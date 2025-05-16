@@ -4,15 +4,15 @@ import { AdvancedImage } from '@cloudinary/react';
 import { Cloudinary } from '@cloudinary/url-gen';
 import bootstrap from "bootstrap/dist/js/bootstrap.bundle.min.js";
 import { addToCart } from "../redux/cartSlice";
-import { productsData } from "./Product"
+// import { productsData } from "./Product"
 
 const cld = new Cloudinary({ cloud: { cloudName: 'dr1ay8vmn' }});
 
-{productsData.map(product =>(
-  <ProductCard key={product.id} {...product}/>
-))} 
+// {productsData.map(product =>(
+//   <ProductCard key={product.id} {...product}/>
+// ))} 
 
-function ProductCard({id, Img, productName, desc, material, sizes, price }) {
+function ProductCard({id, Img, productName, desc, material, sizes, price, onAddToCart }) {
   const fallbackPublicId = "IMG_4113_2_hgg2ta";
   const publicId = Img?.[0]?.publicId || fallbackPublicId;
   const mainImage = cld.image(publicId);
@@ -44,19 +44,38 @@ function ProductCard({id, Img, productName, desc, material, sizes, price }) {
     modalInstance.show();
   };
 
+  // const handleAddToCart = () => {
+  //   if (selectedProduct) {
+  //     dispatch(addToCart(selectedProduct));
+  //     alert(`✅ Added to Cart: ${selectedProduct.productName}`);
+  //     const modalInstance = bootstrap.Modal.getInstance(modalRef.current);
+  //     modalInstance?.hide();
+  //   }
+  // };
   const handleAddToCart = () => {
-    if (selectedProduct) {
-      dispatch(addToCart(selectedProduct));
-      alert(`✅ Added to Cart: ${selectedProduct.productName}`);
-      const modalInstance = bootstrap.Modal.getInstance(modalRef.current);
-      modalInstance?.hide();
+    const product = {
+      id,
+      publicId,
+      productName,
+      desc,
+      material,
+      sizes,
+      price,
+    };
+    if (onAddToCart) {
+      onAddToCart(product); // ✅ Use passed prop
+    } else {
+      dispatch(addToCart(product)); // fallback
+      // alert(`✅ Added to Cart: ${product.productName}`);
     }
+    const modalInstance = bootstrap.Modal.getInstance(modalRef.current);
+    modalInstance?.hide();
   };
 // console.log("ProductCard props:", { productName, desc, material, sizes, price });
 
   return (
     <>
-      <div className="singleCard pb-4 p-3 px-3 border border-1 mx-3 shadow-sm w-100 shadow-lg">
+      <div className="singleCard d-flex flex-column justify-content-between pb-4 p-3 px-3 border border-1 mx-3 shadow-sm w-100 shadow-lg" >
         <p className='d-none'>{id}</p>
 
         <div className="bg-secondary" style={{ height: "300px" }}>
@@ -71,7 +90,7 @@ function ProductCard({id, Img, productName, desc, material, sizes, price }) {
           <p className="fw-bold text-black">{desc || 'No description'}</p>
           <p className="fw-bold text-black">{material || 'No material'}</p>
           <p className="fw-bold text-black">{sizes || 'No sizes'}</p>
-          <p className="fw-bold text-black">N{price.toLocaleString() || '0'}</p>
+          <p className="fw-bold text-black">N{price ? price.toLocaleString() : '0'}</p>
 
           <button className="w-100 bg-black text-white p-2 px-5 border hover:bg-white hover:text-black transition-all duration-300"
             onClick={openModal}>Choose Options
