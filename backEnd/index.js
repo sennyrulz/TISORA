@@ -1,9 +1,10 @@
-import express from "express";
+const express = require("express")
 import bodyParser from "body-parser";
 import dotenv from "dotenv";
 import connectDB from "../connection/database.js";
 import allRoutes from "./routes/allRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
+
 const PORT = process.env.PORT || 5173;
 
 dotenv.config();

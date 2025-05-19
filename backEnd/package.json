@@ -1,0 +1,18 @@
+{
+  "name": "tisora-backend",
+  "version": "1.0.0",
+  "description": "Backend for Tisora e-Commerce",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "nodemon": "nodemon index.js"
+  },
+  "keywords": [],
+  "author": "Fabletoon Limited (Oluwaseun Oloto / Blessing)",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}

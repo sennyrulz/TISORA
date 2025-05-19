@@ -5,7 +5,7 @@ import NewIn from "./pages/NewIn";
 import Shop from "./pages/Shop";
 import Discover from "./pages/Discover";
 import Search from "./components/Search";
-import User from "./pages/User";
+import User from "./pages/allRoutes";
 import Cart from "./components/Cart";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
