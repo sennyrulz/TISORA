@@ -7,6 +7,10 @@ const userSlice = createSlice({
     isAuthenticated: false, // Tracks login state
   },
   reducers: {
+    signUp: (state, action) => {
+      state.user = action.payload; // Get user data (e.g., name, email)
+      state.isAuthenticated = true;
+    },
     login: (state, action) => {
       state.user = action.payload; // Set user data (e.g., name, email)
       state.isAuthenticated = true;
@@ -19,7 +23,7 @@ const userSlice = createSlice({
 });
 
 // Export actions
-export const { login, logout } = userSlice.actions;
+export const { signUp,login, logout } = userSlice.actions;
 
 // Export reducer
 export default userSlice.reducer;

@@ -41,7 +41,7 @@ const Nav = () => {
             <NavLink to="/search">
               <FontAwesomeIcon icon={faSearch} />
             </NavLink>
-            <NavLink to="/user">
+            <NavLink to="/AuthPage">
               <FontAwesomeIcon icon={faUser} />
             </NavLink>
             <NavLink to="/cart">
