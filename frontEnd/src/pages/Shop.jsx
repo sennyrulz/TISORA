@@ -44,14 +44,10 @@ const Shop = () => {
             style={{
               flexWrap: "nowrap",
               overflowX: "auto",
-              paddingBottom: "4px",
-            }}
-          >
-            <p
-              className="text-muted mb-0 fw-medium fs-6 fs-md-5"
-              style={{ flexShrink: 0 }}
-            >
-              Sort by:
+              paddingBottom: "4px" }}>
+            <p className="text-muted mb-0 fw-medium fs-6 fs-md-5"
+              style={{ flexShrink: 0 }} >
+                Sort by:
             </p>
             <Form.Select
               aria-label="Sort products"
@@ -62,15 +58,12 @@ const Shop = () => {
                 width: "fit-content",
                 minWidth: "80px",
                 maxWidth: "170px",
-              }}
-            >
+              }}>
               <option value="low-to-high">Price, (Min price)</option>
               <option value="high-to-low">Price, (Max price)</option>
             </Form.Select>
-            <p
-              className="text-muted mb-0 fs-6"
-              style={{ whiteSpace: "nowrap", minWidth: "80px" }}
-            >
+            <p className="text-muted mb-0 fs-6"
+              style={{ whiteSpace: "nowrap", minWidth: "80px" }}>
               {sortedProducts.length} products
             </p>
           </div>
@@ -93,8 +86,7 @@ const Shop = () => {
               sm={6}
               xs={12}
               className="d-flex align-items-stretch"
-              style={{ minWidth: "360px", minHeight: "300px" }}
-            >
+              style={{ minWidth: "360px", minHeight: "300px" }}>
               <ProductCard {...product} onAddToCart={handleAddToCart} />
             </Col>
           ))
@@ -108,8 +100,7 @@ const Shop = () => {
         position="top-right"
         autoClose={2000}
         hideProgressBar={true}
-        closeOnClick
-      />
+        closeOnClick/>
     </Container>
   );
 };

@@ -21,6 +21,27 @@ body {
   left: 0;
   z-index: 1000;
 }
+  @media screen and (max-width: 768px) {
+  .nav-container { 
+    height: 100px;
+    align-content: center;
+  }
+
+  @media screen and (max-width: 768px) {
+  .nav-links1 {
+  display: flex;
+  }
+}
+
+ @media screen and (max-width: 768px) {
+  .nav-links1 a {
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+    gap: 30px;
+    transition: color 0.3s ease-in-out;
+  }
+}}
 
 /* Logo Styling */
 .logo {
@@ -62,10 +83,15 @@ body {
   color: gray;
 }
 
-/* Mobile screens (≤ 480px) */
-@media screen and (max-width: 480px) {
+.cardBtn:hover {
+   background-color: #853c38;
+   color: #ffffff;
+}
+
+/* Mobile screens (≤ 768px) */
+@media screen and (max-width: 768px) {
   .nav-icons {
-    gap: 10px; /* Reduce spacing */
+    gap: 20px; /* Reduce spacing */
     margin-right: 5px;
   }
 
@@ -84,6 +110,22 @@ body {
   .nav-icons a {
     font-size: 18px;
   }
+
+@media screen and (max-width: 768px) {
+.hamburger {
+  background: none;
+  border: none;
+  color: black;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 5px;
+  margin-left: 2020px;
+}}
+
+@media screen and (max-width: 768px) {
+.social-icons{
+  padding-left: 1000px;
+}}
 }
 
 /* Hamburger Button */

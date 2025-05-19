@@ -11,15 +11,16 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import Logo from "./pages/Logo";
 import HeroBanner from "./components/HeroBanner";
-import ProductCard from "./components/ProductCard";
 import BrandTopic from "./components/brandTopic";
 import Footer from "./components/Footer";
 import { productsData } from "./components/Product";
+import ProductCard from "./components/ProductCard";
 import "./App.css";
 import NewsLetterBox from "./Components/NewsLetterBox";
 import { Modal, Button, Container } from "react-bootstrap";
 import Checkout from "./components/Checkout";
 import { Cloudinary } from "@cloudinary/url-gen";
+
 
 const cld = new Cloudinary({ cloud: { cloudName: 'dr1ay8vmn' }});
 const fallbackPublicId = "IMG_4113_2_hgg2ta";
@@ -61,17 +62,20 @@ function App() {
               <Logo />
               <HeroBanner />
               <Container>
-                <div className="cardContainer px-5" style={{ margin: "-60px 0 0 0" }}>
-                  <h2 className="text-start px-4">Featured Products</h2>
-                  <p className="text-end px-4">
+                <p className="text-end mb-3">
                     <Link to="/shop">View All</Link>
                   </p>
+                <div className="cardContainer px-4" style={{ margin: "-60px 0 0 0" }}>
+                  <h2 className="text-start px-4 mb-4">Featured Products</h2>
                 </div>
                
                 {/* Product Scroll */}
                 <div className="cardScroll d-flex px-5 gap-5 mb-5 overflow-auto" style={{ whiteSpace: "nowrap" }}>
-                  {featuredProducts.map((product) => (
-                    <div key={product.id} style={{ flex: "0 0 auto", scrollSnapAlign: "start" }}>
+                  
+                 {productsData.slice(1, 7).map((product) => (
+                  <div 
+                    key={product.id} 
+                      style={{ flex: "0 0 auto", scrollSnapAlign: "start"}}>
                       <ProductCard
                         id={product.id}
                         cldImg={product.publicId}
@@ -82,9 +86,9 @@ function App() {
                           setSelectedProduct(product);
                           setShowModal(true);
                         }}/>
-                    </div>
+                  </div>
                   ))}
-                </div>
+                </div> 
               </Container>
               <BrandTopic />
             </>
