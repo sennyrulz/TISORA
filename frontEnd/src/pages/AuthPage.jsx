@@ -49,7 +49,9 @@ function AuthPage() {
             <>
               <p>Welcome, {user.name}!</p>
               <div className="d-flex flex-column flex-md-row justify-content-center gap-3 mt-4">
-                <button className="btn btn-danger" onClick={() => dispatch(logout())}>
+                <button style={{
+                  backgroundColor: '#91443f'}} 
+                  className="btn" onClick={() => dispatch(logout())}>
                   Logout
                 </button>
               </div>
@@ -66,8 +68,7 @@ function AuthPage() {
                       className="form-control"
                       value={formData.name}
                       onChange={handleChange}
-                      required
-                    />
+                      required/>
                   </div>
                 )}
                 <div className="mb-3">
@@ -78,8 +79,7 @@ function AuthPage() {
                     className="form-control"
                     value={formData.email}
                     onChange={handleChange}
-                    required
-                  />
+                    required />
                 </div>
                 <div className="mb-3">
                   <label>Password</label>
@@ -89,11 +89,16 @@ function AuthPage() {
                     className="form-control"
                     value={formData.password}
                     onChange={handleChange}
-                    required
-                  />
+                    required />
                 </div>
 
-                <button type="submit" className="btn btn-primary">
+                <button type="submit" 
+                style={{
+                  backgroundColor: '#91443f',
+                  border: 'none',
+                  width: '100'
+                }} 
+                  className="btn btn-primary">
                   {isLogin ? "Login" : "Sign Up"}
                 </button>
               </form>
