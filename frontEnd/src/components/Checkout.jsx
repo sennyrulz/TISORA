@@ -60,9 +60,7 @@ const Checkout = () => {
     }
     toast.success("Discount code applied successfully!");
     // Add discount code logic here
-    
-
-  }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -403,15 +401,39 @@ const Checkout = () => {
               className="align-items-center my-5 pe-4 text-start"
             >
               <Col xs={3}>
-                <Image
-                  src={product.image}
-                  alt={product.name}
-                  width={70}
-                  height={70}
-                  className="mt-2"
-                  style={{ objectFit: "cover" }}
-                  loading="lazy"
-                />
+                <div
+                  style={{
+                    position: "relative",
+                    width: "70px",
+                    height: "70px",
+                  }}
+                >
+                  <Image
+                    src={product.image}
+                    alt={product.name}
+                    width={70}
+                    height={70}
+                    className="mt-2"
+                    style={{ objectFit: "cover", borderRadius: "0.25rem" }}
+                    loading="lazy"
+                  />
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: "3px",
+                      right: "-5px",
+                      backgroundColor: "black",
+                      color: "white",
+                      fontSize: "12px",
+                      padding: "2px 6px",
+                      borderRadius: "999px",
+                      fontWeight: "bold",
+                      lineHeight: "1",
+                    }}
+                  >
+                    {product.quantity}
+                  </div>
+                </div>
               </Col>
               <Col>
                 <p className="mb-1 fw-semibold">{product.productName}</p>
@@ -459,9 +481,9 @@ const Checkout = () => {
             <Col className="text-end">
               {formData.shippingMethod === "standard" && "₦3000 "}
               {formData.shippingMethod === "oneDay" &&
-                "₦5,000 (One-Day Shipping)"}
+                "₦5,000"}
               {formData.shippingMethod === "express" &&
-                "₦7,500 (Express Shipping)"}
+                "₦7,500"}
             </Col>
           </Row>
 
