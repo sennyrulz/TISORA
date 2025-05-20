@@ -12,6 +12,8 @@ function AuthPage() {
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
+    phone: "",
+    address: "",
     password: ""
   });
 
@@ -57,17 +59,40 @@ function AuthPage() {
               </div>
             </>
           ) : (
-            <>
+          <>
+            {/*SignUp*/}
               <form onSubmit={handleSubmit}>
                 {!isLogin && (
                   <div className="mb-3">
-                    <label>Full Name</label>
-                    <input type="text"
+                    <div className="mb-3">
+                      <label>Full Name</label>
+                      <input type="text"
                       name="fullName"
                       className="form-control"
                       value={formData.name}
                       onChange={handleChange}
                       required/>
+                    </div>
+
+                    <div className="mb-3">
+                      <label>Phone</label>
+                      <input type="number"
+                      name="number"
+                      className="form-control"
+                      value={formData.number}
+                      onChange={handleChange}
+                      required />
+                    </div>
+
+                    <div className="mb-3">
+                      <label>Address</label>
+                      <input type="text"
+                        name="address"
+                        className="form-control"
+                        value={formData.address}
+                        onChange={handleChange}
+                        required />
+                    </div>
                   </div>
                 )}
 
@@ -81,36 +106,16 @@ function AuthPage() {
                     required />
                 </div>
 
-                <div className="mb-3">
-                  <label>Phone</label>
-                  <input type="number"
-                    name="number"
-                    className="form-control"
-                    value={formData.number}
-                    onChange={handleChange}
-                    required />
-                </div>
-
-                <div className="mb-3">
-                  <label>Address</label>
-                  <input type="text"
-                    name="address"
-                    className="form-control"
-                    value={formData.address}
-                    onChange={handleChange}
-                    required />
-                </div>
-
-                <div className="mb-3">
-                  <label>Password</label>
-                  <input
-                    type="password"
-                    name="password"
-                    className="form-control"
-                    value={formData.password}
-                    onChange={handleChange}
-                    required />
-                </div>
+                  <div className="mb-3">
+                    <label>Password</label>
+                    <input
+                      type="password"
+                      name="password"
+                      className="form-control"
+                      value={formData.password}
+                      onChange={handleChange}
+                      required />
+                  </div>
 
                 <button type="submit" 
                 style={{
@@ -129,7 +134,7 @@ function AuthPage() {
                   {isLogin ? "Sign Up" : "Login"}
                 </button>
               </p>
-            </>
+          </>
           )}
         </Col>
       </Row>
