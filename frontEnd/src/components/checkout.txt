@@ -1,0 +1,165 @@
+Love this:
+import React, { useState } from "react";
+import { Container, Row, Col, Form, Button, Alert, Card, ListGroup } from "react-bootstrap";
+import { useSelector } from "react-redux";
+
+const Checkout = () => {
+  const cart = useSelector((state) => state.cart.cart);
+
+  // Form state
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    address: "",
+    paymentMethod: "card",
+  });
+  const [errors, setErrors] = useState({});
+  const [submitted, setSubmitted] = useState(false);
+
+  // Calculate subtotal
+  const subtotal = cart.reduce((total, item) => total + item.price * item.quantity, 0);
+
+  // Simple validation
+  const validate = () => {
+    const newErrors = {};
+    if (!form.name.trim()) newErrors.name = "Name is required";
+    if (!form.email.trim() || !/\S+@\S+\.\S+/.test(form.email)) newErrors.email = "Valid email is required";
+    if (!form.phone.trim()) newErrors.phone = "Phone number is required";
+    if (!form.address.trim()) newErrors.address = "Shipping address is required";
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  // Handle form submit
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!validate()) return;
+    setSubmitted(true);
+    // Here you would normally send data to your backend or payment processor
+    alert("Order placed successfully!"); // Placeholder
+  };
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  return (
+    <Container className="my-5">
+      <h1 className="mb-4 text-center">Checkout</h1>
+      <Row>
+        {/* User Info Form */}
+        <Col md={7}>
+          <Card className="p-4 mb-4">
+            <h4>Shipping Information</h4>
+            <Form noValidate onSubmit={handleSubmit}>
+              <Form.Group className="mb-3" controlId="name">
+                <Form.Label>Name *</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Your full name"
+                  name="name"
+                  value={form.name}
+                  onChange={handleChange}
+                  isInvalid={!!errors.name}
+                />
+                <Form.Control.Feedback type="invalid">{errors.name}</Form.Control.Feedback>
+              </Form.Group>
+
+              <Form.Group className="mb-3" controlId="email">
+                <Form.Label>Email *</Form.Label>
+                <Form.Control
+                  type="email"
+                  placeholder="example@mail.com"
+                  name="email"
+                  value={form.email}
+                  onChange={handleChange}
+                  isInvalid={!!errors.email}
+                />
+                <Form.Control.Feedback type="invalid">{errors.email}</Form.Control.Feedback>
+              </Form.Group>
+
+              <Form.Group className="mb-3" controlId="phone">
+                <Form.Label>Phone *</Form.Label>
+                <Form.Control
+                  type="tel"
+                  placeholder="+1234567890"
+                  name="phone"
+                  value={form.phone}
+                  onChange={handleChange}
+                  isInvalid={!!errors.phone}
+                />
+                <Form.Control.Feedback type="invalid">{errors.phone}</Form.Control.Feedback>
+              </Form.Group>
+
+              <Form.Group className="mb-3" controlId="address">
+                <Form.Label>Shipping Address *</Form.Label>
+                <Form.Control
+                  as="textarea"
+                  rows={3}
+                  placeholder="Enter your shipping address"
+                  name="address"
+                  value={form.address}
+                  onChange={handleChange}
+                  isInvalid={!!errors.address}
+                />
+                <Form.Control.Feedback type="invalid">{errors.address}</Form.Control.Feedback>
+              </Form.Group>
+
+              <h5 className="mt-4">Payment Method</h5>
+              <Form.Check
+                type="radio"
+                label="Credit/Debit Card"
+                name="paymentMethod"
+                value="card"
+                checked={form.paymentMethod === "card"}
+                onChange={handleChange}
+                id="payment-card"
+              />
+              <Form.Check
+                type="radio"
+                label="Cash on Delivery"
+                name="paymentMethod"
+                value="cod"
+                checked={form.paymentMethod === "cod"}
+                onChange={handleChange}
+                id="payment-cod"
+              />
+
+              <Button variant="dark" type="submit" className="mt-4" disabled={submitted}>
+                {submitted ? "Processing..." : "Place Order"}
+              </Button>
+            </Form>
+          </Card>
+        </Col>
+
+        {/* Order Summary */}
+        <Col md={5}>
+          <Card className="p-4">
+            <h4>Order Summary</h4>
+            <ListGroup variant="flush">
+              {cart.map((item) => (
+                <ListGroup.Item key={item.id} className="d-flex justify-content-between align-items-center">
+                  <div>
+                    {item.productName} x {item.quantity}
+                  </div>
+                  <div>₦{(item.price * item.quantity).toLocaleString()} NGN</div>
+                </ListGroup.Item>
+              ))}
+              <ListGroup.Item className="d-flex justify-content-between fw-semibold">
+                <span>Subtotal</span>
+                <span>₦{subtotal.toLocaleString()} NGN</span>
+              </ListGroup.Item>
+              <ListGroup.Item className="text-muted small">
+                Taxes and shipping calculated at checkout
+              </ListGroup.Item>
+            </ListGroup>
+          </Card>
+        </Col>
+      </Row>
+    </Container>
+  );
+};
+
+export default Checkout;
+
