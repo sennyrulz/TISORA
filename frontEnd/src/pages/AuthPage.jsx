@@ -10,7 +10,7 @@ function AuthPage() {
 
   const [isLogin, setIsLogin] = useState(true); // Toggle between Login and Signup
   const [formData, setFormData] = useState({
-    name: "",
+    fullName: "",
     email: "",
     password: ""
   });
@@ -61,26 +61,46 @@ function AuthPage() {
               <form onSubmit={handleSubmit}>
                 {!isLogin && (
                   <div className="mb-3">
-                    <label>Name</label>
-                    <input
-                      type="text"
-                      name="name"
+                    <label>Full Name</label>
+                    <input type="text"
+                      name="fullName"
                       className="form-control"
                       value={formData.name}
                       onChange={handleChange}
                       required/>
                   </div>
                 )}
+
                 <div className="mb-3">
                   <label>Email</label>
-                  <input
-                    type="email"
+                  <input type="email"
                     name="email"
                     className="form-control"
                     value={formData.email}
                     onChange={handleChange}
                     required />
                 </div>
+
+                <div className="mb-3">
+                  <label>Phone</label>
+                  <input type="number"
+                    name="number"
+                    className="form-control"
+                    value={formData.number}
+                    onChange={handleChange}
+                    required />
+                </div>
+
+                <div className="mb-3">
+                  <label>Address</label>
+                  <input type="text"
+                    name="address"
+                    className="form-control"
+                    value={formData.address}
+                    onChange={handleChange}
+                    required />
+                </div>
+
                 <div className="mb-3">
                   <label>Password</label>
                   <input
