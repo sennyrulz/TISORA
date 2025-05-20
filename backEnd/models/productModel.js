@@ -2,50 +2,31 @@ import mongoose from "mongoose";
 
 const productSchema = new mongoose.Schema(
   {
-    productName: { 
-        type: String, 
-        required: true 
-    },
-    price: { 
-        type: Number, 
-        required: true 
-    },
-    desc: { 
-        type: String, 
-        required: true 
-    },
-    userId: { 
+    Id: { 
         type: mongoose.Schema.Types.ObjectId, 
         ref: "User" 
     },
-    category: { 
-        type: String, 
-        enum: ["new", "discount", "used"], 
-        default: "new" 
-    },
+
     pictures: {
       type: [
         {
-          url: { 
-            type: String, 
-            required: true 
-        },
-          size: { 
-            type: Number, 
-            required: true 
-        }, // File size in bytes
           publicId: { 
             type: String, 
             required: true 
             }, // For Cloudinary image deletion
+
+          size: { 
+            type: Number, 
+            required: true 
+        }, // File size in bytes
         },
       ],
       validate: [
         {
           validator: function (pics) {
-            return pics.length <= 4; // Max 4 images
+            return pics.length <= 2; // Max 2 images
           },
-          message: "A product can have a maximum of 4 images.",
+          message: "A product can have a maximum of 2 images.",
         },
         {
           validator: function (pics) {
@@ -55,10 +36,39 @@ const productSchema = new mongoose.Schema(
         },
       ],
     },
+
+    productName: { 
+        type: String, 
+        required: true 
+    },
+
+    desc: { 
+        type: String, 
+        required: true 
+    },
+    features: { 
+          type: String, 
+          required: true 
+      },
+
+    material: { 
+        type: String, 
+        required: true 
+    },
+
+    sizes: { 
+        type: String, 
+        required: true 
+    },
+    price: { 
+        type: String, 
+        required: true 
+    },
+    
   },
   { timestamps: true }
 );
 
 const Goods = mongoose.model("Goods", productSchema);
 
-export default Goods; //worked here
+export default Goods;
