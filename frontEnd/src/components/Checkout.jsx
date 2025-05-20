@@ -269,6 +269,7 @@ const Checkout = () => {
                   value={method}
                   checked={formData.shippingMethod === method}
                   onChange={handleChange}
+                  isInvalid={!!errors.shippingMethod}
                 />
               </Form.Group>
             );
@@ -420,15 +421,14 @@ const Checkout = () => {
                   <div
                     style={{
                       position: "absolute",
-                      top: "3px",
-                      right: "-5px",
-                      backgroundColor: "black",
+                      top: "-2px",
+                      right: "-6px",
+                      backgroundColor: "rgba(0, 0, 0, 0.6)",
                       color: "white",
                       fontSize: "12px",
                       padding: "2px 6px",
                       borderRadius: "999px",
                       fontWeight: "bold",
-                      lineHeight: "1",
                     }}
                   >
                     {product.quantity}
