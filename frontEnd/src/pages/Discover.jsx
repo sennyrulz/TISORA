@@ -18,8 +18,8 @@ const Discover = () => {
             </Row>
 
             <div className="d-flex flex-column flex-md-row justify-content-center gap-3 mt-4">
-                <Button variant="dark" href="/shop" className='px-5 py-2 discover_button'>Shop Now</Button>
-                <Button variant="dark" href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" className='px-5 py-2 discover_button'>Instagram</Button>
+                <Button variant="dark" href="/shop" className='px-5 py-2 bg-black rounded-0'>Shop Now</Button>
+                <Button variant="dark" href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" className='px-5 py-2 bg-black rounded-0'>Instagram</Button>
             </div>
         </Container>
     );

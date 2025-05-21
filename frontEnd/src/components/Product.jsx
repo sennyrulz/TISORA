@@ -23,7 +23,7 @@ export const productsData = [
 
     material: "100% Cotton Ghana Batik",
     sizes: "(M-XXL)",
-    price: "25,000",
+    price: 25000,
   },
 
   { 
@@ -50,7 +50,7 @@ export const productsData = [
 
     material: "100% Cotton Ghana Batik",
     sizes: "(M-XXL)",
-    price: "25,000",
+    price: 35000,
   },
 
   { 
@@ -77,7 +77,7 @@ export const productsData = [
 
     material: "100% Cotton Ghana Batik",
     sizes: "(M-XXL)",
-    price: "25,000",
+    price: 45000
   },
 
   { 
@@ -104,7 +104,7 @@ export const productsData = [
 
     material: "100% Cotton Ghana Batik",
     sizes: "(M-XXL)",
-    price: "25,000",
+    price: 20000
   },
 
  
@@ -131,7 +131,7 @@ export const productsData = [
 
     material: "100% Cotton Ghana Batik",
     sizes: "(M-XXL)",
-    price: "25,000",
+    price: 10500,
   },
 
 
@@ -157,7 +157,7 @@ export const productsData = [
 
     material: "100% Cotton Ghana Batik",
     sizes: "(M-XXL)",
-    price: "25,000",
+    price: 25000,
   },
 
   {
@@ -182,7 +182,7 @@ export const productsData = [
 
     material: "100% Cotton Ghana Batik",
     sizes: "(M-XXL)",
-    price: "25,000",
+    price: 40000
   },
 
   {
@@ -207,7 +207,7 @@ export const productsData = [
 
     material: "100% Cotton Ghana Batik",
     sizes: "(M-XXL)",
-    price: "25,000",
+    price: 25000
   },
 
   {
@@ -232,7 +232,7 @@ export const productsData = [
 
     material: "100% Cotton Ghana Batik",
     sizes: "(M-XXL)",
-    price: "25,000",
+    price: 30000
   },
 
   {
@@ -257,7 +257,7 @@ export const productsData = [
 
     material: "100% Cotton Ghana Batik",
     sizes: "(M-XXL)",
-    price: "25,000",
+    price: 25000
   },
 
   {
@@ -282,7 +282,7 @@ export const productsData = [
 
     material: "100% Cotton Ghana Batik",
     sizes: "(M-XXL)",
-    price: "25,000",
+    price: 50000
   },
 
   {
@@ -307,7 +307,7 @@ export const productsData = [
 
     material: "100% Cotton Ghana Batik",
     sizes: "(M-XXL)",
-    price: "25,000",
+    price: 21000
   },
 
   {
@@ -332,7 +332,7 @@ export const productsData = [
 
     material: "100% Cotton Ghana Batik",
     sizes: "(M-XXL)",
-    price: "25,000",
+    price: 30000
   },
 
   {
@@ -357,6 +357,6 @@ export const productsData = [
 
     material: "100% Cotton Ghana Batik",
     sizes: "(M-XXL)",
-    price: "25,000",
+    price: 42000
   },
 ]
