@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import { Container, Row, Col, Form, Button, Image } from "react-bootstrap";
+import {
+  Container,
+  Row,
+  Col,
+  Form,
+  Button,
+  Image,
+  Card,
+} from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -70,10 +78,10 @@ const Checkout = () => {
   };
 
   return (
-    <Container className="my-5 pt-5">
+    <div className="container my-5 pt-5">
       <Row className="justify-content-center">
         {/* Left Column - Form */}
-        <Col md={7} className="pe-5">
+        <Col md={7} className="px-4">
           {/* Form Structure */}
           <Row className="justify-content-between mb-2">
             <Col className="text-start">
@@ -286,120 +294,104 @@ const Checkout = () => {
             />
           </Form.Group>
 
-          <h5 className="mb-3 text-start">Payment</h5>
-          <p className="text-start">All transactions are secured & encrypted</p>
-          <Row
-            className="border p-2 rounded mb-4"
-            style={{ backgroundColor: "#f0f0f0" }}
-          >
-            <Row className="mb-3 justify-content-between">
-              <Col>
-                <h6 className="text-start fw-normal mt-2">Credit Card</h6>
-              </Col>
-              <Col className="text-end">
-                <Image
-                  src={image1}
-                  alt="American Express"
-                  style={{ width: "40px" }}
-                />
-                <Image
-                  src={image2}
-                  alt="Diners Club"
-                  style={{ width: "40px" }}
-                />
-                <Image
-                  src={image3}
-                  alt="Mastercard"
-                  style={{ width: "40px" }}
-                />
-                <Image src={image4} alt="Visa" style={{ width: "40px" }} />
-              </Col>
-            </Row>
+          <h5 className="fw-bold text-start mb-2">Payment Method</h5>
+          <p className="text-muted text-start small mb-0">
+            All transactions are <strong>secured</strong> and{" "}
+            <strong>encrypted</strong>.
+          </p>
 
-            <Form.Group className="mb-3" controlId="cardNumber">
-              <Form.Control
-                type="text"
-                placeholder="Card Number"
-                name="cardNumber"
-                value={formData.cardNumber}
-                onChange={handleChange}
-                isInvalid={!!errors.cardNumber}
-              />
-              <Form.Control.Feedback type="invalid">
-                {errors.cardNumber}
-              </Form.Control.Feedback>
-            </Form.Group>
-
-            <Row className="mb-3">
-              <Col>
-                <Form.Control
-                  type="text"
-                  placeholder="Expiration Date (MM/YY)"
-                  name="cardExpiry"
-                  value={formData.cardExpiry}
-                  onChange={handleChange}
-                  isInvalid={!!errors.cardExpiry}
-                />
-                <Form.Control.Feedback type="invalid">
-                  {errors.cardExpiry}
-                </Form.Control.Feedback>
+          <Card className="p-4 mb-5 mt-4">
+            <Row className="g-3">
+              {/* Stripe Option */}
+              <Col md={6}>
+                <div
+                  onClick={() =>
+                    setFormData({ ...formData, paymentMethod: "stripe" })
+                  }
+                  className={`border rounded-3 p-3 payment-option ${
+                    formData.paymentMethod === "stripe" ? "selected" : ""
+                  }`}
+                  style={{
+                    cursor: "pointer",
+                    borderColor:
+                      formData.paymentMethod === "stripe" ? "#000" : "#ccc",
+                  }}
+                >
+                  <Form.Check
+                    type="radio"
+                    id="stripe"
+                    label="Pay with Stripe (USD)"
+                    name="paymentMethod"
+                    value="stripe"
+                    checked={formData.paymentMethod === "stripe"}
+                    onChange={handleChange}
+                  />
+                  <div className="mt-2 d-flex gap-2 align-items-center justify-content-center">
+                    <Image src={image3} alt="Mastercard" width={40} />
+                    <Image src={image4} alt="Visa" width={40} />
+                  </div>
+                </div>
               </Col>
-              <Col>
-                <Form.Control
-                  type="text"
-                  placeholder="Security Code"
-                  name="cardCvc"
-                  value={formData.cardCvc}
-                  onChange={handleChange}
-                  isInvalid={!!errors.cardCvc}
-                />
-                <Form.Control.Feedback type="invalid">
-                  {errors.cardCvc}
-                </Form.Control.Feedback>
+
+              {/* Paystack Option */}
+              <Col md={6}>
+                <div
+                  onClick={() =>
+                    setFormData({ ...formData, paymentMethod: "paystack" })
+                  }
+                  className={`border rounded-3 p-3 payment-option ${
+                    formData.paymentMethod === "paystack" ? "selected" : ""
+                  }`}
+                  style={{
+                    cursor: "pointer",
+                    borderColor:
+                      formData.paymentMethod === "paystack" ? "#000" : "#ccc",
+                  }}
+                >
+                  <Form.Check
+                    type="radio"
+                    id="paystack"
+                    label="Pay with Paystack (₦NGN)"
+                    name="paymentMethod"
+                    value="paystack"
+                    checked={formData.paymentMethod === "paystack"}
+                    onChange={handleChange}
+                  />
+                  <div className="mt-2 d-flex gap-2 align-items-center justify-content-center">
+                    <Image src={image3} alt="Mastercard" width={40} />
+                    <Image src={image4} alt="Visa" width={40} />
+                  </div>
+                </div>
               </Col>
             </Row>
+          </Card>
 
-            <Form.Group className="mb-3" controlId="cardName">
-              <Form.Control
-                type="text"
-                placeholder="Name on Card"
-                name="cardName"
-                value={formData.cardName}
-                onChange={handleChange}
-                isInvalid={!!errors.cardName}
-              />
-              <Form.Control.Feedback type="invalid">
-                {errors.cardName}
-              </Form.Control.Feedback>
-            </Form.Group>
-
-            <Form.Group className="mb-4" controlId="billingSameAsShipping">
-              <Form.Check
-                type="checkbox"
-                label="Use shipping address as billing address"
-                className="text-start"
-                name="billingSameAsShipping"
-                checked={formData.billingSameAsShipping}
-                onChange={handleChange}
-              />
-            </Form.Group>
-          </Row>
-
-          <Button
-            type="submit"
-            className="btn btn-dark bg-black rounded-0 w-100 p-2"
-          >
-            Pay Now
-          </Button>
+          <div className="d-none d-md-block">
+            <Button
+              type="submit"
+              className="btn btn-dark bg-black rounded-0 w-100 p-2 mb-4"
+            >
+              Pay Now
+            </Button>
+          </div>
         </Col>
 
         {/* Right Column - Order Summary */}
-        <Col md={5} className="ps-5" style={{ backgroundColor: "#f0f0f0" }}>
+        <Col
+          md={5}
+          style={{
+            backgroundColor:
+              window.innerWidth >= 768 ? "#f0f0f0" : "transparent",
+          }}
+        >
+          <div className="d-block d-md-none mt-4">
+            <h2 className="text-start">Order Summary</h2>
+          </div>
           {/* Order details Structure */}
           {cartItems.map((product) => (
             <Row
               key={product.id}
-              className="align-items-center my-5 pe-4 text-start"
+              className="align-items-center my-5 ps-4 pe-4 text-start"
             >
               <Col xs={3}>
                 <div
@@ -448,7 +440,7 @@ const Checkout = () => {
             </Row>
           ))}
 
-          <Form className="my-4 pe-4">
+          <Form className="my-4 pe-4 ps-4">
             <Row className="gx-2">
               <Col xs={9}>
                 <Form.Control
@@ -471,23 +463,21 @@ const Checkout = () => {
             </Row>
           </Form>
 
-          <Row className="mb-2 pe-4">
+          <Row className="mb-2 pe-4 ps-4">
             <Col className="text-start fw-semibold">Subtotal</Col>
             <Col className="text-end">₦{calculateTotal().toLocaleString()}</Col>
           </Row>
 
-          <Row className="mb-2 pe-4">
+          <Row className="mb-2 pe-4 ps-4">
             <Col className="text-start fw-semibold">Shipping</Col>
             <Col className="text-end">
               {formData.shippingMethod === "standard" && "₦3000 "}
-              {formData.shippingMethod === "oneDay" &&
-                "₦5,000"}
-              {formData.shippingMethod === "express" &&
-                "₦7,500"}
+              {formData.shippingMethod === "oneDay" && "₦5,000"}
+              {formData.shippingMethod === "express" && "₦7,500"}
             </Col>
           </Row>
 
-          <Row className="mb-2 pe-4">
+          <Row className="mb-2 pe-4 ps-4">
             <Col className="text-start fw-semibold">Total</Col>
             <Col className="text-end">
               ₦
@@ -504,6 +494,15 @@ const Checkout = () => {
             </Col>
           </Row>
         </Col>
+        {/* Mobile-only Pay Button (below Order Summary) */}
+        <div className="d-block d-md-none mt-3">
+          <Button
+            type="submit"
+            className="btn btn-dark bg-black rounded-0 w-100 p-3"
+          >
+            Pay Now
+          </Button>
+        </div>
       </Row>
 
       <ToastContainer
@@ -512,7 +511,7 @@ const Checkout = () => {
         hideProgressBar={true}
         closeOnClick
       />
-    </Container>
+    </div>
   );
 };
 
