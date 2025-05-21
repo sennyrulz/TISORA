@@ -1,11 +1,18 @@
 const express = require("express")
 import bodyParser from "body-parser";
 import dotenv from "dotenv";
-import connectDB from "../connection/database.js";
-import allRoutes from "./routes/allRoutes.js";
-import adminRoutes from "./routes/adminRoutes.js";
+import connectDB from "../backEnd/connection/database.js";
+import allRoutes from "../backEnd/routes/allRoute.js";
+import adminRoutes from "../backEnd/routes/adminRoute.js";
 
 const PORT = process.env.PORT || 5173;
+
+import fileUpload from 'express-fileupload';
+
+app.use(fileUpload({
+  useTempFiles: true,
+}));
+
 
 dotenv.config();
 connectDB();

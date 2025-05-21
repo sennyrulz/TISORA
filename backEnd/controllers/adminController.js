@@ -1,120 +1,55 @@
-import User from "../models/userModel.js";
-import Goods from "./productModel.js";
+import Admin from '../models/adminModel.js';
 
-export const updateRegisterUser = async (req, res) => {
-    try {
-        const { role } = req.body; // Get the new role from request body
-
-        const user = await User.findById(req.params.id);
-        if (!user) return res.status(404).json({ message: "User not found" });
-
-        if (!role) {
-            return res.status(400).json({ message: "Role is required" });
-        }
-
-        user.role = role; // Change the user role
-        await user.save();
-
-        res.status(200).json({ message: "User role updated successfully", user });
-
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Server Error" });
-    }
+export const getAdmin = (req, res) => {
+  Admin.find()
+    .then(admins => res.json(admins))
+    .catch(err => res.status(500).json({ message: 'Server error', error: err.message }));
 };
 
-// Delete a user from the database
-export const deleteUser = async (req, res) => {
-    try {
-        const user = await User.findByIdAndDelete(req.params.id);
-        if (!user) return res.status(404).json({ message: "User not found" });
-        res.status(200).json({ message: "User deleted successsfully" });
-        
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Server Error" });
-    }
-}
+export const createAdmin = (req, res) => {
+  const { id, fullName, email, phone, address, password } = req.body;
 
-// Get one user from the database
-export const getOneUser = async (req, res) => {
-    try {
-        const user = await User.findById(req.params.id);
-        if (!user) return res.status(404).json({ message: "User not found" });
-        res.status(200).json(user);
-        
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Server Error" });
-    }
-}
+  // Validate required fields
+  if (!id || !fullName || !email || !phone || !address || !password) {
+    return res.status(400).json({ message: 'All fields are required' });
+  }
 
-// Get all users from the database
-export const getAllUsers = async (req, res) => {
-    try {
-        const users = await User.find();
-        res.status(200).json(users);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Server Error" });
-    }
-}
+  // Create new admin
+  const newAdmin = new Admin({
+    id,
+    fullName,
+    email,
+    phone,
+    address,
+    password,
+  });
 
-// Get one product from the database
-export const getOneProduct = async (req, res) => {
-    try {
-        const good = await Goods.findById(req.params.id);
-        if (!good) return res.status(404).json({ message: "Product not found" });
-        res.status(200).json(good);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Server Error" });
-    }
-}
+  newAdmin.save()
+    .then(savedAdmin => res.status(201).json(savedAdmin))
+    .catch(err => res.status(500).json({ message: 'Error creating admin', error: err.message }));
+};
 
-// Get all products from the database
-export const getAllProducts = async (req, res) => {
-    try {
-        const goods = await Goods.find();
-        res.status(200).json(goods);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Server Error" });
-    } 
-}
+export const updateAdmin = (req, res) => {
+  const { id, ...updates } = req.body;
+  if (!id) return res.status(400).json({ message: 'ID is required' });
 
-// Create a new product 
-export const createProduct = async (req, res) => {
-    try {
-        const newProduct = new Product(req.body);
-        await newProduct.save();
-        res.status(201).json({ message: "Product Created successfully", product: newProduct });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Server Error" });
-    }
-}
+  Admin.findByIdAndUpdate(id, updates, { new: true })
+    .then(updated => {
+      if (!updated) return res.status(404).json({ message: 'Admin not found' });
+      res.json(updated);
+    })
+    .catch(err => res.status(500).json({ message: 'Error updating admin', error: err.message }));
+};
 
-// Get all products by one vendor
-export const getProductsByVendor = async (req, res) => {
-    try {
-        const products = await Goods.find({ vendorId: req.params.vendorId });
-        if (!products) return res.status(404).json({ message: "No products found for this vendor" });
-        res.status(200).json(products);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Server Error" });
-    }
-}
+export const deleteAdmin = (req, res) => {
+  const { id } = req.body;
 
-// Get one product by one vendor
-export const getOneProductByVendor = async (req, res) => {
-    try {
-        const product = await Goods.findOne({ _id: req.params.productId, vendorId: req.params.vendorId });
-        if (!product) return res.status(404).json({ message: "Product not found for this vendor" });
-        res.status(200).json(product);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Server Error" });
-    }
-}
+  if (!id) return res.status(400).json({ message: 'ID is required' });
+
+  Admin.findByIdAndDelete(id)
+    .then(deleted => {
+      if (!deleted) return res.status(404).json({ message: 'Admin not found' });
+      res.json({ message: 'Admin deleted successfully' });
+    })
+    .catch(err => res.status(500).json({ message: 'Error deleting admin', error: err.message }));
+};

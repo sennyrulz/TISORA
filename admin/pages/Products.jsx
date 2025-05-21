@@ -42,11 +42,11 @@ const productSchema = new mongoose.Schema(
       ],
       validate: {
         validator: function (pics) {
-          if (pics.length > 4) return false;
+          if (pics.length > 2) return false;
           return pics.every((pic) => pic.size <= 10 * 1024 * 1024); // 10MB
         },
         message:
-          "A product can have a maximum of 4 images, and each must not exceed 10MB.",
+          "A product can have a maximum of 2 images, and each must not exceed 10MB.",
       },
     },
   },

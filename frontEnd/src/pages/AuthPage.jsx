@@ -28,13 +28,17 @@ function AuthPage() {
     e.preventDefault();
     if (isLogin) {
       dispatch(login({
-        name: formData.name || formData.email.split("@")[0],
-        email: formData.email
+        name: formData.fullName || formData.email.split("@")[0],
+        email: formData.email,
+        password: formData.password,
       }));
     } else {
       dispatch(signUp({
-        name: formData.name,
-        email: formData.email
+        name: formData.fullName,
+        email: formData.email,
+        password: formData.password,
+        phone: formData.phone,
+        address: formData.address,
       }));
     }
   };

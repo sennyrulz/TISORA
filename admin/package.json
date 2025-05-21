@@ -1,0 +1,25 @@
+{
+  "name": "admin",
+  "version": "1.0.0",
+  "description": "Admin page for Tisora",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "nodemon": "nodemon index.js"
+  },
+  "keywords": [],
+  "author": "Oluwaseun Oloto",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "cloudinary": "^2.6.1",
+    "express": "^5.1.0",
+    "express-fileupload": "^1.5.1",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.15.0",
+    "nodemon": "^3.1.10",
+    "react-icons": "^5.5.0",
+    "recharts": "^2.15.3"
+  }
+}
