@@ -6,7 +6,7 @@ User.find()
 .catch(err => res.status(500).json({ message: 'Server error', error: err.message }));
 };
 
-const createUser = (req, res)=>{
+export const createUser = (req, res)=>{
     const {
     id,
     fullName,
@@ -19,9 +19,9 @@ const createUser = (req, res)=>{
     if (!id || !fullName || !email || !phone || !address || !password ) {
         return res.status(400).json({ message: 'All fields are required' });
     }
-}
-//new user
-const newUser = newUser ({
+
+//Create new user
+const newUser = new User ({
     id,
     fullName,
     email,
@@ -29,13 +29,12 @@ const newUser = newUser ({
     address,
     password,
 });
-
-   
 newUser.save()
 .then(savedUser => res.status(201).json(savedUser))
 .catch(err => res.status(500).json({ message: 'Error creating user', error: err.message }));
-
-//Update user
+};
+   
+//Update admin
 const updateUser = (req,res)=>{
     const {id, ...updates } = req.body
     if (!id) return res.status(400).json({ message: 'ID is required' });
@@ -61,4 +60,4 @@ const deleteUser = (req, res) => {
     .catch(err => res.status(500).json({ message: 'Error deleting user', error: err.message }));
 };
 
-export { getUser, createUser, updateUser, deleteUser };
+export { getUser, updateUser, deleteUser };

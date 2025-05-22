@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import {BsCart3, BsGrid1X2Fill, BsFillArchiveFill, BsGrid3X3GapFill,
   BsPeopleFill, BsListCheck, BsMenuButtonWideFill, BsFillGearFill, BsFillBellFill
 } from 'react-icons/bs'
@@ -8,45 +9,48 @@ const Sidebar = () => {
     <aside id="sidebar">
       <div className='sidebar-title'>
         <div className='sidebar-brand'>
+          <Link to='/admin/dashboard'>
             <BsCart3 className='icon_header' /> TISORA SHOP
+          </Link>      
         </div>
         <span className='icon close_icon'>X</span>
       </div>
-        <ul className='sidebar-list'>
+
+        <ul className='sidebar-list' onClick={'/admin/Dashboard'}>
           <li className='sidebar-list-item'>
-            <a href='/admin/Dashboard'>
+            <Link to='/admin/dashboard'>
               <BsGrid1X2Fill className='icon'/> Dashboard
-            </a>
+            </Link>
           </li>
 
           <li className='sidebar-list-item'>
-            <a href='/admin/Products'>
+            <Link to='/admin/products'>
               <BsFillArchiveFill className='icon'/> Products
-            </a>
+            </Link>
           </li>
 
           <li className='sidebar-list-item'>
-            <a href='/admin/Users'>
+            <Link to='/admin/users'>
               <BsPeopleFill className='icon'/> Users
-            </a>
+            </Link>
           </li>
 
           <li className='sidebar-list-item'>
-            <a href='/admin/Inventories'>
+            <Link to='/admin/inventories'>
               <BsListCheck className='icon'/> Inventories
-            </a>
+            </Link>
           </li>
 
           <li className='sidebar-list-item'>
-            <a href='/admin/Orders'>
+            <Link to='/admin/orders'>
               <BsFillBellFill className='icon'/> Orders
-            </a>
+            </Link>
           </li>
 
           <li className='sidebar-list-item'>
-            <a href='/admin/Settings'>
+            <Link to='/admin/settings'>
               <BsFillGearFill className='icon'/> Settings
-            </a>
+            </Link>
           </li>
         </ul>
     </aside>

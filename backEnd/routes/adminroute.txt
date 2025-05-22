@@ -1,0 +1,58 @@
+import express from 'express'
+import Admin from "../models/adminModel.js";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import {
+  getAdmin,
+  createAdmin,
+  updateAdmin,
+  deleteAdmin,
+} from "../controllers/adminController.js";
+
+const route = express.Router();
+
+// JWT middleware
+const authenticateToken = (req, res, next) => {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
+
+  if (!token) return res.status(401).send("Unauthorized");
+
+  jwt.verify(token, process.env.SECRETKEY, (err, user) => {
+    if (err) return res.status(403).send("Forbidden");
+    req.user = user;
+    next();
+  });
+};
+
+//public url
+route.post("/register", createAdmin);
+
+route.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const admin = await Admin.findOne({ email });
+    if (!admin) return res.status(401).json({ message: "Invalid credentials" });
+
+    // If passwords are hashed
+    const isMatch = await bcrypt.compare(password, admin.password);
+    if (!isMatch) return res.status(401).json({ message: "Invalid credentials" });
+
+    const token = jwt.sign({ id: admin._id, email: admin.email }, process.env.SECRETKEY, {
+      expiresIn: "1h",
+    });
+    return res.json({ token });
+
+  } catch (err) {
+    return res.status(500).json({ message: "Server error", error: err.message });
+  }
+});
+
+
+// Apply middleware to protected routes
+route.get("/", authenticateToken, getAdmin);
+route.put("/:id", authenticateToken, updateAdmin);
+route.delete("/:id", authenticateToken, deleteAdmin);
+
+export default route;

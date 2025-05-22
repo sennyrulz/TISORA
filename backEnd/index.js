@@ -1,37 +1,45 @@
-const express = require("express")
+import express from "express";
 import bodyParser from "body-parser";
 import dotenv from "dotenv";
 import connectDB from "../backEnd/connection/database.js";
 import allRoutes from "../backEnd/routes/allRoute.js";
 import adminRoutes from "../backEnd/routes/adminRoute.js";
-
-const PORT = process.env.PORT || 5173;
-
 import fileUpload from 'express-fileupload';
-
-app.use(fileUpload({
-  useTempFiles: true,
-}));
-
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 dotenv.config();
-connectDB();
-const app = express();
-app.use(express.json)
 
+const app = express();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+connectDB();
+
+app.use(fileUpload({ useTempFiles: true }));
+
+app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-// Route
-app.use("/api", allRoutes);
+app.use("/api/users", allRoutes);
 app.use("/admin", adminRoutes);
 
 app.use((err, req, res, next) => {
-    console.log(err.stack);
-    res.status(500).send("Something went wrong");
+  console.error(err.stack);
+  res.status(500).send("Something went wrong");
 });
 
+// Serve React static files for admin frontend
+app.use(express.static(path.join(__dirname, '../../admin-frontend/build')));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../../admin-frontend/build', 'index.html'));
+});
+
+const PORT = process.env.PORT || 5173;
 
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });

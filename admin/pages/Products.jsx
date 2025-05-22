@@ -1,58 +1,11 @@
-import mongoose from "mongoose";
+import React from 'react'
 
-const productSchema = new mongoose.Schema(
-  {
-    productName: { 
-        type: String, 
-        required: true 
-    },
-    price: { 
-        type: Number, 
-        required: true 
-    },
-    desc: { 
-        type: String, 
-        required: true 
-    },
-    userId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-    },
-    category: {
-      type: String,
-      enum: ["new", "discount", "used"],
-      default: "new",
-    },
-    pictures: {
-      type: [
-        {
-          url: { 
-            type: String, 
-            required: true 
-        },
-          size: { 
-            type: Number, 
-            required: true 
-        },
-          publicId: { 
-            type: String, 
-            required: true 
-        },
-        },
-      ],
-      validate: {
-        validator: function (pics) {
-          if (pics.length > 2) return false;
-          return pics.every((pic) => pic.size <= 10 * 1024 * 1024); // 10MB
-        },
-        message:
-          "A product can have a maximum of 2 images, and each must not exceed 10MB.",
-      },
-    },
-  },
-  { timestamps: true }
-);
+const Products = () => {
+  return (
+    <div>
+      <h1>Products</h1>
+    </div>
+  )
+}
 
-const Product = mongoose.model("Product", productSchema);
-
-export default Product;
+export default Products

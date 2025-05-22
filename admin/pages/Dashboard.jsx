@@ -1,11 +1,16 @@
 import React from 'react'
+import Header from '../components/header'
+import Sidebar from '../components/Sidebar'
+import Home from '../components/Home'
 
-const Dashboard = () => {
-  return (
-    <div>
-      
-    </div>
-  )
+function Dashboard() {
+ return (
+  <div>
+    <Header />
+    <Sidebar />
+    <Home />
+  </div>
+ )
 }
 
-export default Dashboard
+export default Dashboard;

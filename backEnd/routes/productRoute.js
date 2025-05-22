@@ -11,25 +11,25 @@ import {
 const route = express.Router();
 
 // GET all products
-route.get("/admin/getProducts", 
+route.get("/admin/products", 
     authenticateToken, 
     authorizeAdmin, 
     getProducts);
 
 // CREATE new product
-route.post("/admin/createProducts", 
+route.post("/admin/products", 
     authenticateToken, 
     authorizeAdmin, 
     createProducts);
 
 // UPDATE a product
-route.put("/admin/updateProducts", 
+route.put("/admin/products", 
     authenticateToken, 
     authorizeAdmin, 
     updateProducts);
 
 // DELETE a product
-route.delete("/admin/Products", 
+route.delete("/admin/products", 
     authenticateToken, 
     authorizeAdmin, 
     deleteProducts);

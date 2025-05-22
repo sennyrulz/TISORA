@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter as Routes, Route, Link } from "react-router-dom";
 import Nav from "./components/Nav";
 import NewIn from "./pages/NewIn";
 import Shop from "./pages/Shop";
@@ -29,6 +29,7 @@ const publicId = fallbackPublicId;
 const mainImage = cld.image(publicId);
 
 function App() {
+
   const featuredProducts = productsData.slice(0, 5);
   const [cart, setCart] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -51,7 +52,6 @@ function App() {
     console.log("Cart updated:", cart);
     setShowModal(false);
   };
-  
 
   return (
     <>
