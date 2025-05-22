@@ -1,8 +1,12 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import User from '../models/userModel.js';
-import jwt from "jsonwebtoken";
 import express from 'express';
+import {
+  getUser,
+  updateUser,
+  deleteUser,
+} from "../controllers/userController.js";
 
 // Register User
 export const registerUser = async (req, res) => {
@@ -59,17 +63,7 @@ export const authenticateUserToken = (req, res, next) => {
   });
 };
 
-import {
-  getUser,
-  updateUser,
-  deleteUser,
-} from "../controllers/userController.js";
-import {
-  registerUser,
-  loginUser
-} from "../controllers/authController.js";
 
-import { authenticateUserToken } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 

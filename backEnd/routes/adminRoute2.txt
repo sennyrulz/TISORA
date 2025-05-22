@@ -1,23 +1,23 @@
 import { Routes, Route } from "react-router-dom";
 import { AdminLayout } from "../layouts/AdminLayouts";
-import ProtectedRoute from "../../../admin/routes/ProtectedRoute";
+import ProtectedRoute from "./ProtectedRoute";
 import AdminAuthPage from "../../../admin/pages/AdminAuthPage";
-import Dashboard from "../../../admin/pages/Dashboard";
-import Users from "../../../admin/pages/Users";
-import Products from "../../../admin/pages/Products";
-import Orders from "../../../admin/pages/Orders";
-import Inventories from "../../../admin/pages/Inventories";
-import Settings from "../../../admin/pages/Settings";
+import Dashboard from "../../admin/pages/Dashboard";
+import Users from "../../admin/pages/Users";
+import Products from "../../admin/pages/Products";
+import Orders from "../../admin/pages/Orders";
+import Inventories from "../../admin/pages/Inventories";
+import Settings from "../../admin/pages/Settings";
 
 const AdminRoutes = () => {
   return (
     <Routes>
       {/* Public route for authentication */}
-      <Route path="/admin/auth" element={<AdminAuthPage />} />
+      <Route path="/" element={<AdminAuthPage />} />
 
       {/* Protected admin routes */}
       <Route 
-        path="/admin" 
+        path="/" 
         element={
           <ProtectedRoute>
             <AdminLayout />

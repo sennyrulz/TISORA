@@ -12,8 +12,8 @@ dotenv.config();
 
 const app = express();
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// const __filename = fileURLToPath(import.meta.url);
+// const __dirname = path.dirname(__filename);
 
 connectDB();
 
@@ -23,7 +23,7 @@ app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.use("/api/users", allRoutes);
+app.use("/", allRoutes);
 app.use("/admin", adminRoutes);
 
 app.use((err, req, res, next) => {
@@ -31,12 +31,12 @@ app.use((err, req, res, next) => {
   res.status(500).send("Something went wrong");
 });
 
-// Serve React static files for admin frontend
-app.use(express.static(path.join(__dirname, '../../admin-frontend/build')));
+// // Serve React static files for admin frontend
+// app.use(express.static(path.join(__dirname, '../../admin-frontend/build')));
 
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../../admin-frontend/build', 'index.html'));
-});
+// app.get('*', (req, res) => {
+//   res.sendFile(path.join(__dirname, '../../admin-frontend/build', 'index.html'));
+// });
 
 const PORT = process.env.PORT || 5173;
 

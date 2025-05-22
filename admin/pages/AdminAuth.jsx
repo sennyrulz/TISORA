@@ -25,7 +25,7 @@ function AdminAuth() {
   // Automatically navigate to dashboard when authenticated
   useEffect(() => {
     if (isAuthenticated) {
-      navigate("/admin/dashboard");
+      navigate("/dashboard");
     }
   }, [isAuthenticated, navigate]);
 
@@ -40,7 +40,7 @@ function AdminAuth() {
     e.preventDefault();
     try {
       const endpoint = isLogin ? "login" : "register";
-      const url = `http://localhost:5001/api/admin/${endpoint}`; 
+      const url = `http://localhost:5001/admin/${endpoint}`; 
 
       const payload = isLogin
         ? {
