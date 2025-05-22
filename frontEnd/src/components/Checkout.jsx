@@ -350,7 +350,7 @@ const Checkout = () => {
             </p>
 
             <div className="mb-5">
-              <div className="border rounded-top px-3 border-primary" style={{ backgroundColor: "#F0F5FF", padding: "14px 0 14px 0" }}>
+              <div className="border rounded-top px-3 border-primary" style={{ backgroundColor: "#F0F5FF", padding: "15px 0 15px 0" }}>
                 <div className="d-flex justify-content-between align-items-center">
                   <p className="mb-0 small">Paystack</p>
                   <div className="d-flex gap-2">
