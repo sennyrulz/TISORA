@@ -11,7 +11,6 @@ function App() {
   
   return (
     <div className='grid-container'>
-      <BrowserRouter>
         <Routes>
           {/* Admin Login Route */}
             <Route path="/" element={<AdminAuth />} />
@@ -22,7 +21,8 @@ function App() {
             element={isAuthenticated ? <Dashboard /> : <Navigate to="/" replace />
           }/>
         </Routes>
-      </BrowserRouter> 
+      console.log("App is running")
+
     </div>
   
 )}

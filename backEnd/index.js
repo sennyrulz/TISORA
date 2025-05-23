@@ -1,9 +1,9 @@
 import express from "express";
 import bodyParser from "body-parser";
 import dotenv from "dotenv";
-import connectDB from "../backEnd/connection/database.js";
-import allRoutes from "../backEnd/routes/allRoute.js";
-import adminRoutes from "../backEnd/routes/adminRoute.js";
+import connectDB from "./connection/database.js";
+import allRoutes from "./routes/allRoute.js";
+import adminRoutes from "./routes/adminRoute.js";
 import fileUpload from 'express-fileupload';
 import path from 'path';
 import { fileURLToPath } from 'url';
