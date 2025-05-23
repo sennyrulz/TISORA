@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import Nav from "./components/Nav";
 import NewIn from "./pages/NewIn";
 import Shop from "./pages/Shop";
@@ -54,88 +55,90 @@ function App() {
   };
 
   return (
-    <>
-      <Nav />
-      <Routes>
-        <Route path="/"
-          element={
-            <>
-              <Logo />
-              <HeroBanner />
-              <Container>
-                <p className="text-end mb-3">
-                    <Link to="/shop">View All</Link>
-                  </p>
-                <div className="cardContainer px-4" style={{ margin: "-60px 0 0 0" }}>
-                  <h2 className="text-start px-4 mb-4">Featured Products</h2>
-                </div>
-               
-                {/* Product Scroll */}
-                <div className="cardScroll d-flex px-5 gap-5 mb-5 overflow-auto" style={{ whiteSpace: "nowrap" }}>
-                  
-                 {productsData.slice(1, 7).map((product) => (
-                  <div 
-                    key={product.id} 
-                      style={{ flex: "0 0 auto", scrollSnapAlign: "start"}}>
-                      <ProductCard
-                        id={product.id}
-                        cldImg={product.publicId}
-                        name={product.name}
-                        price={product.price}
-                        addToCart={addToCart} 
-                        onSelect={(product) => {
-                          setSelectedProduct(product);
-                          setShowModal(true);
-                        }}/>
+  
+      <>
+        <Nav />
+        <Routes>
+          <Route path="/"
+            element={
+              <>
+                <Logo />
+                <HeroBanner />
+                <Container>
+                  <p className="text-end mb-3">
+                      <button onClick={() => navigate("/shop")}>View All</button>
+                    </p>
+                  <div className="cardContainer px-4" style={{ margin: "-60px 0 0 0" }}>
+                    <h2 className="text-start px-4 mb-4">Featured Products</h2>
                   </div>
-                  ))}
-                </div> 
-              </Container>
-              <BrandTopic />
-            </>
-          }/>
-        <Route path="/newIn" element={<NewIn />} />
-        <Route path="/shop" element={<Shop />} />
-        <Route path="/discover" element={<Discover />} />
-        <Route path="/search" element={<Search />} />
-        <Route path="/authPage" element={<AuthPage />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/checkout" element={<Checkout />} />
-      </Routes>
-      <NewsLetterBox />
-      <Footer />
+                
+                  {/* Product Scroll */}
+                  <div className="cardScroll d-flex px-5 gap-5 mb-5 overflow-auto" style={{ whiteSpace: "nowrap" }}>
+                    
+                  {productsData.slice(1, 7).map((product) => (
+                    <div 
+                      key={product.id} 
+                        style={{ flex: "0 0 auto", scrollSnapAlign: "start"}}>
+                        <ProductCard
+                          id={product.id}
+                          cldImg={product.publicId}
+                          name={product.name}
+                          price={product.price}
+                          addToCart={addToCart} 
+                          onSelect={(product) => {
+                            setSelectedProduct(product);
+                            setShowModal(true);
+                          }}/>
+                    </div>
+                    ))}
+                  </div> 
+                </Container>
+                <BrandTopic />
+              </>
+            }/>
+          <Route path="/newIn" element={<NewIn />} />
+          <Route path="/shop" element={<Shop />} />
+          <Route path="/discover" element={<Discover />} />
+          <Route path="/search" element={<Search />} />
+          <Route path="/authPage" element={<AuthPage />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/checkout" element={<Checkout />} />
+        </Routes>
+        <NewsLetterBox />
+        <Footer />
 
-      {/* Modal */}
-      <Modal show={showModal} onHide={() => setShowModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>{selectedProduct?.name}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {selectedProduct && (
-            <>
-              <img
-                src={selectedProduct.Img}
-                alt={selectedProduct.name}
-                className="w-100 mb-3"
-                style={{ objectFit: "cover", maxHeight: "300px" }}
-              />
-              <p>Price: ₦{selectedProduct.price}</p>
-            </>
-          )}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button
-            variant="btn btn-success bg-black text-white p-2 px-5 border w-100 hover:bg-white hover:text-black transition-all duration-300"
-            onClick={() => {
-              if (selectedProduct) {
-                addToCart(selectedProduct);
-              }
-            }}>
-            Add to Cart
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    </>
+        {/* Modal */}
+        <Modal show={showModal} onHide={() => setShowModal(false)}>
+          <Modal.Header closeButton>
+            <Modal.Title>{selectedProduct?.name}</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            {selectedProduct && (
+              <>
+                <img
+                  src={selectedProduct.Img}
+                  alt={selectedProduct.name}
+                  className="w-100 mb-3"
+                  style={{ objectFit: "cover", maxHeight: "300px" }}
+                />
+                <p>Price: ₦{selectedProduct.price}</p>
+              </>
+            )}
+          </Modal.Body>
+          <Modal.Footer>
+            <Button
+              variant="btn btn-success bg-black text-white p-2 px-5 border w-100 hover:bg-white hover:text-black transition-all duration-300"
+              onClick={() => {
+                if (selectedProduct) {
+                  addToCart(selectedProduct);
+                }
+              }}>
+              Add to Cart
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      </>
+  
   );
 }
 

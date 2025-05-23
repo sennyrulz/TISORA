@@ -40,8 +40,7 @@ function AdminAuth() {
     e.preventDefault();
     try {
       const endpoint = isLogin ? "login" : "register";
-      const url = `http://localhost:5001/admin/${endpoint}`; 
-
+      const url = `${import.meta.env.VITE_BACKEND_URL}/admin/${endpoint}`;
       const payload = isLogin
         ? {
             email: formData.email,
