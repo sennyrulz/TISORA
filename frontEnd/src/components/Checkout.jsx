@@ -7,6 +7,7 @@ import {
   Button,
   Image,
   Card,
+  Collapse,
 } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
@@ -350,7 +351,10 @@ const Checkout = () => {
             </p>
 
             <div className="mb-5">
-              <div className="border rounded-top px-3 border-primary" style={{ backgroundColor: "#F0F5FF", padding: "15px 0 15px 0" }}>
+              <div
+                className="border rounded-top px-3 border-primary"
+                style={{ backgroundColor: "#F0F5FF", padding: "15px 0 15px 0" }}
+              >
                 <div className="d-flex justify-content-between align-items-center">
                   <p className="mb-0 small">Paystack</p>
                   <div className="d-flex gap-2">
@@ -358,7 +362,8 @@ const Checkout = () => {
                       (img, index) => (
                         <span
                           key={index}
-                          className="d-inline-flex align-items-center justify-content-center">
+                          className="d-inline-flex align-items-center justify-content-center"
+                        >
                           <img src={img} alt={`Card ${index}`} height="23" />
                         </span>
                       )
@@ -368,7 +373,9 @@ const Checkout = () => {
               </div>
 
               <div
-                className="border rounded-bottom pb-3 pt-2 px-3" style={{ backgroundColor: "#F4F4F4" }}>
+                className="border rounded-bottom pb-3 pt-2 px-3"
+                style={{ backgroundColor: "#F4F4F4" }}
+              >
                 <div className="text-center">
                   <img src={image5} alt="Paystack Illustration" width={80} />
                   <p className="mt-2 mb-0 small">
@@ -379,7 +386,7 @@ const Checkout = () => {
               </div>
             </div>
 
-            <div className="mb-5">
+            {/* <div className="mb-5">
               <div className="border rounded-top p-3 border-primary ">
                 <div className="d-flex justify-content-between">
                   <p className="mb-0 small">Same as shipping address</p>
@@ -392,6 +399,169 @@ const Checkout = () => {
                   </p>
                 </div>
               </div>
+            </div> */}
+
+            <div className="mb-5">
+              <div className="border rounded-top p-3 border-primary">
+                <Form.Group className="text-start small">
+                  <Form.Check
+                    type="radio"
+                    label="Same as shipping address"
+                    name="billingSameAsShipping"
+                    checked={formData.billingSameAsShipping === true}
+                    onChange={(e) =>
+                      setFormData({ ...formData, billingSameAsShipping: true })
+                    }
+                  />
+                </Form.Group>
+              </div>
+              <div className="border rounded-bottom p-3">
+                <Form.Group className="text-start small">
+                  <Form.Check
+                    type="radio"
+                    label="Use a different billing address"
+                    name="billingSameAsShipping"
+                    checked={formData.billingSameAsShipping === false}
+                    onChange={(e) =>
+                      setFormData({ ...formData, billingSameAsShipping: false })
+                    }
+                  />
+                </Form.Group>
+              </div>
+              {!formData.billingSameAsShipping && (
+                <div className="border rounded p-3 mb-4 bg-light">
+                  <Form.Group className="mb-3" controlId="country">
+                    <Form.Select
+                      name="country"
+                      value={formData.country}
+                      onChange={handleChange}
+                      isInvalid={!!errors.country}
+                    >
+                      <option value="" disabled>
+                        Country/Region
+                      </option>
+                      <option value="NG">Nigeria</option>
+                      <option value="USA">USA</option>
+                      <option value="UK">UK</option>
+                      <option value="CA">Canada</option>
+                    </Form.Select>
+                    <Form.Control.Feedback type="invalid">
+                      {errors.country}
+                    </Form.Control.Feedback>
+                  </Form.Group>
+
+                  <Row className="mb-3">
+                    <Col>
+                      <Form.Control
+                        type="text"
+                        placeholder="First Name"
+                        name="firstName"
+                        value={formData.firstName}
+                        onChange={handleChange}
+                        isInvalid={!!errors.firstName}
+                      />
+                      <Form.Control.Feedback type="invalid">
+                        {errors.firstName}
+                      </Form.Control.Feedback>
+                    </Col>
+                    <Col>
+                      <Form.Control
+                        type="text"
+                        placeholder="Last Name"
+                        name="lastName"
+                        value={formData.lastName}
+                        onChange={handleChange}
+                        isInvalid={!!errors.lastName}
+                      />
+                      <Form.Control.Feedback type="invalid">
+                        {errors.lastName}
+                      </Form.Control.Feedback>
+                    </Col>
+                  </Row>
+
+                  <Form.Group className="mb-3" controlId="address">
+                    <Form.Control
+                      type="text"
+                      placeholder="Address"
+                      name="address"
+                      value={formData.address}
+                      onChange={handleChange}
+                      isInvalid={!!errors.address}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      {errors.address}
+                    </Form.Control.Feedback>
+                  </Form.Group>
+
+                  <Form.Group className="mb-3" controlId="apartment">
+                    <Form.Control
+                      type="text"
+                      placeholder="Apartment, suite, etc. (optional)"
+                      name="apartment"
+                      value={formData.apartment}
+                      onChange={handleChange}
+                    />
+                  </Form.Group>
+
+                  <Row className="mb-3">
+                    <Col>
+                      <Form.Control
+                        type="text"
+                        placeholder="City"
+                        name="city"
+                        value={formData.city}
+                        onChange={handleChange}
+                        isInvalid={!!errors.city}
+                      />
+                      <Form.Control.Feedback type="invalid">
+                        {errors.city}
+                      </Form.Control.Feedback>
+                    </Col>
+                    <Col>
+                      <Form.Select
+                        name="state"
+                        value={formData.state}
+                        onChange={handleChange}
+                        isInvalid={!!errors.state}
+                      >
+                        <option value="" disabled>
+                          State
+                        </option>
+                        <option value="Lagos">Lagos</option>
+                        <option value="Kano">Kano</option>
+                        <option value="Abuja">Abuja</option>
+                        <option value="Imo">Imo</option>
+                      </Form.Select>
+                      <Form.Control.Feedback type="invalid">
+                        {errors.state}
+                      </Form.Control.Feedback>
+                    </Col>
+                    <Col>
+                      <Form.Control
+                        type="text"
+                        placeholder="Postal Code (optional)"
+                        name="postalCode"
+                        value={formData.postalCode}
+                        onChange={handleChange}
+                      />
+                    </Col>
+                  </Row>
+
+                  <Form.Group className="mb-4" controlId="phone">
+                    <Form.Control
+                      type="text"
+                      placeholder="Phone"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleChange}
+                      isInvalid={!!errors.phone}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      {errors.phone}
+                    </Form.Control.Feedback>
+                  </Form.Group>
+                </div>
+              )}
             </div>
 
             <div className="d-none d-md-block">

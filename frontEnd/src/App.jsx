@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { BrowserRouter as Routes, Route, Link } from "react-router-dom";
+import { Routes, Route, Link } from "react-router-dom";
 import Nav from "./components/Nav";
 import NewIn from "./pages/NewIn";
 import Shop from "./pages/Shop";
