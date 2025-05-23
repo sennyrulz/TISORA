@@ -9,8 +9,8 @@ import mongoose from 'mongoose'
 const app = express();
 const router = express.Router();
 
-mongoose.connect("mongodb+srv://tisora:1110000@cluster0.e3iqsfd.mongodb.net/cluster0?retryWrites=true&w=majority&appName=Cluster0")
-const PORT = process.env.PORT || 5173;
+mongoose.connect(process.env.MONGODBURL);
+const PORT = process.env.PORT || 5000;
 
 //middleware
 app.use(express.json());

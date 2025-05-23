@@ -7,6 +7,7 @@ import adminRoutes from "../backEnd/routes/adminRoute.js";
 import fileUpload from 'express-fileupload';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import cors from "cors";
 
 dotenv.config();
 
@@ -23,6 +24,11 @@ app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
+app.use(cors({
+  origin: ["http://localhost:5173", "http://localhost:5174"],
+  credentials: true
+}));
+
 app.use("/", allRoutes);
 app.use("/admin", adminRoutes);
 
@@ -38,7 +44,7 @@ app.use((err, req, res, next) => {
 //   res.sendFile(path.join(__dirname, '../../admin-frontend/build', 'index.html'));
 // });
 
-const PORT = process.env.PORT || 5173;
+const PORT = process.env.PORT || 5001;
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
