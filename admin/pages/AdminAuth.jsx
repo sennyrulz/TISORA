@@ -97,8 +97,7 @@ function AdminAuth() {
                   onClick={() => {
                     localStorage.removeItem("adminToken");
                     dispatch(logout());
-                  }}
-                >
+                  }}>
                   Logout
                 </button>
               </div>
@@ -115,9 +114,8 @@ function AdminAuth() {
                         name="fullName"
                         className="form-control"
                         value={formData.fullName}
-                        onChange={handleChange}
-                        required
-                      />
+                        onChange={handleChange} 
+                        placeholder="full name"/>
                     </div>
 
                     <div className="mb-3">
@@ -129,7 +127,7 @@ function AdminAuth() {
                         value={formData.phone}
                         onChange={handleChange}
                         required
-                      />
+                        placeholder="Phone Number"/>
                     </div>
 
                     <div className="mb-3">
@@ -141,6 +139,7 @@ function AdminAuth() {
                         value={formData.address}
                         onChange={handleChange}
                         required
+                        placeholder="Address"
                       />
                     </div>
                   </>
@@ -155,6 +154,7 @@ function AdminAuth() {
                     value={formData.email}
                     onChange={handleChange}
                     required
+                    placeholder="Email"
                   />
                 </div>
 
@@ -167,6 +167,7 @@ function AdminAuth() {
                     value={formData.password}
                     onChange={handleChange}
                     required
+                    placeholder="Password"
                   />
                 </div>
 

@@ -3,6 +3,7 @@ import express from "express"
 import fileUpload from 'express-fileupload';
 import  adminRoute from "../../backEnd/routes/adminRoute.js";
 import mongoose from 'mongoose'
+import 'bootstrap/dist/css/bootstrap.min.css';
 // import  productRoute from "./routes/productRoute.js";
 
 
