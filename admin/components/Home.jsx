@@ -1,88 +1,10 @@
 import React from 'react'
-import {BsCart3, BsGrid1X2Fill, BsFillArchiveFill, BsGrid3X3GapFill,
-  BsPeopleFill, BsListCheck, BsMenuButtonWideFill, BsFillGearFill,
-  BsFillBellFill
-} from 'react-icons/bs'
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, 
-    Legend, ResponsiveContainer } from 'recharts';
+import {BsCart3, BsGrid1X2Fill, BsFillArchiveFill, BsGrid3X3GapFill, BsPeopleFill, BsListCheck, BsMenuButtonWideFill, BsFillGearFill, BsFillBellFill} from 'react-icons/bs'
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import DataTable from "../components/DataTable"
 
 
 const Home = () => {
-
-    const data = [
-  {
-    date: '2025-01',
-    uv: 4000,
-    pv: 2400,
-    amt: 2400,
-  },
-  {
-    date: '2025-02',
-    uv: 3000,
-    pv: 1398,
-    amt: 2210,
-  },
-  {
-    date: '2025-03',
-    uv: 2025,
-    pv: 9800,
-    amt: 2290,
-  },
-  {
-    date: '2025-04',
-    uv: 2780,
-    pv: 3908,
-    amt: 2025,
-  },
-  {
-    date: '2025-05',
-    uv: 1890,
-    pv: 4800,
-    amt: 2181,
-  },
-  {
-    date: '2025-06',
-    uv: 2390,
-    pv: 3800,
-    amt: 2500,
-  },
-  {
-    date: '2025-07',
-    uv: 3490,
-    pv: 4300,
-    amt: 2100,
-  },
-  {
-    date: '2025-08',
-    uv: 4000,
-    pv: 2400,
-    amt: 2400,
-  },
-  {
-    date: '2025-09',
-    uv: 3000,
-    pv: 1398,
-    amt: 2210,
-  },
-  {
-    date: '2025-10',
-    uv: 2025,
-    pv: 9800,
-    amt: 2290,
-  },
-  {
-    date: '2025-11',
-    uv: 2780,
-    pv: 3908,
-    amt: 2025,
-  },
-  {
-    date: '2025-12',
-    uv: 1890,
-    pv: 4800,
-    amt: 2181,
-  },
-];
 
 return (
     <main className='main-container'>
@@ -132,8 +54,9 @@ return (
             </div>
 
             <div className='charts'>
-                <ResponsiveContainer width="100%" height="100%">
-                    <BarChart
+              <ResponsiveContainer width="100%" height="100%">
+                <DataTable>
+                  <BarChart
                     width={500}
                     height={300}
                     data={data}
@@ -159,8 +82,9 @@ return (
                     <Legend />
                     <Bar dataKey="pv" fill="#8884d8" />
                     <Bar dataKey="uv" fill="#82ca9d" />
-                    </BarChart>
-                </ResponsiveContainer>
+                  </BarChart>
+                </DataTable>
+              </ResponsiveContainer>
             </div>
         </div>
     </main>

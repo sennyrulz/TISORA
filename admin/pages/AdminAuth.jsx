@@ -4,12 +4,17 @@ import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { signUp, login, logout } from "../src/redux/authSlice";
 import { Container, Row, Col } from "react-bootstrap";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Dashboard from "./Dashboard";
 
 function AdminAuth() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+  const [loading, setLoading] = useState(false);
+  
+  
+ 
   const user = useSelector((state) => state.user.user);
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
 
@@ -38,6 +43,8 @@ function AdminAuth() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+      setLoading(true);
+
     try {
       const endpoint = isLogin ? "login" : "register";
       const url = `${import.meta.env.VITE_BACKEND_URL}/admin/${endpoint}`;
@@ -74,7 +81,9 @@ function AdminAuth() {
       );
     } catch (error) {
       console.error("Auth error:", error);
-      alert("Login or Signup failed: " + error.response?.data?.message || error.message);
+      toast.error("Login or Signup failed: " + error.response?.data?.message || error.message);
+    } finally {
+        setLoading(false)
     }
   };
 
@@ -115,13 +124,13 @@ function AdminAuth() {
                         className="form-control"
                         value={formData.fullName}
                         onChange={handleChange} 
-                        placeholder="full name"/>
+                        placeholder="full Name"/>
                     </div>
 
                     <div className="mb-3">
                       <label>Phone</label>
                       <input
-                        type="text"
+                        type="number"
                         name="phone"
                         className="form-control"
                         value={formData.phone}
@@ -177,15 +186,17 @@ function AdminAuth() {
                     backgroundColor: "#91443f",
                     border: "none",
                     width: "100%",
-                  }}
+                  }} 
                   className="btn btn-primary"
+                  disabled={loading}
                 >
-                  {isLogin ? "Login" : "Sign Up"}
+                  {loading ? "loading..." : isLogin ? "Login" : "Sign Up"}
                 </button>
               </form>
 
               <p className="mt-4">
                 {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
+
                 <button className="btn btn-link p-0" onClick={() => setIsLogin(!isLogin)}>
                   {isLogin ? "Sign Up" : "Login"}
                 </button>
@@ -194,6 +205,12 @@ function AdminAuth() {
           )}
         </Col>
       </Row>
+
+      <ToastContainer
+        position="top-right"
+        autoClose={2000}
+        hideProgressBar={true}
+        closeOnClick/>
     </Container>
   );
 }

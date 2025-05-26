@@ -6,11 +6,12 @@ import { faSearch, faUser, faShoppingCart } from '@fortawesome/free-solid-svg-ic
 import { Menu, X } from 'lucide-react';
 import logo from '../assets/Tisora.svg';
 
-const NavLinks = () => (
-  <div className="nav-links1 py-2 d-flex justify-center">
-    <NavLink onClick={()=>setVisible(false)} to="/newIn" style={{textDecoration:'none', color:'white'}}>NEW IN</NavLink>
-    <NavLink onClick={()=>setVisible(false)} to="/shop" style={{textDecoration:'none', color:'white'}}>SHOP</NavLink>
-    <NavLink onClick={()=>setVisible(false)} to="/discover" style={{textDecoration:'none', color:'white'}}>DISCOVER</NavLink>
+const NavLinks = ({ onClick }) => (
+  <div className="nav-links1 py-10 pb-4 d-flex justify-center">
+    <NavLink onClick={onClick} to="/newIn" style={{ textDecoration: 'none', color: 'white' }}>NEW IN</NavLink>
+    <NavLink onClick={onClick} to="/shop" style={{ textDecoration: 'none', color: 'white' }}>SHOP</NavLink>
+    <NavLink onClick={onClick} to="/discover" style={{ textDecoration: 'none', color: 'white' }}>DISCOVER</NavLink>
+    <NavLink onClick={onClick} to="/AuthPage" style={{ textDecoration: 'none', color: 'white' }}>SIGN IN</NavLink>
   </div>
 );
 
@@ -19,23 +20,23 @@ const Nav = () => {
 
   return (
     <div className="container-fluid nav-container px-5">
-      <nav className="row justify-content-between align-items-center">
-        
+      <div className="row justify-content-between align-items-center">
+
         {/* Logo */}
         <div className="col-lg-2 col-6 d-flex justify-content-start">
-          <Link to="/" className="logo-link">
+          <Link to="/">
             <img src={logo} alt="Logo" className="logo" />
           </Link>
         </div>
 
         {/* Desktop Navigation Links */}
         <div className="col-lg-6 d-none d-lg-flex justify-content-center">
-          <NavLinks />
+          <NavLinks onClick={() => setIsOpen(false)} />
         </div>
 
         {/* Right-side Icons & Mobile Menu */}
         <div className="col-lg-4 col-6 d-flex justify-content-end align-items-center">
-          
+
           {/* Icons */}
           <div className="nav-icons d-flex gap-10">
             <NavLink to="/search">
@@ -54,13 +55,12 @@ const Nav = () => {
             {isOpen ? <X /> : <Menu />}
           </Button>
         </div>
-      </nav>
+      </div>
 
       {/* Mobile Navigation Menu */}
       {isOpen && (
         <div className="mobile-menu d-lg-none">
-          <NavLinks />
-          <nav-icons />
+          <NavLinks onClick={() => setIsOpen(false)} />
         </div>
       )}
     </div>

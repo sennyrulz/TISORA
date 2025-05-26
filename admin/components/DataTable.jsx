@@ -1,11 +1,77 @@
-import React from 'react'
 
-const DataTable = () => {
-  return (
-    <div>
-      
-    </div>
-  )
-}
+  const data = [
+  {
+    date: '2025-01',
+    uv: 4000,
+    pv: 2400,
+    amt: 2400,
+  },
+  {
+    date: '2025-02',
+    uv: 3000,
+    pv: 1398,
+    amt: 2210,
+  },
+  {
+    date: '2025-03',
+    uv: 2025,
+    pv: 9800,
+    amt: 2290,
+  },
+  {
+    date: '2025-04',
+    uv: 2780,
+    pv: 3908,
+    amt: 2025,
+  },
+  {
+    date: '2025-05',
+    uv: 1890,
+    pv: 4800,
+    amt: 2181,
+  },
+  {
+    date: '2025-06',
+    uv: 2390,
+    pv: 3800,
+    amt: 2500,
+  },
+  {
+    date: '2025-07',
+    uv: 3490,
+    pv: 4300,
+    amt: 2100,
+  },
+  {
+    date: '2025-08',
+    uv: 4000,
+    pv: 2400,
+    amt: 2400,
+  },
+  {
+    date: '2025-09',
+    uv: 3000,
+    pv: 1398,
+    amt: 2210,
+  },
+  {
+    date: '2025-10',
+    uv: 2025,
+    pv: 9800,
+    amt: 2290,
+  },
+  {
+    date: '2025-11',
+    uv: 2780,
+    pv: 3908,
+    amt: 2025,
+  },
+  {
+    date: '2025-12',
+    uv: 1890,
+    pv: 4800,
+    amt: 2181,
+  },
+];
 
-export default DataTable
+export default data;
