@@ -7,14 +7,15 @@ import {
   deleteAdmin,
 } from "../controllers/adminController.js";
 
-const route = express.Router();
+const router = express.Router();
 
 //public url
-route.post("/", createAdmin);
+router.post("/AdminAuth", createAdmin);
+router.post("/AdminAuth", getAdmin);
 
 // Apply middleware to protected routes
-route.get("/", authenticateAdmin, getAdmin);
-route.put("/:id", authenticateAdmin, updateAdmin);
-route.delete("/:id", authenticateAdmin, deleteAdmin);
+router.get("/", authenticateAdmin, getAdmin);
+router.put("/:id", authenticateAdmin, updateAdmin);
+router.delete("/:id", authenticateAdmin, deleteAdmin);
 
-export default route;
+export default router;

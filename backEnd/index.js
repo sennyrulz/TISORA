@@ -2,19 +2,19 @@ import express from "express";
 import bodyParser from "body-parser";
 import dotenv from "dotenv";
 import connectDB from "./connection/database.js";
-import allRoutes from "./routes/allRoute.js";
-import adminRoutes from "./routes/adminRoute.js";
+import userRoute from "./routes/userRoute.js";
+import adminRoute from "./routes/adminRoute.js";
 import fileUpload from 'express-fileupload';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import cors from "cors";
+// import mongoose from "mongoose";
 
 dotenv.config();
-
 const app = express();
 
-// const __filename = fileURLToPath(import.meta.url);
-// const __dirname = path.dirname(__filename);
+//Create connection
+// mongoose.connect("mongodb://localhost:27017/Tisora")
 
 connectDB();
 
@@ -24,25 +24,16 @@ app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.use(cors({
-  origin: ["http://localhost:5173", "http://localhost:5174"],
-  credentials: true
-}));
+app.use(cors());
 
-app.use("/", allRoutes);
-app.use("/admin", adminRoutes);
+//creating endpoints for user and admin DB
+app.use("/users", userRoute);
+app.use("/", adminRoute);
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send("Something went wrong");
 });
-
-// // Serve React static files for admin frontend
-// app.use(express.static(path.join(__dirname, '../../admin-frontend/build')));
-
-// app.get('*', (req, res) => {
-//   res.sendFile(path.join(__dirname, '../../admin-frontend/build', 'index.html'));
-// });
 
 const PORT = process.env.PORT || 5001;
 

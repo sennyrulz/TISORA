@@ -1,12 +1,16 @@
-import React, { useState } from "react";
+import React from 'react'
+import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { signUp, login, logout } from "../redux/authSlice";
+import { toast, ToastContainer } from "react-toastify";
 import { Container, Row, Col } from "react-bootstrap";
+import axios from 'axios';
 
 function AuthPage() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.user);
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+   const [loading, setLoading] = useState(false);
 
   const [isLogin, setIsLogin] = useState(true); // Toggle between Login and Signup
   const [formData, setFormData] = useState({
@@ -24,22 +28,48 @@ function AuthPage() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (isLogin) {
-      dispatch(login({
-        name: formData.fullName || formData.email.split("@")[0],
-        email: formData.email,
-        password: formData.password,
-      }));
-    } else {
-      dispatch(signUp({
-        name: formData.fullName,
-        email: formData.email,
-        password: formData.password,
-        phone: formData.phone,
-        address: formData.address,
-      }));
+    setLoading(true);
+     try {
+      const endpoint = isLogin ? "login" : "register";
+      const url = `${import.meta.env.VITE_BACKEND_URL}/admin/${endpoint}`;
+      const payload = isLogin
+        ? {
+            email: formData.email,
+            password: formData.password,
+          }
+        : {
+            fullName: formData.fullName,
+            email: formData.email,
+            password: formData.password,
+            phone: formData.phone,
+            address: formData.address,
+          };
+
+      const response = await axios.post(url, payload);
+      const { token } = response.data;
+
+      localStorage.setItem("adminToken", token);
+
+      dispatch(
+        isLogin
+          ? login({
+              name: formData.fullName || formData.email.split("@")[0],
+              email: formData.email,
+              token,
+            })
+          : signUp({
+              name: formData.fullName,
+              email: formData.email,
+              token,
+            })
+      );
+    } catch (error) {
+      console.error("Auth error:", error);
+      toast.error("Login or Signup failed: " + error.response?.data?.message || error.message);
+    } finally {
+        setLoading(false)
     }
   };
 
@@ -67,23 +97,25 @@ function AuthPage() {
             {/*SignUp*/}
               <form onSubmit={handleSubmit}>
                 {!isLogin && (
+                <>
                   <div className="mb-3">
                     <div className="mb-3">
                       <label>Full Name</label>
                       <input type="text"
                       name="fullName"
                       className="form-control"
-                      value={formData.name}
+                      value={formData.fullName}
                       onChange={handleChange}
                       required/>
                     </div>
 
                     <div className="mb-3">
                       <label>Phone</label>
-                      <input type="number"
-                      name="number"
+                      <input 
+                      type="number"
+                      name='phone'
                       className="form-control"
-                      value={formData.number}
+                      value={formData.phone}
                       onChange={handleChange}
                       required />
                     </div>
@@ -98,6 +130,7 @@ function AuthPage() {
                         required />
                     </div>
                   </div>
+                </>
                 )}
 
                 <div className="mb-3">
@@ -125,9 +158,12 @@ function AuthPage() {
                 style={{
                   backgroundColor: '#91443f',
                   border: 'none',
-                  width: '100'
+                  width: '100p%'
                 }} 
-                  className="btn btn-primary">
+                  className="btn btn-primary"
+                   disabled={loading}
+                >
+                  {loading ? "loading..." : isLogin ? "Login" : "Sign Up"}
                   {isLogin ? "Login" : "Sign Up"}
                 </button>
               </form>
@@ -142,6 +178,11 @@ function AuthPage() {
           )}
         </Col>
       </Row>
+      <ToastContainer
+        position="top-right"
+        autoClose={2000}
+        hideProgressBar={true}
+        closeOnClick/>
     </Container>
   );
 }
