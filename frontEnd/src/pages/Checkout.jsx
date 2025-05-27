@@ -1,462 +1,696 @@
 import React, { useState } from "react";
-import { Container, Row, Col, Form, Button, Image, Badge } from "react-bootstrap";
-import image1 from "../assets/American_Express.png";
-import image2 from "../assets/Diners_Club.png";
-import image3 from "../assets/mastercard.png";
-import image4 from "../assets/Visa.png";
+import { Container, Row, Col, Form, Button, Image, Card } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import image1 from "../assets/american_express.C3z4WB9r.svg";
+import image2 from "../assets/mpesa.C3NjGMBV.svg";
+import image3 from "../assets/master.CzeoQWmc.svg";
+import image4 from "../assets/visa.sxIq5Dot.svg";
+import image5 from "../assets/web.png";
+import image6 from "../assets/ozow.BrS1cEol.svg";
 
 const Checkout = () => {
   const [formData, setFormData] = useState({
+    email: "",
+    country: "",
     firstName: "",
     lastName: "",
-    email: "",
     address: "",
-    phone: "",
+    apartment: "",
     city: "",
     state: "",
-    zip: "",
-    country: "",
-    apartment: "",
+    postalCode: "",
+    phone: "",
+    shippingMethod: "standard",
+    saveInfo: false,
+    emailOffers: false,
+    billingSameAsShipping: true,
+    cardNumber: "",
+    cardExpiry: "",
+    cardCvc: "",
+    cardName: "",
+    paymentMethod: "paystack",
   });
 
-  const [promoCode, setPromoCode] = useState("");
-  const [shippingMethod, setShippingMethod] = useState(""); 
-  const [cartItems, setCartItems] = useState([
-    { id: 1, name: "Black T-Shirt", price: 5000, quantity: 2, image: "/shirt.jpg" },
-    { id: 2, name: "Blue Jeans", price: 12000, quantity: 1, image: "/jeans.jpg" },
-    { id: 3, name: "Skirt", price: 3000, quantity: 3, image: "/skirt.jpg" },
-  ]);
+  const [errors, setErrors] = useState({});
+  const [discountCode, setDiscountCode] = useState("");
+  const [discount, setDiscount] = useState(0);
 
-  // Shipping cost management
-  const shippingOptions = {
-    standard: 1000,
-    express: 3000,
-    "one-day": 2000,
-  }
-
-  const getShippingCost = (method) => shippingOptions[method] || 0;
+  const cartItems = useSelector((state) => state.cart.cart);
+  const dispatch = useDispatch();
 
   // Calculate total dynamically
   const calculateTotal = () => {
-    return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+    const subtotal = cartItems.reduce(
+      (total, item) => total + item.price * item.quantity,
+      0
+    );
+    return subtotal - subtotal * discount;
+  };
+
+  // Calculate shipping cost
+  const getShippingCost = () => {
+    switch (formData.shippingMethod) {
+      case "standard":
+        return 3000;
+      case "express":
+        return 5000;
+      case "one-day":
+        return 7500;
+      default:
+        return 0;
+    }
   };
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value, type, checked } = e.target;
+    setFormData({
+      ...formData,
+      [name]: type === "checkbox" ? checked : value,
+    });
   };
 
-  const handleShippingChange = (e) => {
-    setShippingMethod(e.target.value);
-  };
-
-  const handlePromoCodeApply = () => {
-    const validPromoCodes = ["PromoCode1", "PromoCode2", "PromoCode3"];
-
-    if (validPromoCodes.includes(promoCode.toUpperCase())) {
-      alert("Promo code applied successfully!");
-      // Apply a 10% discount to all items
-      setCartItems((prevItems) => 
-        prevItems.map((item) => ({ 
-          ...item, 
-          price: item.price * 0.9,
-        }))
-      );
-    } else {
-      alert("Invalid promo code!");
-    }
-  }
-
-  const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent the page reload
-  
-    // You can use a condition to make sure all required fields are valid:
-    if (!isFormValid()) {
-      alert("Please fill all the required fields correctly.");
+  const handleApplyDiscount = () => {
+    if (!discountCode.trim()) {
+      toast.error("Please enter a discount code.");
       return;
     }
-  
-    // Send the data to an API
-    try {
-      const response = await fetch("/api/order", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          formData,
-          promoCode,
-          shippingMethod,
-          cartItems,
-        }),
-      });
-  
-      if (response.ok) {
-        const result = await response.json();
-        console.log("Order successfully placed", result);
-        alert("Order placed successfully!");
-        // Redirect to a confirmation page or show a confirmation message
-      } else {
-        console.log("Error placing order");
-        alert("There was an error placing your order. Please try again.");
-      }
-    } catch (error) {
-      console.log("API Error:", error);
-      alert("Error connecting to the server. Please try again.");
+
+    if (discountCode.trim().toUpperCase() === "SAVE10") {
+      setDiscount(0.1); // 10% discount
+      toast.success("10% discount applied!");
+    } else {
+      setDiscount(0); // reset discount if invalid
+      toast.error("Invalid discount code.");
     }
   };
-  
 
-  const isFormValid = () => {
-    return (
-      formData.firstName &&
-      formData.lastName &&
-      formData.email &&
-      formData.address &&
-      formData.phone &&
-      formData.city &&
-      formData.state &&
-      formData.zip &&
-      formData.country &&
-      shippingMethod
-    )
-  }
+  // Validation function for required fields
+  const validate = () => {
+    let tempErrors = {};
+
+    if (!formData.email) tempErrors.email = "Email is required";
+    else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(formData.email))
+      tempErrors.email = "Invalid email address";
+
+    if (!formData.country) tempErrors.country = "Country is required";
+    if (!formData.firstName) tempErrors.firstName = "First name is required";
+    if (!formData.lastName) tempErrors.lastName = "Last name is required";
+    if (!formData.address) tempErrors.address = "Address is required";
+    if (!formData.city) tempErrors.city = "City is required";
+    if (!formData.state) tempErrors.state = "State is required";
+    if (!formData.postalCode) tempErrors.postalCode = "Postal code is required";
+    if (!formData.phone) tempErrors.phone = "Phone number is required";
+
+    if (!formData.paymentMethod)
+      tempErrors.paymentMethod = "Please select a payment method";
+
+    setErrors(tempErrors);
+    return Object.keys(tempErrors).length === 0;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!validate()) return;
+    console.log("Form Data Submitted:", formData);
+    toast.success("Order Placed! Proceeding to payment...");
+    // Redirect to payment page - dispatch an action or call your payment API
+  };
 
   return (
-    <Container style={{ marginTop: "100px", marginBottom: "100px", paddingTop: "20px" }}>
+    <div className="container my-5 pt-5">
       <Row className="justify-content-center">
         {/* Left Column - Form */}
-        <Col sm={12} md={7} className="px-4">
-          <Row className="justify-content-between mb-2">
-            <Col className="text-start"><h5>Contact</h5></Col>
-            <Col className="text-end"><a href="/login" className="text-decoration-underline" style={{ color: "black" }}>Log in</a></Col>
-          </Row>
-
-          {/* Email and News Subscription */}
-          <Form.Group className="mb-3">
-            <Form.Control
-              type="email"
-              placeholder="Email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-              isInvalid={formData.email && !/\S+@\S+\.\S+/.test(formData.email)}
-            />
-            <Form.Control.Feedback type="invalid">
-              Please enter a valid email address.
-            </Form.Control.Feedback>
-          </Form.Group>
-
-          <Form.Group className="mb-4">
-            <Form.Check type="checkbox" label="Email me with news & offers" className="text-start" />
-          </Form.Group>
-
-          {/* Delivery Information */}
-          <h5 className="mb-3 text-start">Delivery</h5>
-          <Form.Group className="mb-3">
-            <Form.Select name="country" value={formData.country} onChange={handleChange}>
-              <option value="" disabled>Country/Region</option>
-              <option value="NG">Nigeria</option>
-              <option value="USA">USA</option>
-              <option value="UK">UK</option>
-              <option value="CA">Canada</option>
-            </Form.Select>
-          </Form.Group>
-
-          <Row className="mb-3">
-            <Col sm={12} md={6} className="buttom">
-              <Form.Control
-                type="text"
-                placeholder="First Name"
-                name="firstName"
-                value={formData.firstName}
-                onChange={handleChange}
-              />
-            </Col>
-            <Col sm={12} md={6}>
-              <Form.Control
-                type="text"
-                placeholder="Last Name"
-                name="lastName"
-                value={formData.lastName}
-                onChange={handleChange}
-              />
-            </Col>
-          </Row>
-
-          <Form.Group className="mb-3">
-            <Form.Control
-              type="text"
-              placeholder="Address"
-              name="address"
-              value={formData.address}
-              onChange={handleChange}
-              required
-            />
-          </Form.Group>
-
-          <Form.Group className="mb-3">
-            <Form.Control
-              type="text"
-              placeholder="Apartment, suite, etc. (optional)"
-              name="apartment"
-              value={formData.apartment}
-              onChange={handleChange}
-            />
-          </Form.Group>
-
-          <Row className="mb-3">
-            <Col sm={12} md={6} className="buttom mb-3">
-              <Form.Control
-                type="text"
-                placeholder="City"
-                name="city"
-                value={formData.city}
-                onChange={handleChange}
-              />
-            </Col>
-            <Col sm={12} md={6} className="buttom mb-3">
-              <Form.Select name="state" value={formData.state} onChange={handleChange}>
-                <option value="" disabled>State</option>
-                <option value="Lagos">Lagos</option>
-                <option value="Kano">Kano</option>
-                <option value="Abuja">Abuja</option>
-                <option value="Imo">Imo</option>
-              </Form.Select>
-            </Col>
-          </Row>
-          
-          <Form.Group className="mb-3">
-            <Form.Control
-              type="text"
-              placeholder="Postal Code (optional)"
-              name="zip"
-              value={formData.zip}
-              onChange={handleChange}
-            />
-          </Form.Group>
-
-          {/* Validate phone number with optional country code */} 
-          <Form.Group className="mb-3">
-            <Form.Control
-              type="text"
-              placeholder="Phone (including country code)"
-              name="phone"
-              value={formData.phone}
-              onChange={handleChange}
-              required
-              isInvalid={formData.phone && !/^\+?\d{1,4}?\s?\(?\d+\)?[\d\s-]+$/.test(formData.phone)}
-            />
-            <Form.Control.Feedback type="invalid">
-              Please provide a valid 10-digit phone number.
-            </Form.Control.Feedback>
-          </Form.Group>
-
-          <h5 className="mb-3 text-start">Shipping Method</h5>
-
-          <Form.Group className="mb-3">
-            <Form.Check
-              type="radio"
-              label="Standard Shipping (3-5 business days)"
-              value="standard"
-              checked={shippingMethod === "standard"}
-              onChange={handleShippingChange}
-              className="text-start"
-            />
-          </Form.Group>
-
-          <Form.Group className="mb-3">
-            <Form.Check
-              type="radio"
-              label="One-Day Shipping (1 business day)"
-              value="one-day"
-              checked={shippingMethod === "one-day"}
-              onChange={handleShippingChange}
-              className="text-start"
-            />
-          </Form.Group>
-
-          <Form.Group className="mb-3">
-            <Form.Check
-              type="radio"
-              label="Express Shipping (2-3 business days)"
-              value="express"
-              checked={shippingMethod === "express"}
-              onChange={handleShippingChange}
-              className="text-start"
-            />
-          </Form.Group>
-
-          <Form.Group className="mb-4">
-            <Form.Check type="checkbox" label="Save this information for next time" className="text-start" />
-          </Form.Group>
-
-          <h5 className="mb-3 text-start">Payment</h5>
-          <p className="text-start mb-3" style={{ fontSize: "14px", color: "#6c757d" }}>
-            All transactions are secured & encrypted
-          </p>
-
-          {/* Payment Method */}
-          <div className="border p-4 rounded mb-4 " style={{ backgroundColor: "#f0f0f0" }}>
-            <Row className="mb-3">
-              <Col xs={6} md={6}>
-                <h6 className="text-start fw-bold fs-4 mt-3">Credit Card</h6>
+        <Col md={7} className="px-4">
+          <Form onSubmit={handleSubmit}>
+            {/* Form Structure */}
+            <Row className="justify-content-between mb-2">
+              <Col className="text-start">
+                <h5>Contact</h5>
               </Col>
-              <Col xs={6} md={6} className="text-end mt-2">
-              <div className="d-flex justify-content-end gap-3">
-                <Image src={image1} alt="Credit Card"  style={{ width: "40px" }} />
-                <Image src={image2} alt="Credit Card" style={{ width: "40px" }} />
-                <Image src={image3} alt="Credit Card" style={{ width: "40px" }} />
-                <Image src={image4} alt="Credit Card" style={{ width: "40px"}} />
-              </div>
+              <Col className="text-end">
+                <a href="/login" className="text-decoration-underline" style={{ color: "black" }}> Log in </a>
               </Col>
             </Row>
 
-            {/* Card Details */}
-            <Form.Group className="mb-3">
-              <Form.Control 
-                type="text" 
-                placeholder="Card Number"
-                style={{ padding: "12px", fontSize: "16px" }}
+            <Form.Group className="mb-3" controlId="email">
+              <Form.Control
+                type="email"
+                placeholder="Email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                isInvalid={!!errors.email}
               />
+              <Form.Control.Feedback type="invalid">
+                {errors.email}
+              </Form.Control.Feedback>
             </Form.Group>
 
-            <Row className="mb-3">
-              <Col sm={12} md={6} className="buttom">
-              <Form.Group>
-                <Form.Control 
-                  type="text"
-                  placeholder="Expiration Date (MM/YY)"
-                  style={{ padding: "12px", fontSize: "16px", width: "100%" }}
-                />
-              </Form.Group>
-              </Col>
-
-              <Col sm={12} md={6}>
-              <Form.Group>
-                <Form.Control 
-                  type="text"
-                  placeholder="Security Code"
-                  style={{ padding: "12px", fontSize: "16px", width: "100%" }}
-                />
-              </Form.Group>
-                
-              </Col>
-            </Row>
-
-            <Form.Group className="mb-3">
-              <Form.Control 
-                type="text"
-                placeholder="Name on Card"
-                style={{ padding: "12px", fontSize: "16px" }}
-              />
-            </Form.Group>
-
-            <Form.Group className="mb-4 text-start">
-              <Form.Check 
+            <Form.Group className="mb-4" controlId="emailOffers">
+              <Form.Check
                 type="checkbox"
-                label="Use shipping address as billing address"
-                style={{ fontSize: "14px" }}
+                label="Email me with news & offers"
+                className="text-start"
+                name="emailOffers"
+                checked={formData.emailOffers}
+                onChange={handleChange}
               />
             </Form.Group>
-          </div>
 
-          <Button 
-            variant="dark"
-            type="submit"
-            disabled={!isFormValid()}
-            onClick={handleSubmit}
-            className="p-3 w-100"
-            style={{
-              fontSize: "18px",
-              fontWeight: "bold",
-              borderRadius: "0px",
-            }}
-          >
-            Pay Now
-          </Button>
+            <h5 className="mb-3 text-start">Delivery</h5>
+
+            <Form.Group className="mb-3" controlId="country">
+              <Form.Select
+                name="country"
+                value={formData.country}
+                onChange={handleChange}
+                isInvalid={!!errors.country}
+              >
+                <option value="" disabled>
+                  Country/Region
+                </option>
+                <option value="NG">Nigeria</option>
+                <option value="USA">USA</option>
+                <option value="UK">UK</option>
+                <option value="CA">Canada</option>
+              </Form.Select>
+              <Form.Control.Feedback type="invalid">
+                {errors.country}
+              </Form.Control.Feedback>
+            </Form.Group>
+
+            <Row className="mb-3">
+              <Col>
+                <Form.Control
+                  type="text"
+                  placeholder="First Name"
+                  name="firstName"
+                  value={formData.firstName}
+                  onChange={handleChange}
+                  isInvalid={!!errors.firstName}
+                />
+                <Form.Control.Feedback type="invalid">
+                  {errors.firstName}
+                </Form.Control.Feedback>
+              </Col>
+              <Col>
+                <Form.Control
+                  type="text"
+                  placeholder="Last Name"
+                  name="lastName"
+                  value={formData.lastName}
+                  onChange={handleChange}
+                  isInvalid={!!errors.lastName}
+                />
+                <Form.Control.Feedback type="invalid">
+                  {errors.lastName}
+                </Form.Control.Feedback>
+              </Col>
+            </Row>
+
+            <Form.Group className="mb-3" controlId="address">
+              <Form.Control
+                type="text"
+                placeholder="Address"
+                name="address"
+                value={formData.address}
+                onChange={handleChange}
+                isInvalid={!!errors.address}
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.address}
+              </Form.Control.Feedback>
+            </Form.Group>
+
+            <Form.Group className="mb-3" controlId="apartment">
+              <Form.Control
+                type="text"
+                placeholder="Apartment, suite, etc. (optional)"
+                name="apartment"
+                value={formData.apartment}
+                onChange={handleChange}
+              />
+            </Form.Group>
+
+            <Row className="mb-3">
+              <Col>
+                <Form.Control
+                  type="text"
+                  placeholder="City"
+                  name="city"
+                  value={formData.city}
+                  onChange={handleChange}
+                  isInvalid={!!errors.city}
+                />
+                <Form.Control.Feedback type="invalid">
+                  {errors.city}
+                </Form.Control.Feedback>
+              </Col>
+              <Col>
+                <Form.Select
+                  name="state"
+                  value={formData.state}
+                  onChange={handleChange}
+                  isInvalid={!!errors.state}
+                >
+                  <option value="" disabled>
+                    State
+                  </option>
+                  <option value="Lagos">Lagos</option>
+                  <option value="Kano">Kano</option>
+                  <option value="Abuja">Abuja</option>
+                  <option value="Imo">Imo</option>
+                </Form.Select>
+                <Form.Control.Feedback type="invalid">
+                  {errors.state}
+                </Form.Control.Feedback>
+              </Col>
+              <Col>
+                <Form.Control
+                  type="text"
+                  placeholder="Postal Code (optional)"
+                  name="postalCode"
+                  value={formData.postalCode}
+                  onChange={handleChange}
+                />
+              </Col>
+            </Row>
+
+            <Form.Group className="mb-4" controlId="phone">
+              <Form.Control
+                type="text"
+                placeholder="Phone"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                isInvalid={!!errors.phone}
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.phone}
+              </Form.Control.Feedback>
+            </Form.Group>
+
+            <h5 className="mb-3 text-start">Shipping Method</h5>
+            
+            <div className="mb-4">
+              {["standard", "oneDay", "express"].map((method, idx, arr) => {
+                const labelMap = {
+                  standard: { 
+                    label: "Standard Shipping (3-5 business days)", 
+                    price: "₦3,000",
+                  },
+                  oneDay: {
+                    label: "One-Day Shipping (1 business day)", 
+                    price: "₦5,000",
+                  },
+                  express: {
+                    label: "Express Shipping (2-3 business days)", 
+                    price: "₦7,500",
+                  },
+                };
+                
+                const isSelected = formData.shippingMethod === method;
+                const borderRadiusClass =
+                idx === 0
+                ? "rounded-top"
+                : idx === arr.length - 1
+                ? "rounded-bottom"
+                : "rounded-0";
+                
+                return (
+                <div key={method}
+                className={`border ${borderRadiusClass} ${
+                  isSelected ? "border-primary bg-light-blue" : ""}`}
+                  onClick={() => setFormData({ ...formData, shippingMethod: method })}
+                  style={{ padding: "0.8rem", cursor: "pointer", borderTop: idx === 0 ? "1px solid #dee2e6" : "none",}}
+                >
+                  <Form.Group className="m-0">
+                    <div className="d-flex justify-content-between align-items-start small">
+                      <Form.Check
+                      type="radio"
+                      label={labelMap[method].label}
+                      name="shippingMethod"
+                      checked={isSelected}
+                      onChange={() =>
+                        setFormData({ ...formData,
+                          shippingMethod: method })}
+                  />
+                      <span className="text-end fw-semibold">{labelMap[method].price}</span>
+                    </div>
+                  </Form.Group>
+                </div>
+                );
+              })}
+            </div>
+            
+            <h5 className="text-start mb-3">Payment Method</h5>
+            <p className="text-muted text-start small mb-3">
+              All transactions are <strong>secured</strong> and{" "}
+              <strong>encrypted</strong>.
+            </p>
+
+            <div className="mb-4">
+              <div
+                className="border rounded-top px-3 border-primary"
+                style={{ backgroundColor: "#F0F5FF", padding: "15px 0 15px 0" }}
+              >
+                <div className="d-flex justify-content-between align-items-center">
+                  <p className="mb-0 small">Paystack</p>
+                  <div className="d-flex gap-2">
+                    {[image3, image4, image1, image2, image6].map(
+                      (img, index) => (
+                        <span
+                          key={index}
+                          className="d-inline-flex align-items-center justify-content-center"
+                        >
+                          <img src={img} alt={`Card ${index}`} height="23" />
+                        </span>
+                      )
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              <div
+                className="border rounded-bottom pb-3 pt-2 px-3"
+                style={{ backgroundColor: "#F4F4F4" }}
+              >
+                <div className="text-center">
+                  <img src={image5} alt="Paystack Illustration" width={80} />
+                  <p className="mt-2 mb-0 small">
+                    After clicking “Pay now”, you will be redirected to <br />
+                    Paystack to complete your purchase securely.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <h5 className="text-start mb-3">Billing Address</h5>
+            <div className="mb-3">
+              <div className={`border ${formData.billingSameAsShipping ? "rounded-top border-primary bg-light-blue" : "rounded-top"}`}
+              onClick={() => setFormData({ ...formData, billingSameAsShipping: true })}
+              style={{ cursor: "pointer", padding: "0.8rem" }}>
+                <Form.Group className="text-start small">
+                  <Form.Check
+                    type="radio"
+                    label="Same as shipping address"
+                    name="billingSameAsShipping"
+                    checked={formData.billingSameAsShipping === true}
+                    onChange={(e) =>
+                      setFormData({ ...formData, billingSameAsShipping: true })
+                    }
+                  />
+                </Form.Group>
+              </div>
+              <div className={`border ${formData.billingSameAsShipping ? "rounded-bottom" : "rounded-0 border-primary bg-light-blue"}`} 
+              onClick={() => setFormData({ ...formData, billingSameAsShipping: false })}
+              style={{ cursor: "pointer", padding: "0.8rem" }}>
+                <Form.Group className="text-start small">
+                  <Form.Check
+                    type="radio"
+                    label="Use a different billing address"
+                    name="billingSameAsShipping"
+                    checked={formData.billingSameAsShipping === false}
+                    onChange={(e) =>
+                      setFormData({ ...formData, billingSameAsShipping: false })
+                    }
+                  />
+                </Form.Group>
+              </div>
+              {!formData.billingSameAsShipping && (
+                <div className="border rounded-bottom p-3 mb-4 border-top-0"
+                style={{ backgroundColor: "#F4F4F4" }}>
+                  <Form.Group className="mb-3" controlId="country">
+                    <Form.Select
+                      name="country"
+                      value={formData.country}
+                      onChange={handleChange}
+                      isInvalid={!!errors.country}
+                    >
+                      <option value="" disabled>
+                        Country/Region
+                      </option>
+                      <option value="NG">Nigeria</option>
+                      <option value="USA">USA</option>
+                      <option value="UK">UK</option>
+                      <option value="CA">Canada</option>
+                    </Form.Select>
+                    <Form.Control.Feedback type="invalid">
+                      {errors.country}
+                    </Form.Control.Feedback>
+                  </Form.Group>
+
+                  <Row className="mb-3">
+                    <Col>
+                      <Form.Control
+                        type="text"
+                        placeholder="First Name"
+                        name="firstName"
+                        value={formData.firstName}
+                        onChange={handleChange}
+                        isInvalid={!!errors.firstName}
+                      />
+                      <Form.Control.Feedback type="invalid">
+                        {errors.firstName}
+                      </Form.Control.Feedback>
+                    </Col>
+                    <Col>
+                      <Form.Control
+                        type="text"
+                        placeholder="Last Name"
+                        name="lastName"
+                        value={formData.lastName}
+                        onChange={handleChange}
+                        isInvalid={!!errors.lastName}
+                      />
+                      <Form.Control.Feedback type="invalid">
+                        {errors.lastName}
+                      </Form.Control.Feedback>
+                    </Col>
+                  </Row>
+
+                  <Form.Group className="mb-3" controlId="address">
+                    <Form.Control
+                      type="text"
+                      placeholder="Address"
+                      name="address"
+                      value={formData.address}
+                      onChange={handleChange}
+                      isInvalid={!!errors.address}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      {errors.address}
+                    </Form.Control.Feedback>
+                  </Form.Group>
+
+                  <Form.Group className="mb-3" controlId="apartment">
+                    <Form.Control
+                      type="text"
+                      placeholder="Apartment, suite, etc. (optional)"
+                      name="apartment"
+                      value={formData.apartment}
+                      onChange={handleChange}
+                    />
+                  </Form.Group>
+
+                  <Row className="mb-3">
+                    <Col>
+                      <Form.Control
+                        type="text"
+                        placeholder="City"
+                        name="city"
+                        value={formData.city}
+                        onChange={handleChange}
+                        isInvalid={!!errors.city}
+                      />
+                      <Form.Control.Feedback type="invalid">
+                        {errors.city}
+                      </Form.Control.Feedback>
+                    </Col>
+                    <Col>
+                      <Form.Select
+                        name="state"
+                        value={formData.state}
+                        onChange={handleChange}
+                        isInvalid={!!errors.state}
+                      >
+                        <option value="" disabled>
+                          State
+                        </option>
+                        <option value="Lagos">Lagos</option>
+                        <option value="Kano">Kano</option>
+                        <option value="Abuja">Abuja</option>
+                        <option value="Imo">Imo</option>
+                      </Form.Select>
+                      <Form.Control.Feedback type="invalid">
+                        {errors.state}
+                      </Form.Control.Feedback>
+                    </Col>
+                    <Col>
+                      <Form.Control
+                        type="text"
+                        placeholder="Postal Code (optional)"
+                        name="postalCode"
+                        value={formData.postalCode}
+                        onChange={handleChange}
+                      />
+                    </Col>
+                  </Row>
+
+                  <Form.Group className="mb-4" controlId="phone">
+                    <Form.Control
+                      type="text"
+                      placeholder="Phone"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleChange}
+                      isInvalid={!!errors.phone}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      {errors.phone}
+                    </Form.Control.Feedback>
+                  </Form.Group>
+                </div>
+              )}
+            </div>
+
+            <div className="d-none d-md-block mt-5">
+              <Button
+                type="submit"
+                className="btn btn-dark bg-black rounded-0 w-100 p-2 mb-4"
+              >
+                Pay Now
+              </Button>
+            </div>
+          </Form>
         </Col>
 
         {/* Right Column - Order Summary */}
-        <Col sm={12} md={5} className="px-4 mt-4" style={{ backgroundColor: "#f0f0f0" }}>
+        <Col md={5} style={{ backgroundColor: window.innerWidth >= 768 ? "#F5F5F5" : "transparent", position: window.innerWidth >= 768 ? "sticky" : "static",
+    top: window.innerWidth >= 768 ? "70px" : "auto",
+    height: window.innerWidth >= 768 ? "calc(100vh - 70px)" : "auto",
+    overflowY: window.innerWidth >= 768 ? "auto" : "visible",}}>
+          <div className="d-block d-md-none mt-4 px-4">
+            <h5 className="fw-bold text-start">Order Summary</h5>
+          </div>
           {/* Order details Structure */}
-          <h5 className="text-start my-4 fs-4">Order Summary</h5>
-
-          {/* Cart Items */}
-          {cartItems.map(item => (
-            <Row className="align-items-center px-3 my-3 text-start" key={item.id}>
-              <Col>
-                <div className="position-relative ">
-                  <Image src={image1} alt="Product" style={{ width: "80px" }} />
-                  {/* Quantity Badge */}
-                  <Badge pill bg="dark" style={{
-                    position: "absolute", top: "-10px", right: "20px", fontSize: "12px"
-                  }}>
-                    {item.quantity}
-                  </Badge>
+          {cartItems.map((product) => (
+            <Row key={product.id} className="align-items-center my-5 px-4 text-start">
+              <Col xs={3}>
+                <div style={{ position: "relative", width: "70px", height: "70px",}}>
+                  <Image
+                    src={product.image}
+                    alt={product.name}
+                    width={70}
+                    height={70}
+                    className="mt-2"
+                    style={{ objectFit: "cover", borderRadius: "0.25rem" }}
+                    loading="lazy"
+                  />
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: "-2px",
+                      right: "-6px",
+                      backgroundColor: "rgba(0, 0, 0, 0.6)",
+                      color: "white",
+                      fontSize: "12px",
+                      padding: "2px 6px",
+                      borderRadius: "999px",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    {product.quantity}
+                  </div>
                 </div>
               </Col>
-
-              <Col className="me-5" style={{ marginLeft: "-40px" }}>
-                <p className="mb-1">{item.name}</p>
-                <small>Size: M</small>
+              <Col>
+                <p className="mb-1 fw-semibold">{product.productName}</p>
+                <small>Size: {product.size || "M"}</small>
               </Col>
 
               <Col className="text-end">
-                <p>₦{item.price.toLocaleString()}</p>
+                <p className="mb-0">
+                  ₦{(product.price * product.quantity).toLocaleString()}
+                </p>
               </Col>
             </Row>
           ))}
 
-          <Row className="my-3 px-3">
-            <Col xs={9}>
-              <Form.Control
-                type="text"
-                placeholder="Discount code or gift card"
-                value={promoCode}
-                onChange={(e) => setPromoCode(e.target.value)}
-                className="form-control p-3"
-              />
-            </Col>
+          <Form className="my-4 px-4">
+            <Row className="gx-2">
+              <Col xs={9}>
+                <Form.Control
+                  type="text"
+                  placeholder="Discount code or gift card"
+                  className="rounded-0 p-2"
+                  value={discountCode}
+                  onChange={(e) => setDiscountCode(e.target.value)}
+                />
+              </Col>
+              <Col xs={3}>
+                <Button
+                  variant="dark"
+                  className="w-100 rounded-0 p-2"
+                  onClick={handleApplyDiscount}
+                >
+                  Apply
+                </Button>
+              </Col>
+            </Row>
+          </Form>
 
-            <Col xs={3} className="d-flex justify-content-end">
-              <Button variant="dark" onClick={handlePromoCodeApply}>Apply</Button>
+          <Row className="mb-2 px-4">
+            <Col className="text-start fw-semibold">Subtotal</Col>
+            <Col className="text-end">₦{calculateTotal().toLocaleString()}</Col>
+          </Row>
+
+          <Row className="mb-2 px-4">
+            <Col className="text-start fw-semibold">Shipping</Col>
+            <Col className="text-end">
+              {formData.shippingMethod === "standard" && "₦3000 "}
+              {formData.shippingMethod === "oneDay" && "₦5,000"}
+              {formData.shippingMethod === "express" && "₦7,500"}
             </Col>
           </Row>
 
-          <Row className="my-3 px-3 text-start">
-            <Col xs={8}>
-              <strong>Subtotal</strong>
-            </Col>
-
+          <Row className="mb-2 px-4">
+            <Col className="text-start fw-semibold">Total</Col>
             <Col className="text-end">
-              <strong>₦{calculateTotal().toLocaleString()}</strong>
-            </Col>
-          </Row>
-
-          <Row className="my-3 px-3 text-start">
-            <Col xs={8}>
-              <strong>Shipping</strong>
-            </Col>
-
-            <Col className="text-end">
-              <strong>₦{getShippingCost(shippingMethod).toLocaleString()}</strong>
-            </Col>
-          </Row>
-
-          <hr />
-          <Row className="my-3 px-3 pb-4 text-start">
-            <Col xs={8}>
-              <strong>Total</strong>
-            </Col>
-
-            <Col className="text-end">
-              <strong>₦{(calculateTotal() + (getShippingCost(shippingMethod))).toLocaleString()}</strong>
+              ₦
+              {(
+                calculateTotal() +
+                (formData.shippingMethod === "standard"
+                  ? 3000
+                  : formData.shippingMethod === "oneDay"
+                  ? 5000
+                  : formData.shippingMethod === "express"
+                  ? 7500
+                  : 0)
+              ).toLocaleString()}
             </Col>
           </Row>
         </Col>
+        {/* Mobile-only Pay Button (below Order Summary) */}
+        <div className="d-block d-md-none mt-3 px-4">
+          <Button
+            type="submit"
+            className="btn btn-dark bg-black rounded-0 w-100 p-3"
+          >
+            Pay Now
+          </Button>
+        </div>
       </Row>
-    </Container>
+
+      <ToastContainer
+        position="top-right"
+        autoClose={2000}
+        hideProgressBar={true}
+        closeOnClick
+      />
+    </div>
   );
 };
 
