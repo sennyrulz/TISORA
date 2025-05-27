@@ -1,5 +1,7 @@
 import { useState } from "react";
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Link } from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
 import Nav from "./components/Nav";
 import NewIn from "./pages/NewIn";
 import Shop from "./pages/Shop";
@@ -24,12 +26,12 @@ import AuthPage from "./pages/AuthPage";
 
 
 const cld = new Cloudinary({ cloud: { cloudName: 'dr1ay8vmn' }});
-const fallbackPublicId = "IMG_4113_2_hgg2ta";
+const fallbackPublicId = "depositphotos_734849084-stock-illustration-shirt-discount-line-icon-vector_pppp92";
 const publicId = fallbackPublicId;
 const mainImage = cld.image(publicId);
 
 function App() {
-
+  const navigate = useNavigate();
   const featuredProducts = productsData.slice(0, 5);
   const [cart, setCart] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -63,13 +65,17 @@ function App() {
               <>
                 <Logo />
                 <HeroBanner />
-                <Container>
-                  <p className="text-end mb-3">
-                      <button onClick={() => navigate("/shop")}>View All</button>
-                    </p>
-                  <div className="cardContainer px-4" style={{ margin: "-60px 0 0 0" }}>
+                
+                 <p className="text-end mb-3" onClick={() => navigate("/shop")} 
+                      style={{cursor:'pointer'}}>
+                        View All
+                    {/* <Link to="/shop">View all</Link> */}
+                  </p>
+                  <div className="px-4" style={{ margin: "-60px 0 0 0" }}>
                     <h2 className="text-start px-4 mb-4">Featured Products</h2>
                   </div>
+
+                <Container>
                 
                   {/* Product Scroll */}
                   <div className="cardScroll d-flex px-5 gap-5 mb-5 overflow-auto" style={{ whiteSpace: "nowrap" }}>

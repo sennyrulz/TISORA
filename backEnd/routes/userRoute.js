@@ -1,22 +1,22 @@
 import express from 'express';
-import { authenticateToken } from "../middlewares/authMid.js"
+// import { authenticateToken } from "../middlewares/authMid.js"
 import {
-  getUser,
+  loginUser,
   createUser,
   updateUser,
   deleteUser,
 } from "../controllers/userController.js";
 
 
-const router = express.Router();
+const route = express.Router();
 
 // Public routes for User
-router.post("signUp", createUser); 
-router.post("/login", getUser);
+route.post("/signUp", createUser); 
+route.post("/login", loginUser);
 
 // Protected routes
-router.get("/Profile", authenticateToken, getUser);
-router.put("/:id", authenticateToken, updateUser);
-router.delete("/:id", authenticateToken, deleteUser);
+// route.get("/Profile", getUser);
+route.put("/:id", updateUser);
+route.delete("/:id", deleteUser);
 
-export default router;
+export default route;

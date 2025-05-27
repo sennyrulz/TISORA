@@ -4,10 +4,12 @@ import { AdvancedImage } from '@cloudinary/react';
 import { Cloudinary } from '@cloudinary/url-gen';
 import bootstrap from "bootstrap/dist/js/bootstrap.bundle.min.js";
 import { addToCart } from "../redux/cartSlice";
-// import { productsData } from "./Product"
-// {productsData.map(product =>(
-//   <ProductCard key={product.id} {...product}/>
-// ))} 
+import productModel from "../../../backEnd/models//productModel"
+import { productsData } from "./Product";
+{productsData.map(product =>(
+  <ProductCard key={product.id} {...product}/>
+))} 
+
 
 function ProductCard({id, Img1, Img2, productName, desc, features, material, sizes, price, onAddToCart }) {
   const cld = new Cloudinary({ cloud: { cloudName: 'dr1ay8vmn' }});

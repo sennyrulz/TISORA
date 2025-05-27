@@ -1,56 +1,43 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import {BsCart3, BsGrid1X2Fill, BsFillArchiveFill, BsGrid3X3GapFill,
   BsPeopleFill, BsListCheck, BsMenuButtonWideFill, BsFillGearFill, BsFillBellFill
 } from 'react-icons/bs'
 
 const Sidebar = () => {
+  const navigate = useNavigate();
   return (
     <aside id="sidebar">
       <div className='sidebar-title'>
-        <div className='sidebar-brand'>
-          <Link to='/admin/dashboard'>
-            <BsCart3 className='icon_header' /> TISORA SHOP
-          </Link>      
+        <div className='sidebar-brand'  onClick= {() => navigate('/admin/Dashboard')} >
+          <BsCart3 className='icon_header' /> TISORA SHOP    
         </div>
         <span className='icon close_icon'>X</span>
       </div>
 
-        <ul className='sidebar-list' onClick={'/admin/Dashboard'}>
-          <li className='sidebar-list-item'>
-            <Link to='/admin/dashboard'>
+        <ul className='sidebar-list' onClick= {() => navigate('/admin/Dashboard')} >
+          <li className='sidebar-list-item' onClick={() => navigate ('/admin/dashboard')}>
               <BsGrid1X2Fill className='icon'/> Dashboard
-            </Link>
           </li>
 
-          <li className='sidebar-list-item'>
-            <Link to='/admin/products'>
+          <li className='sidebar-list-item' onClick= {() => navigate('/admin/products')}>
               <BsFillArchiveFill className='icon'/> Products
-            </Link>
           </li>
 
-          <li className='sidebar-list-item'>
-            <Link to='/admin/users'>
-              <BsPeopleFill className='icon'/> Users
-            </Link>
+          <li className='sidebar-list-item' onClick= {() => navigate('/admin/users')}>
+              <BsPeopleFill className='icon'/> Users  
           </li>
 
-          <li className='sidebar-list-item'>
-            <Link to='/admin/inventories'>
+          <li className='sidebar-list-item' onClick= {() => navigate('/admin/inventories')}>
               <BsListCheck className='icon'/> Inventories
-            </Link>
           </li>
 
-          <li className='sidebar-list-item'>
-            <Link to='/admin/orders'>
+          <li className='sidebar-list-item' onClick= {() => navigate( '/admin/orders')}>
               <BsFillBellFill className='icon'/> Orders
-            </Link>
           </li>
 
-          <li className='sidebar-list-item'>
-            <Link to='/admin/settings'>
+          <li className='sidebar-list-item' onClick= {() => navigate('/admin/settings')}>
               <BsFillGearFill className='icon'/> Settings
-            </Link>
           </li>
         </ul>
     </aside>

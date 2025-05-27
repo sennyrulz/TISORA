@@ -1,42 +1,58 @@
 import express from "express";
 import bodyParser from "body-parser";
-import dotenv from "dotenv";
 import connectDB from "./connection/database.js";
 import userRoute from "./routes/userRoute.js";
 import adminRoute from "./routes/adminRoute.js";
+import mongoose from "mongoose";
 import fileUpload from 'express-fileupload';
-import path from 'path';
-import { fileURLToPath } from 'url';
 import cors from "cors";
-// import mongoose from "mongoose";
-
+import dotenv from "dotenv";
 dotenv.config();
-const app = express();
 
-//Create connection
-// mongoose.connect("mongodb://localhost:27017/Tisora")
+//Create Connection
+const app = express();
+mongoose.connect(process.env.MONGODB_URL || "mongodb://localhost:27017/eCommerce");
 
 connectDB();
 
-app.use(fileUpload({ useTempFiles: true }));
+// ✅ CORS config
+app.use(cors({
+  origin: 'http://localhost:5173',
+  credentials: true,
+}));
 
+// ✅ Handle preflight OPTIONS requests
+app.options('*', cors({
+  origin: 'http://localhost:5173',
+  credentials: true,
+}));
+
+// ✅ Manually allow OPTIONS passthrough (alternative to above)
+app.use((req, res, next) => {
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(204);
+  }
+  next();
+});
+
+// Middleware
+app.use(fileUpload({ useTempFiles: true }));
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.use(cors());
+// Routes endpoints
+//app.use(userRoute) app.use(adminRoute);
+app.use("/", userRoute);
+app.use("/admin", adminRoute);
 
-//creating endpoints for user and admin DB
-app.use("/users", userRoute);
-app.use("/", adminRoute);
-
+//✅ Error handler (should be last!)
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send("Something went wrong");
 });
 
-const PORT = process.env.PORT || 5001;
-
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });

@@ -5,13 +5,19 @@ import jwt from 'jsonwebtoken';
 
 
 // Login User
-export const getUser = async (req, res) => {
+export const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
   try {
     const user = await User.findOne({ email });
     if (!user) return res.status(401).json({ message: "Invalid credentials" });
-
+    
+  const hashedPassword = await bcrypt.hash(password, 10);
+    
+        const isAdmin = await adminModel.findOne({email});
+         if (isAdmin){
+            return res.send("Admin already exists. Please login")
+         }
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(401).json({ message: "Invalid credentials" });
 
@@ -74,7 +80,7 @@ export const updateUser = async (req,res)=>{
     })
     .catch(err => res.status(500).json({ message: 'Error updating user', error: err.message }));
 };
-
+ 
 // Delete user
 export const deleteUser = async (req, res) => {
   const { id } = req.body;

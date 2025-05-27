@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 import User from "./models/userModel.js";
 import jwt from "jsonwebtoken";
 
-export const login = async (req, res) => {
+export const getUser = async (req, res) => {
     try {
         const { email, password } = req.body;
         const user = await User.findOne({ email });
@@ -19,7 +19,7 @@ export const login = async (req, res) => {
     }
 }
 
-export const registerUser = async (req, res) => {
+export const createUser = async (req, res) => {
     try {
         console.log(req.body); // Debugging: Check incoming request data
 

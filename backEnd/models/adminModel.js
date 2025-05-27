@@ -35,8 +35,8 @@ const adminSchema = new mongoose.Schema(
             enum: ["admin"],
             default: "admin",
         },
-    },
-    { timestamps: true }
+    },  
+        { timestamps: true }
 );
 
 const adminModel = mongoose.model("Admin", adminSchema);

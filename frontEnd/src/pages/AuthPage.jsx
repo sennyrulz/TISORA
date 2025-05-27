@@ -32,8 +32,8 @@ function AuthPage() {
     e.preventDefault();
     setLoading(true);
      try {
-      const endpoint = isLogin ? "login" : "register";
-      const url = `${import.meta.env.VITE_BACKEND_URL}/admin/${endpoint}`;
+      const endpoint = isLogin ? "login" : "signUp";
+      const url = `${import.meta.env.VITE_BACKEND_URL}/users/${endpoint}`;
       const payload = isLogin
         ? {
             email: formData.email,
@@ -42,15 +42,15 @@ function AuthPage() {
         : {
             fullName: formData.fullName,
             email: formData.email,
-            password: formData.password,
             phone: formData.phone,
             address: formData.address,
+            password: formData.password,
           };
 
       const response = await axios.post(url, payload);
       const { token } = response.data;
 
-      localStorage.setItem("adminToken", token);
+      localStorage.setItem("userToken", token);
 
       dispatch(
         isLogin
