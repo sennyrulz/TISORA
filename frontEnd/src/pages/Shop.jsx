@@ -94,7 +94,7 @@ const Shop = () => {
       </Row>
 
       {/* ✅ Ensure ScrollCards receives addToCart */}
-      {/* <ScrollCards products={productsData} addToCart={addToCart} /> */}
+      {/* <ScrollCards products={productModel} addToCart={addToCart} /> */}
 
       <ToastContainer
         position="top-right"

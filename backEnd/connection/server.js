@@ -4,7 +4,7 @@ import cors from 'cors';
 import multer from 'multer';
 import { v2 as cloudinary } from 'cloudinary';
 
-const tisora = express()
+const app = express()
 dotenv.config();
 app.use(cors());
 app.use(express.json());
@@ -21,7 +21,7 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
 // Route to upload image
-tisora.post('/upload', upload.single('image'), async (req, res) => {
+app.post('/upload', upload.single('image'), async (req, res) => {
   try {
     const result = cloudinary.uploader.upload_stream(
       {
@@ -38,8 +38,9 @@ tisora.post('/upload', upload.single('image'), async (req, res) => {
     res.status(500).json({ error: 'Upload failed' });
   }});
 
-  tisora.listen(5000, () => {
-    console.log('Server running on http://localhost:5000');
+  const PORT = process.env.PORT || 5001;
+    app.listen(5000, () => {
+    console.log(`Server running on ${PORT}`);
   });
   
   const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "1h" });

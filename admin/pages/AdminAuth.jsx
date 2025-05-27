@@ -46,8 +46,8 @@ function AdminAuth() {
       setLoading(true);
 
     try {
-      const endpoint = isLogin ? "login" : "register";
-      const url = `${import.meta.env.VITE_BACKEND_URL}/admin/${endpoint}`;
+      const endpoint = isLogin ? "login" : "signUp";
+      const url = `${import.meta.env.VITE_BACKEND_URL}/${endpoint}`;
       const payload = isLogin
         ? {
             email: formData.email,
@@ -56,27 +56,27 @@ function AdminAuth() {
         : {
             fullName: formData.fullName,
             email: formData.email,
-            password: formData.password,
             phone: formData.phone,
             address: formData.address,
+            password: formData.password,
           };
 
-      const response = await axios.post(url, payload);
-      const { token } = response.data;
+      // const response = await axios.post(url, payload);
+      // const { token } = response.data;
 
-      localStorage.setItem("adminToken", token);
+      // localStorage.setItem("adminToken", token);
 
       dispatch(
         isLogin
           ? login({
               name: formData.fullName || formData.email.split("@")[0],
-              email: formData.email,
-              token,
+              email: formData.email
+              // token,
             })
           : signUp({
               name: formData.fullName,
-              email: formData.email,
-              token,
+              email: formData.email
+              // token,
             })
       );
     } catch (error) {
@@ -104,7 +104,7 @@ function AdminAuth() {
                   style={{ backgroundColor: "#91443f" }}
                   className="btn"
                   onClick={() => {
-                    localStorage.removeItem("adminToken");
+                    // localStorage.removeItem("adminToken");
                     dispatch(logout());
                   }}>
                   Logout

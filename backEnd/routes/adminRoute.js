@@ -1,21 +1,21 @@
 import express from 'express'
 import { authenticateAdmin } from "../middlewares/adminMid.js";
 import {
-  getAdmin,
+  loginAdmin,
   createAdmin,
   updateAdmin,
   deleteAdmin,
 } from "../controllers/adminController.js";
 
-const router = express.Router();
+const route = express.Router();
 
 //public url
-router.post("/AdminAuth", createAdmin);
-router.post("/AdminAuth", getAdmin);
+route.post("/signUp", createAdmin);
+route.post("/login", loginAdmin);
 
 // Apply middleware to protected routes
-router.get("/", authenticateAdmin, getAdmin);
-router.put("/:id", authenticateAdmin, updateAdmin);
-router.delete("/:id", authenticateAdmin, deleteAdmin);
+// route.get("/", getAdmin);
+route.put("/:id", updateAdmin);
+route.delete("/:id", deleteAdmin);
 
-export default router;
+export default route;

@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 
-const productSchema = new mongoose.Schema(
+const productSchema = new mongoose.Schema (
   {
-    Id: { 
+    id: { 
         type: mongoose.Schema.Types.ObjectId, 
         ref: "Admin" 
     },

@@ -1,78 +1,94 @@
 import adminModel from '../models/adminModel.js';
 import Admin from '../models/adminModel.js';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken'
 
-export const getAdmin = async (req, res) => {
+
+// Login Admin
+export const loginAdmin = async (req, res) => {
+  const { email, password } = req.body;
+
   try {
-  const admin = await adminModel.find();
-    return res.json(admin);
-  } catch(err) {res.status(500).json({ message: 'Server error', error: err.message });
-}};
+    const admin = await Admin.findOne({ email });
+    if (!admin) return res.status(401).json({ message: "Invalid credentials" });
 
-export const createAdmin = async (req, res) => {
-  try{
-    const { payload } = req.body;
-    console.log(payload)
+    const isMatch = await bcrypt.compare(password, admin.password);
+    if (!isMatch) return res.status(401).json({ message: "Invalid credentials" });
 
-    // Validate required fields
-    if (!payload || !payload.name || !payload.email || !payload.passwordn) {
-    return res.status(400).json({ message: 'All fields are required' });
-  }
+     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create new admin
-  const newAdmin = new adminModel(payload);
+    const isAdmin = await adminModel.findOne({email});
+     if (isAdmin){
+        return res.send("Admin already exists. Please login")
+     }
 
-    // Save to DB
-    const savedAdmin = await newAdmin.save();
-
-    // Respond
-    return res.status(201).json(savedAdmin);
+    const token = jwt.sign(
+      { id: admin._id, email: admin.email }, 
+      process.env.SECRETKEY, 
+      {expiresIn: "1h",
+    });
+    return res.json({ token });
+    
   } catch (err) {
-    return res.status(500).json({ message: 'Error creating admin', error: err.message });
+    return res.status(500).json({ message: "Server error", error: err.message });
   }
+
 };
 
-export const updateAdmin = async (req, res) => {
-  const { id, ...others } = req.body;
+export const createAdmin = async (req, res)=>{
+    const {
+    fullName,
+    email,
+    phone,
+    address,
+    password} = req.body
 
-  // Validate input
-  if (!id) {
-    return res.status(400).json({ message: 'ID is required' });
-  }
-
-  try {
-    const updatedAdmin = await adminModel.findByIdAndUpdate(
-      id,
-      { ...others },
-      { new: true }
-    );
-
-    if (!updatedAdmin) {
-      return res.status(404).json({ message: 'Admin not found' });
+// Validate required fields
+    if (!fullName || !email || !phone || !address || !password ) {
+        return res.status(400).json({ message: 'All fields are required' });
     }
-
-    return res.json(updatedAdmin);
-  } catch (err) {
-    return res.status(500).json({ message: 'Error updating admin', error: err.message });
-  }
+    
+   
+//check if Admin exists in DB
+    try {
+        const newAdmin = new adminModel({   
+            fullName,
+            email,
+            phone,
+            address,
+            password,});
+        const savedAdmin = await newAdmin.save();
+        return res.json(savedAdmin);    
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ message: 'Error creating Admin', error: err.message });
+    }
 };
 
+//Update admin
+export const updateAdmin = async (req,res)=>{
+    const {id, ...others } = req.body
+    if (!id) return res.status(400).json({ message: 'ID is required' });
+    
+    Admin.findByIdAndUpdate(id, others, { new: true })
+
+    .then(updated => {
+      if (!updated) return res.status(404).json({ message: 'Admin not found' });
+      res.json(updated);
+    })
+    .catch(err => res.status(500).json({ message: 'Error updating Admin', error: err.message }));
+};
+ 
+// Delete Admin
 export const deleteAdmin = async (req, res) => {
-  const { id } = req.query;
+  const { id } = req.body;
 
-  // Validate that ID is provided
-  if (!id) {
-    return res.status(400).json({ message: 'ID is required' });
-  }
+  if (!id) return res.status(400).json({ message: 'ID is required' });
 
-  try {
-    const deletedAdmin = await adminModel.findByIdAndDelete(id);
-
-    if (!deletedAdmin) {
-      return res.status(404).json({ message: 'Admin not found' });
-    }
-
-    return res.status(200).json({ message: 'Admin deleted successfully', data: deletedAdmin });
-  } catch (err) {
-    return res.status(500).json({ message: 'Error deleting admin', error: err.message });
-  }
+  Admin.findByIdAndDelete(id)
+    .then(deleted => {
+      if (!deleted) return res.status(404).json({ message: 'Admin not found' });
+      res.json({ message: 'Admin deleted successfully' });
+    })
+    .catch(err => res.status(500).json({ message: 'Error deleting Admin', error: err.message }));
 };
