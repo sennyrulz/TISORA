@@ -14,7 +14,7 @@ const PaymentMethod = ({ formData, setFormData, error }) => {
 
   return (
     <>
-      <h5 className="text-start mb-3">Payment Method</h5>
+      <h5 className="text-start">Payment</h5>
       <p className="text-muted text-start small mb-3">
         All transactions are <strong>secured</strong> and{" "}
         <strong>encrypted</strong>.
@@ -55,7 +55,7 @@ const PaymentMethod = ({ formData, setFormData, error }) => {
           style={{ backgroundColor: "#F4F4F4" }}
         >
           <div className="text-center">
-            <img src={image5} alt="Paystack Illustration" width={80} />
+            <img src={image5} alt="Paystack Illustration" width={100} />
             <p className="mt-2 mb-0 small">
               After clicking “Pay now”, you will be redirected to <br />
               Paystack to complete your purchase securely.
