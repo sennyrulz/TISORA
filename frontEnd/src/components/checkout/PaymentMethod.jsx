@@ -4,7 +4,7 @@ import image1 from "../../assets/american_express.C3z4WB9r.svg";
 import image2 from "../../assets/mpesa.C3NjGMBV.svg";
 import image3 from "../../assets/master.CzeoQWmc.svg";
 import image4 from "../../assets/visa.sxIq5Dot.svg";
-import image5 from "../../assets/web.png";
+import image5 from "../../assets/payIcon.png";
 import image6 from "../../assets/ozow.BrS1cEol.svg";
 
 const PaymentMethod = ({ formData, setFormData, error }) => {
@@ -51,11 +51,11 @@ const PaymentMethod = ({ formData, setFormData, error }) => {
         </div>
 
         <div
-          className="border rounded-bottom pb-3 pt-2 px-3"
+          className="border rounded-bottom pb-3 pt-3 px-3"
           style={{ backgroundColor: "#F4F4F4" }}
         >
           <div className="text-center">
-            <img src={image5} alt="Paystack Illustration" width={100} />
+            <img src={image5} alt="Paystack Illustration" height={100} />
             <p className="mt-2 mb-0 small">
               After clicking “Pay now”, you will be redirected to <br />
               Paystack to complete your purchase securely.
