@@ -2,6 +2,7 @@ import express from 'express';
 // import { authenticateToken } from "../middlewares/authMid.js"
 import {
   loginUser,
+  getUser,
   createUser,
   updateUser,
   deleteUser,
@@ -15,7 +16,7 @@ route.post("/signUp", createUser);
 route.post("/login", loginUser);
 
 // Protected routes
-// route.get("/Profile", getUser);
+route.get("/dashboard", getUser);
 route.put("/:id", updateUser);
 route.delete("/:id", deleteUser);
 

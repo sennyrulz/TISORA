@@ -35,12 +35,12 @@ const adminProductUploadSchema = new mongoose.Schema (
       }
     ],
 
-  productName:
-    { 
-      type: String,
-      required: true,
-      unique: true
-    },
+    productName:
+      { 
+        type: String,
+        required: true,
+        unique: true
+      },
 
     desc:
       {

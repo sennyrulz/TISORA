@@ -2,6 +2,7 @@ import express from 'express'
 import { authenticateAdmin } from "../middlewares/adminMid.js";
 import {
   loginAdmin,
+  getAdmin,
   createAdmin,
   updateAdmin,
   deleteAdmin,
@@ -14,8 +15,8 @@ route.post("/signUp", createAdmin);
 route.post("/login", loginAdmin);
 
 // Apply middleware to protected routes
-// route.get("/", getAdmin);
-route.put("/:id", updateAdmin);
-route.delete("/:id", deleteAdmin);
+route.get("/dashboard", authenticateAdmin, getAdmin);
+route.put("/:id", authenticateAdmin, updateAdmin);
+route.delete("/:id", authenticateAdmin, deleteAdmin);
 
 export default route;

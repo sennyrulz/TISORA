@@ -4,8 +4,10 @@ import cors from 'cors';
 import multer from 'multer';
 import { v2 as cloudinary } from 'cloudinary';
 
-const app = express()
 dotenv.config();
+
+const app = express();
+
 app.use(cors());
 app.use(express.json());
 
@@ -23,55 +25,20 @@ const upload = multer({ storage });
 // Route to upload image
 app.post('/upload', upload.single('image'), async (req, res) => {
   try {
-    const result = cloudinary.uploader.upload_stream(
-      {
-        folder: 'uploads',
-      },
+    const stream = cloudinary.uploader.upload_stream(
+      { folder: 'uploads' },
       (error, result) => {
         if (error) return res.status(500).json({ error });
         res.json({ url: result.secure_url });
-      });
-
-    result.end(req.file.buffer);
-    
+      }
+    );
+    stream.end(req.file.buffer);
   } catch (error) {
     res.status(500).json({ error: 'Upload failed' });
-  }});
+  }
+});
 
-  const PORT = process.env.PORT || 5001;
-    app.listen(5000, () => {
-    console.log(`Server running on ${PORT}`);
-  });
-  
-  const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "1h" });
-
-// const students = [
-//   {id:1, name: "Oluwaseun", email:"oluwaseun.oloto@gmail.com", password:"11111"},
-//   {id:2, name: "Olayinka", email:"olayinka.oloto@gmail.com", password:"11111"},
-//   {id:3, name: "Olatunji oluyide", email:"olatunji.oluyide@gmail.com", password:"11111"}
-// ]
-// app.post("/", (req, res)=>{
-//   const payload = req.body;
-//   console.log(payload)
-//   const newPayload = {id:students.length+1, ...payload}
-//   students.push(newPayload)
-//   return res.send("registration was sucessful!!")
-// })
-
-// app.get("/", (req, res)=>{
-//   return res.json(students)
-// })
-
-// app.put("/", (req,res)=>{
-//   const payload = req.body;
-//   const userPosition = students.findIndex((student)=> student.id == payload.id)
-//   // const studentPosition = students.findIndex((students)=> students.email == payload.email)
-//   students.splice(userPosition, 1, payload)
-//   // console.log(studentPosition)
-//   return res.send("Your information is updated successfully")
-// })
-// app.delete("/", (req, res)=>{
-//   return("this is a delete request")
-// })
-
-
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Server running on ${PORT}`);
+});

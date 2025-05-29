@@ -14,7 +14,6 @@ const getProducts = async (req, res) => {
 // Create a new product
 const createProducts = async (req, res) => {
     const {
-        id,
         productName,
         desc,
         features,

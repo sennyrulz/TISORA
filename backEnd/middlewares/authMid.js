@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 
-const backendURL = import.meta.env.VITE_BACKEND_URL;
+// const backendURL = process.env.VITE_BACKEND_URL;
 
 export const authenticateToken = (req, res, next) => {
   const authHeader = req.headers['authorization'];

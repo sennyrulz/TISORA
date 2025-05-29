@@ -10,14 +10,16 @@ export const loginUser = async (req, res) => {
 
   try {
     const user = await User.findOne({ email });
-    if (!user) return res.status(401).json({ message: "Invalid credentials" });
-    
-  const hashedPassword = await bcrypt.hash(password, 10);
-    
-        const isAdmin = await adminModel.findOne({email});
-         if (isAdmin){
-            return res.send("Admin already exists. Please login")
-         }
+    if (!user) return res.status(401).json({ message: "Invalid credentials" });    
+      const isUser = await userModel.findOne({email});
+        if (isUser){
+          return res.send("User already exists. Please login")
+  };
+  //create a hashed password
+    const salt = bcrypt.genSaltSync(10);
+    const hashedPassword = bcrypt.hashSync(password, salt);
+    console.log(hashedPassword);
+
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(401).json({ message: "Invalid credentials" });
 
@@ -32,7 +34,7 @@ export const loginUser = async (req, res) => {
 
 };
 
-export const createUser = async (req, res)=>{
+export const createUser = async (req, res) => {
     const {
     fullName,
     email,
@@ -41,33 +43,43 @@ export const createUser = async (req, res)=>{
     password} = req.body
 
 // Validate required fields
-    if (!fullName || !email || !phone || !address || !password ) {
-        return res.status(400).json({ message: 'All fields are required' });
-    }
-    
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const isUser = await userModel.findOne({email});
-     if (isUser){
-        return res.send("User already exists. Please login")
-     }
+  if (!fullName || !email || !phone || !address || !password ) {
+    return res.status(400).json({ message: 'All fields are required' });
+  }
 //check if user exists in DB
-    try {
-        const newUser = new userModel({   
-            fullName,
-            email,
-            phone,
-            address,
-            password,});
-        const savedUser = await newUser.save();
-        return res.json(savedUser);    
+  const isUser = await userModel.findOne({email});
+    if (isUser){
+      return res.send("User already exists. Please login")
+  };
+//create a hashed password
+  const salt = bcrypt.genSaltSync(10);
+  const hashedPassword = bcrypt.hashSync(password, salt);
+  console.log(hashedPassword);
+
+//continue with registration
+  try {
+    const newUser = new userModel({   
+      fullName,
+      email,
+      phone,
+      address,
+      password:hashedPassword});
+
+    const savedUser = await newUser.save();
+      return res.json(savedUser);    
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({ message: 'Error creating user', error: err.message });
+      console.log(error);
+      return res.status(500).json({ message: 'Error creating user', error: err.message });
     }
 };
 
-//Update admin
+//Get user
+export const getUser = async (req, res) => {
+  const allUser = await userModel.find();
+  return res.json(allUser);
+};
+
+//Update user
 export const updateUser = async (req,res)=>{
     const {id, ...others } = req.body
     if (!id) return res.status(400).json({ message: 'ID is required' });

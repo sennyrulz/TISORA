@@ -1,9 +1,11 @@
 import express from 'express';
+import { initiatePayment} from '../controllers/paymentController.js';
+// import { verifyPayment } from '../controllers/paymentController.js'; // add the verify payment logic in your payment controller
+
 
 const router = express.Router();
-const { initiatePayment, verifyPayment } = require('../controllers/paymentController');
 
 router.post("/checkout/initiate-payment", initiatePayment);
-router.post('/verify', verifyPayment);
+// router.post('/verify', verifyPayment);
 
-module.exports = router;
+export default router;

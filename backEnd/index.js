@@ -5,14 +5,18 @@ import userRoute from "./routes/userRoute.js";
 import adminRoute from "./routes/adminRoute.js";
 import mongoose from "mongoose";
 import fileUpload from 'express-fileupload';
+import paymentRoute from './routes/paymentRoute.js'
+import productRoute from './routes/productRoute.js'
 import cors from "cors";
 import dotenv from "dotenv";
+
+
 dotenv.config();
+const app = express();
 
 //Create Connection
-const app = express();
-mongoose.connect(process.env.MONGODB_URL || "mongodb://localhost:27017/eCommerce");
-
+mongoose
+.connect(process.env.MONGODB_URL || "mongodb://localhost:27017/eCommerce");
 connectDB();
 
 // ✅ CORS config
@@ -39,12 +43,14 @@ app.use((req, res, next) => {
 app.use(fileUpload({ useTempFiles: true }));
 app.use(express.json());
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+// app.use(bodyParser.urlencoded({ extended: false }));
 
 // Routes endpoints
 //app.use(userRoute) app.use(adminRoute);
 app.use("/", userRoute);
+app.use("/payment", paymentRoute)
 app.use("/admin", adminRoute);
+app.use("/admin/products", productRoute);
 
 //✅ Error handler (should be last!)
 app.use((err, req, res, next) => {

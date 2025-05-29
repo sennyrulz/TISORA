@@ -1,6 +1,6 @@
 import express from 'express';
 import upload from '../middlewares/upload.js';
-import { authenticateToken, authorizeAdmin } from '../middlewares/authMiddleware.js'; // Make sure these are defined
+import { authenticateToken, authorizeAdmin } from '../middlewares/authMid.js'; // Make sure these are defined
 import {
     getProducts,
     createProducts,
@@ -11,25 +11,27 @@ import {
 const route = express.Router();
 
 // GET all products
-route.get("/admin/products", 
+route.get("/", 
     authenticateToken, 
     authorizeAdmin, 
     getProducts);
 
 // CREATE new product
-route.post("/admin/products", 
+route.post("/", 
     authenticateToken, 
     authorizeAdmin, 
     createProducts);
+    
+route.post("/upload", upload.single("image"), productUploadHandler);
 
 // UPDATE a product
-route.put("/admin/products", 
+route.put("/:id", 
     authenticateToken, 
     authorizeAdmin, 
     updateProducts);
 
 // DELETE a product
-route.delete("/admin/products", 
+route.delete("/:id", 
     authenticateToken, 
     authorizeAdmin, 
     deleteProducts);
