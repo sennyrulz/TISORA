@@ -10,24 +10,27 @@ import productRoute from './routes/productRoute.js'
 import cors from "cors";
 import dotenv from "dotenv";
 
-
 dotenv.config();
 const app = express();
 
 //Create Connection
-mongoose
-.connect(process.env.MONGODB_URL || "mongodb://localhost:27017/eCommerce");
-connectDB();
+mongoose.connect(process.env.MONGODBURL || "mongodb://localhost:27017/eCommerce")
+  .then(() => console.log('MongoDB Connected'))
+  .catch(err => console.error('MongoDB connection error:', err));
+
+// connectDB();
 
 // ✅ CORS config
+const allowedOrigins = [process.env.CLIENT_URL || 'http://localhost:5173'];
+
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: allowedOrigins,
   credentials: true,
 }));
 
 // ✅ Handle preflight OPTIONS requests
 app.options('*', cors({
-  origin: 'http://localhost:5173',
+  origin: allowedOrigins,
   credentials: true,
 }));
 

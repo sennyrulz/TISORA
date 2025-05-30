@@ -8,4 +8,7 @@ const router = express.Router();
 router.post("/checkout/initiate-payment", initiatePayment);
 // router.post('/verify', verifyPayment);
 
+// Uncomment this when you implement verify payment logic
+// router.post('/checkout/verify-payment', verifyPayment);
+
 export default router;

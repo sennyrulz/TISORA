@@ -1,7 +1,27 @@
 import Goods from '../models/productModel.js';
+import cloudinary from 'cloudinary'
+import streamifier from 'streamifier'
+
+// Configure Cloudinary
+cloudinary.v2.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+// Helper to upload buffer to Cloudinary
+const uploadToCloudinary = (buffer) => {
+  return new Promise((resolve, reject) => {
+    const stream = cloudinary.v2.uploader.upload_stream({ folder: 'products' }, (err, result) => {
+      if (err) return reject(err);
+      resolve(result.secure_url);
+    });
+    streamifier.createReadStream(buffer).pipe(stream);
+  });
+};
 
 // Get all products
-const getProducts = async (req, res) => {
+export const getProducts = async (req, res) => {
     try {
         const products = await Goods.find().populate('adminId', 'fullname email');
         return res.status(200).json(products);
@@ -12,15 +32,15 @@ const getProducts = async (req, res) => {
 };
 
 // Create a new product
-const createProducts = async (req, res) => {
+export const createProducts = async (req, res) => {
     const {
+        pictures,
         productName,
         desc,
         features,
         materials,
         sizes,
         price,
-        pictures
     } = req.body;
 
     // Validate required fields
@@ -28,22 +48,27 @@ const createProducts = async (req, res) => {
         return res.status(400).json({ message: 'All fields are required' });
     }
 
-    // Validate that at least two images were uploaded
-    if (!Array.isArray(pictures) || pictures.length < 2) {
-        return res.status(400).json({ message: 'At least two images are required' });
-    }
+   // Validate image upload
+  if (!req.files || req.files.length < 2) {
+    return res.status(400).json({ message: 'At least two images are required' });
+  }
 
-    try {
-        const newProduct = new Goods({
-            adminId: req.user.userId, // from JWT middleware
-            productName,
-            desc,
-            features,
-            materials,
-            sizes,
-            price,
-            pictures // Expecting Cloudinary image array
-        });
+  try {
+    // Upload all images to Cloudinary
+    const pictures = await Promise.all(
+      req.files.map(file => uploadToCloudinary(file.buffer))
+    );
+
+    const newProduct = new Goods({
+        adminId: req.user.userId, // from JWT middleware
+        productName,
+        desc,
+        features,
+        materials,
+        sizes,
+        price,
+        pictures // Expecting Cloudinary image array
+    });
 
         await newProduct.save();
 
@@ -58,7 +83,7 @@ const createProducts = async (req, res) => {
 };
 
 // Update an existing product
-const updateProducts = async (req, res) => {
+export const updateProducts = async (req, res) => {
     const { id, ...updates } = req.body;
 
     try {
@@ -76,7 +101,7 @@ const updateProducts = async (req, res) => {
 };
 
 // Delete a product
-const deleteProducts = async (req, res) => {
+export const deleteProducts = async (req, res) => {
     const { id } = req.body;
 
     try {
@@ -92,5 +117,3 @@ const deleteProducts = async (req, res) => {
         return res.status(500).json({ message: 'Failed to delete product' });
     }
 };
-
-export default {getProducts, createProducts, updateProducts, deleteProducts};
