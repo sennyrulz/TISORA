@@ -2,11 +2,10 @@ import mongoose from "mongoose";
 
 const productSchema = new mongoose.Schema (
   {
-    id: { 
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: "Admin" 
-    },
-
+    // id: { 
+    //     type: mongoose.Schema.Types.ObjectId, 
+    //     ref: "Admin" 
+    // },
     pictures: {
       type: [
         {
@@ -20,8 +19,7 @@ const productSchema = new mongoose.Schema (
             required: true 
         }, // File size in bytes
         },
-      ],
-      validate: [
+      ], validate: [
         {
           validator: function (pics) {
             return pics.length <= 2; // Max 2 images
@@ -36,12 +34,10 @@ const productSchema = new mongoose.Schema (
         },
       ],
     },
-
     productName: { 
         type: String, 
         required: true 
     },
-
     desc: { 
         type: String, 
         required: true 
@@ -50,12 +46,10 @@ const productSchema = new mongoose.Schema (
           type: String, 
           required: true 
       },
-
     material: { 
         type: String, 
         required: true 
     },
-
     sizes: { 
         type: String, 
         required: true 
@@ -63,10 +57,8 @@ const productSchema = new mongoose.Schema (
     price: { 
         type: String, 
         required: true 
-    },
-    
-  },
-  { timestamps: true }
+    },  
+  },{ timestamps: true }
 );
 
 const Goods = mongoose.model("Goods", productSchema);

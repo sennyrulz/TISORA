@@ -12,12 +12,12 @@ import {
 const route = express.Router();
 
 // GET all products
-route.get("/",
+route.get("/admin/dashboard/products",
     authenticateToken,
     getProducts);
 
 // CREATE new product
-route.post("/",
+route.post("/admin/dashboard/products",
     authenticateToken,
     upload.array('images', 2), 
     createProducts);
@@ -33,6 +33,6 @@ route.delete("/:id",
     deleteProducts);
 
 //admin product upload route
-route.post("/upload", upload.array("images", 2), createProducts);
+route.post("/admin/dashboard/products/upload", upload.array("images", 2), createProducts);
 
 export default route;

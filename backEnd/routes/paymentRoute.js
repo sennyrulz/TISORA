@@ -5,7 +5,7 @@ import { initiatePayment} from '../controllers/paymentController.js';
 
 const router = express.Router();
 
-router.post("/checkout/initiate-payment", initiatePayment);
+router.post("/cart/Checkout", initiatePayment);
 // router.post('/verify', verifyPayment);
 
 // Uncomment this when you implement verify payment logic

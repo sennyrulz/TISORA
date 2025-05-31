@@ -12,11 +12,11 @@ import {
 const route = express.Router();
 
 // Public routes for User
-route.post("/signUp", createUser); 
-route.post("/login", loginUser);
+route.post("/user/signUp", createUser); 
+route.post("/user/login", loginUser);
 
 // Protected routes
-route.get("/dashboard", getUser);
+route.get("/user/dashboard", getUser);
 route.put("/:id", updateUser);
 route.delete("/:id", deleteUser);
 

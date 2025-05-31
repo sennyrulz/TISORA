@@ -2,11 +2,6 @@ import mongoose from "mongoose";
 
 const adminSchema = new mongoose.Schema(
     {   
-        Id: {
-            type: mongoose.Schema.Types.ObjectId, 
-            ref: "Admin" 
-        },
-
         fullname: {
             type: String,
             required: true,
@@ -30,13 +25,11 @@ const adminSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
-        role: {
-            type: String,
-            enum: ["admin"],
-            default: "admin",
+        admin: {
+            type: Boolean,
+            default: true
         },
-    },  
-        { timestamps: true }
+    },  { timestamps: true }
 );
 
 const adminModel = mongoose.model("Admin", adminSchema);
