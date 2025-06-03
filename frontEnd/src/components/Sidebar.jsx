@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
-import { BsCart3, BsGrid1X2Fill, BsFillGearFill, BsFillBellFill
+import {
+  BsCart3, BsGrid1X2Fill, BsFillGearFill, BsFillBellFill
 } from 'react-icons/bs';
 
 const Sidebar = () => {
@@ -45,13 +46,6 @@ const Sidebar = () => {
           <li className="sidebar-list-item" onClick={() => handleNavigate('/orders')}>
             <BsFillBellFill className='icon' /> Orders
           </li>
-             <li className='sidebar-list-item' onClick= {() => navigate('/users')}>
-              <BsPeopleFill className='icon'/> Users  
-          </li>
-          <li className='sidebar-list-item' onClick= {() => navigate('/inventories')}>
-              <BsListCheck className='icon'/> Inventories
-          </li>
-          <li className='sidebar-list-item' onClick= {() => navigate( '/orders')}></li>
           <li className="sidebar-list-item" onClick={() => handleNavigate('/settings')}>
             <BsFillGearFill className='icon' /> Settings
           </li>
@@ -62,4 +56,3 @@ const Sidebar = () => {
 };
 
 export default Sidebar;
-

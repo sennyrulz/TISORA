@@ -23,6 +23,7 @@ import { Modal, Button, Container } from "react-bootstrap";
 import Checkout from "./components/Checkout";
 import { Cloudinary } from "@cloudinary/url-gen";
 import AuthPage from "./pages/AuthPage";
+import Dashboard from "./pages/Dashboard";
 
 
 const cld = new Cloudinary({ cloud: { cloudName: 'dr1ay8vmn' }});
@@ -108,6 +109,7 @@ function App() {
           <Route path="/authPage" element={<AuthPage />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />
+          <Route path="/Dashboard" element={<Dashboard/>} />
         </Routes>
         <NewsLetterBox />
         <Footer />

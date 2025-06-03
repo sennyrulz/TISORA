@@ -25,7 +25,8 @@ const Cart = () => {
             <div className="mt-5">
               <h2>Have an account?</h2>
               <p>
-                <a href="/login" className="fw-semibold text-black">
+                <a href="/AuthPage" className="fw-semibold text-black">
+
                   Login
                 </a>{" "}to checkout faster
               </p>

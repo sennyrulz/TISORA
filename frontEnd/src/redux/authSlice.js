@@ -5,7 +5,7 @@ export const signUp = createAsyncThunk(
   "user/signUp",
   async (userData, { rejectWithValue }) => {
     try {
-      const res = await fetch("http://localhost:5173/users/signup", {
+      const res = await fetch("http://localhost:5001/users/signup", {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
@@ -13,7 +13,7 @@ export const signUp = createAsyncThunk(
       });
       if (!res.ok) throw new Error("Signup failed");
       const data = await res.json();
-      return data; // assumed to be user info or token
+      return data; 
     } catch (err) {
       return rejectWithValue(err.message);
     }
@@ -25,8 +25,9 @@ export const login = createAsyncThunk(
   "user/login",
   async (credentials, { rejectWithValue }) => {
     try {
-      const res = await fetch("http://localhost:5173/users/login", {
+      const res = await fetch("http://localhost:5001/users/login", {
         method: "POST",
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(credentials),
       });
