@@ -1,7 +1,10 @@
 import React, { useState, useRef } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import { loadPaystackScript } from "../utils/paystack";
+import { initializePayment, verifyPayment } from "../services/paystackService";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { clearCart } from "../redux/cartSlice";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ShippingForm from "./checkout/ShippingForm";
@@ -52,6 +55,7 @@ const Checkout = () => {
 
   const cartItems = useSelector((state) => state.cart.cart);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
    // Calculate total dynamically
   const calculateTotal = () => {
@@ -115,42 +119,90 @@ const Checkout = () => {
         return { isValid: Object.keys(tempErrors).length === 0, firstErrorKey };
       };
 
-      const initializePaystackPayment = async () => {
-        const isLoaded = await loadPaystackScript();
-        if (!isLoaded) {
-          toast.error("Failed to load Paystack script. Check your internet.");
-          return;
-        }
-        const totalAmount = calculateTotal() * 100; // Convert to kobo
-        const handler = window.PaystackPop.setup({
-          key: import.meta.env.VITE_PAYSTACK_PUBLIC_KEY, // Replace with your Paystack public key
-          email: formData.email,
-          amount: totalAmount,
-          currency: "NGN",
-          ref: `PSK_${Date.now()}`, // Unique ref
-          metadata: {
-            custom_fields: [
-              {
-                display_name: `${formData.firstName} ${formData.lastName}`,
-                variable_name: "phone",
-                value: formData.phone,
+      const handlePaystackPayment = async () => {
+        try {
+          setIsProcessing(true);
+
+          // Prepare payment data
+          const paymentData = {
+            email: formData.email,
+            amount: Math.round(calculateTotal() * 100), // This will convert to kobo
+            currency: "NGN",
+            metadata: {
+              customer: {
+                firstName: formData.firstName,
+                lastName: formData.lastName,
+                phone: formData.phone,
               },
-            ],
-          },
-           callback: function (response) {
-            toast.success("Payment successful!");
-            console.log("Payment response:", response);
-            // TODO: Notify backend to verify and save order
+              order: {
+                items: cartItems.map(item => ({
+                  name: item.name,
+                  quantity: item.quantity,
+                  price: item.price
+                })),
+                shipping: {
+                  address: formData.address,
+                  apartment: formData.apartment,
+                  city: formData.city,
+                  state: formData.state,
+                  country: formData.country,
+                  postalCode: formData.postalCode,
+                  method: formData.shippingMethod
+                }
+              }
+            }
+          };
+
+          // Initialize payment with Backend
+          const { data } = await initializePayment(paymentData);
+
+          // Load Paystack script
+          const PaystackPop = await loadPaystackScript();
+
+          // Configure Paystack popup
+          const handler = PaystackPop.setup({
+            key: process.env.VITE_PAYSTACK_PUBLIC_KEY,
+            email: formData.email,
+            amount: paymentData.amount,
+            currency: paymentData.currency,
+            ref: data.reference,
+            metadata: paymentData.metadata,
+            callback: async function(response) {
+              try {
+                // Verify Payment on Backend
+                const verificationResult = await verifyPayment(response.reference);
+
+                if (verificationResult.success) {
+                  toast.success("Payment successful! Order confirmed.");
+
+                  // Clear cart and redirect
+                  dispatch(clearCart());
+                  navigate("/order-success", { state: verificationResult.data });
+                } else {
+                  toast.error("Payment failed. Please contact support.");
+                }
+              } catch (error) {
+                console.error("Payment verification error:", error);
+                toast.error("Payment failed. Please contact support.");
+              } finally {
+                setIsProcessing(false);
+              }
             },
-            onClose: function () {
-              toast.info("Payment popup closed.");
+            onClose: function() {
+              toast.info('Payment cancelled.');
               setIsProcessing(false);
-            },
+            }
           });
-          
+
+          // Open Paystack popup
           handler.openIframe();
-        };
-        
+
+        } catch (error) {
+          console.error("Payment initialization error:", error);
+          toast.error("Payment initialization failed. Please contact support.");
+          setIsProcessing(false);
+        }
+      }
         const handleSubmit = (e) => {
           e.preventDefault();
           
@@ -163,17 +215,17 @@ const Checkout = () => {
             }
             return;
           }
-          
+          // Calling paystackpayment API here
+          handlePaystackPayment();
           setIsProcessing(true);
           console.log("Form Data Submitted:", formData);
           toast.success("Order Placed!");
           
-          setTimeout(() => {
-            console.log("Form Data Submitted:", formData);
-            // TODO: Call Paystack or redirect here
-            initializePaystackPayment();
-            // setIsProcessing(false); // Reset processing state if needed
-            }, 1000);
+          // setTimeout(() => {
+          //   console.log("Form Data Submitted:", formData);
+          //   // TODO: Call Paystack or redirect here
+          //   // setIsProcessing(false); // Reset processing state if needed
+          //   }, 1000);
           };
       
       return (
@@ -186,8 +238,7 @@ const Checkout = () => {
               <ShippingMethod
               shippingMethod={formData.shippingMethod}
               onChange={(method) => setFormData({ ...formData, shippingMethod: method })}/>
-              <PaymentMethod
-              paymentMethod formData={formData} setFormData={setFormData} handleChange={handleChange} errors={errors} />
+              <PaymentMethod formData={formData} setFormData={setFormData} handleChange={handleChange} errors={errors} />
               <BillingAddress formData={formData}
               setFormData={setFormData} 
               handleChange={handleChange}

@@ -1,5 +1,4 @@
 import React from "react";
-import { Form } from "react-bootstrap";
 import image1 from "../../assets/american_express.C3z4WB9r.svg";
 import image2 from "../../assets/mpesa.C3NjGMBV.svg";
 import image3 from "../../assets/master.CzeoQWmc.svg";
@@ -8,10 +7,12 @@ import image5 from "../../assets/payIcon.png";
 import image6 from "../../assets/ozow.BrS1cEol.svg";
 
 const PaymentMethod = ({ formData, setFormData, error }) => {
-  const handlePaymentChange = (e) => {
-    setFormData({ ...formData, paymentMethod: e.target.value });
-  };
-
+  const handlePaymentChange = (method) => {
+    setFormData(prev => ({
+      ...prev,
+      paymentMethod: method
+    }))
+  }
   return (
     <>
       <h5 className="text-start">Payment</h5>
@@ -22,20 +23,12 @@ const PaymentMethod = ({ formData, setFormData, error }) => {
 
       <div className="mb-4">
         <div
-          className="border rounded-top px-3 border-primary"
-          style={{ backgroundColor: "#F0F5FF", padding: "15px 0" }}
+          className="border rounded-top px-3 ${formData.paymentMethod === 'paystack' ? 'border-primary' : 'border-secondary'} border-primary"
+          style={{ backgroundColor: formData.paymentMethod === 'paystack' ? "#F0F5FF" : "#F8F9FA", padding: "15px 0", cursor: "pointer" }}
+          onClick={() => handlePaymentChange('paystack')}
         >
           <div className="d-flex justify-content-between align-items-center">
-            <Form.Check
-              type="radio"
-              id="paystack"
-              label="Paystack"
-              name="paymentMethod"
-              value="paystack"
-              checked={formData.paymentMethod === "paystack"}
-              onChange={handlePaymentChange}
-              isInvalid={!!error}
-            />
+            <div>Paystack</div>
 
             <div className="d-flex gap-2">
               {[image3, image4, image1, image2, image6].map((img, index) => (
@@ -50,6 +43,7 @@ const PaymentMethod = ({ formData, setFormData, error }) => {
           </div>
         </div>
 
+        {formData.paymentMethod === "paystack" && (
         <div
           className="border rounded-bottom pb-3 pt-3 px-3"
           style={{ backgroundColor: "#F4F4F4" }}
@@ -62,10 +56,9 @@ const PaymentMethod = ({ formData, setFormData, error }) => {
             </p>
           </div>
         </div>
-
-        {error && (
-          <div className="text-danger mt-2 small">{error}</div>
         )}
+
+        {error && <div className="text-danger mt-2 small">{error}</div>}
       </div>
     </>
   );

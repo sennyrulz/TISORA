@@ -35,6 +35,8 @@ mongoose
 //   origin: allowedOrigins,
 //   credentials: true,
 // }));
+app.use(cors());
+app.use('/api/payment/webhook', express.raw({ type: 'application/json' }));
 
 // ✅ Handle preflight OPTIONS requests
 // app.options('*', cors({
