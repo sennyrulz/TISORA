@@ -42,7 +42,7 @@ const Nav = () => {
             <NavLink to="/search">
               <FontAwesomeIcon icon={faSearch} />
             </NavLink>
-            <NavLink to="/AuthPage">
+            <NavLink to="/userAuth">
               <FontAwesomeIcon icon={faUser} />
             </NavLink>
             <NavLink to="/cart">

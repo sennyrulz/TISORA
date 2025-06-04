@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";  // useEffect from react
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { signUp, login, logout } from "../redux/authSlice";
+import { signUp, login, logout } from "../redux/userAuthSlice";
 import { toast, ToastContainer } from "react-toastify";
 import { Container, Row, Col } from "react-bootstrap";
 import axios from 'axios';
 
-function AuthPage() {
+function userAuthPage() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.user);
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
@@ -177,4 +177,4 @@ useEffect(() => {
   );
 }
 
-export default AuthPage;
+export default userAuthPage;

@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";  // useEffect from react
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { signUp, login, logout } from "../redux/authSlice";
+import { signUp, login, logout } from "../store/authSlice.js";
 import { toast, ToastContainer } from "react-toastify";
 import { Container, Row, Col } from "react-bootstrap";
 import axios from 'axios';

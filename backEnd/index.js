@@ -19,10 +19,6 @@ app.use(cors({
   credentials: true,
 }));
 
-// Handle OPTIONS preflight requests globally
-// app.options('*', cors());
-
-// Handle OPTIONS preflight requests manually
 app.use((req, res, next) => {
   if (req.method === 'OPTIONS') {
     res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
@@ -47,10 +43,10 @@ app.use(express.json());
 
 
 // Routes endpoints
-app.use('/users', userRoute);
-app.use('/payments', paymentRoute);
-app.use('/admin', adminRoute);
-app.use('/products', productRoute);
+app.use(userRoute);
+app.use(paymentRoute);
+app.use(adminRoute);
+app.use(productRoute);
 
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {

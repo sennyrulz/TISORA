@@ -4,7 +4,7 @@ import './App.css'
 import AdminAuth from "../../admin/pages/AdminAuth"
 import { BrowserRouter, Routes, Route, Navigate} from "react-router-dom";
 import Dashboard from '../pages/Dashboard'
-import AdminLayout from '../layout/adminLayout';
+// import AdminLayout from '../layout/adminLayout';
 import Nav from '../components/Nav';
 import Footer from '../components/Footer';
 
@@ -18,7 +18,7 @@ function App() {
     <div className='grid-container'>
         <Routes>
           {/* Admin Login Route */}
-            <Route path="/" element={<AdminAuth />} />
+            <Route path="/admin" element={<AdminAuth />} />
 
           {/* Protected Dashboard Route */}
             <Route

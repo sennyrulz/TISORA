@@ -24,7 +24,7 @@ export const loginAdmin = async (req, res) => {
     }
 
     // Return admin info (avoid returning password)
-    return res.json({ id: user.id, name: user.fullName, email: user.email });
+    return res.json({ id: admin.id, name: admin.fullName, email: admin.email });
   } catch (error) {
     console.error("Login error:", error);
     return res.status(500).json({ message: "Internal server error" });
@@ -48,7 +48,7 @@ export const createAdmin = async (req, res) => {
 //check if Admin exists in DB
     const isAdmin = await adminModel.findOne({email});
     if(isAdmin){
-      return res.send("Admin already exists. Please log in")
+      res.json({ message: "Admin already exists. Please log in"});
     };
 
     //create a hashed password
@@ -63,7 +63,8 @@ export const createAdmin = async (req, res) => {
         email,
         phone,
         address,
-        password:hashedPassword});
+        password:hashedPassword,
+        admin:true,});
       const savedAdmin = await newAdmin.save();
       return res.json(savedAdmin);    
     } catch (error) {

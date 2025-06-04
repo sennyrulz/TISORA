@@ -12,8 +12,8 @@ import {
 const route = express.Router();
 
 // Public routes for User
-route.post("/signup", createUser); 
-route.post("/login", loginUser);
+route.post("/users/signup", createUser); 
+route.post("/users/login", loginUser);
 
 // Protected routes
 route.get("/dashboard", getUser);

@@ -1,33 +1,27 @@
 import React, { useEffect, useState } from "react";  // useEffect from react
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { signUp, login, logout } from "../redux/authSlice";
+import { signUp, login, logout } from "../store/authSlice.js";
 import { toast, ToastContainer } from "react-toastify";
 import { Container, Row, Col } from "react-bootstrap";
 import axios from 'axios';
 
+
 function AdminAuth() {
+
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.user.user);
+  const admin = useSelector((state) => state.user.user);
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
    const [loading, setLoading] = useState(false);
-
-  const [isLogin, setIsLogin] = useState(true); // Toggle between Login and Signup
+  const [isLogin, setIsLogin] = useState(true); 
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
     phone: "",
     address: "",
-    password: ""
+    password: "",
+    admin: true,
   });
-
-// Automatically navigate to dashboard when authenticated
-const navigate = useNavigate();  
-useEffect(() => {
-    if (isAuthenticated) {
-    navigate("/Dashboard");
-    }
-  }, [isAuthenticated, navigate]);
 
   const handleChange = (e) => {
   setFormData((prev) => ({
@@ -45,6 +39,9 @@ useEffect(() => {
       const resultAction = await dispatch(login(formData));
       if (login.fulfilled.match(resultAction)) {
         toast.success("Login successful");
+        
+        //navigate to dashboard
+        navigate("/Dashboard")
       } else {
         toast.error(resultAction.payload || "Admin does not exist! Please create an account");
       }
@@ -52,6 +49,19 @@ useEffect(() => {
       const resultAction = await dispatch(signUp(formData));
       if (signUp.fulfilled.match(resultAction)) {
         toast.success("Signup successful");
+        //navigate to signin
+        navigate("/admin/login");
+
+         // Optionally reset form and mode
+        setIsLogin(true);
+        setFormData({
+          fullName: "",
+          email: "",
+          phone: "",
+          address: "",
+          password: "",
+          admin: true,
+        });
       } else {
         toast.error(resultAction.payload || "Signup failed");
       }
@@ -73,9 +83,9 @@ return (
 
           {isAuthenticated ? (
             <>
-              <p>{user.id}</p>
-              <p>Welcome, {user.name}!</p>
-              <p>{user.email}</p> 
+              <p>{admin.id}</p>
+              <p>Welcome, {admin.name}!</p>
+              <p>{admin.email}</p> 
               <div className="d-flex flex-column flex-md-row justify-content-center gap-3 mt-4">
                 <button style={{
                   backgroundColor: '#91443f'}} 
@@ -86,6 +96,7 @@ return (
             </>
           ) : (
           <>
+          
             {/*SignUp*/}
             <form onSubmit={handleSubmit}>
                 {!isLogin && (
@@ -152,9 +163,9 @@ return (
                   border:'none',
                   width: '100%'
                 }} 
-                className="btn btn-primary"
-                  disabled={loading}>
-                  {loading ? "loading..." : isLogin ? "Login" : "Sign Up"}
+                className="signupBtn btn btn-primary"
+                disabled={loading}>  
+                {loading ? "loading..." : isLogin ? "Login" : "Sign Up"}
               </button>
             </form>
 
