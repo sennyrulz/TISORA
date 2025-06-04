@@ -2,17 +2,13 @@ import mongoose from "mongoose";
 
 const productSchema = new mongoose.Schema (
   {
-    // id: { 
-    //     type: mongoose.Schema.Types.ObjectId, 
-    //     ref: "Admin" 
-    // },
     pictures: {
       type: [
         {
           publicId: { 
             type: String, 
             required: true 
-            }, // For Cloudinary image deletion
+            }, 
 
           size: { 
             type: Number, 

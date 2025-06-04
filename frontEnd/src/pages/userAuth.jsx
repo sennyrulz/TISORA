@@ -1,12 +1,12 @@
-import React from 'react'
-import { useState } from "react";
+import React, { useEffect, useState } from "react";  // useEffect from react
+import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { signUp, login, logout } from "../redux/authSlice";
+import { signUp, login, logout } from "../redux/userAuthSlice";
 import { toast, ToastContainer } from "react-toastify";
 import { Container, Row, Col } from "react-bootstrap";
 import axios from 'axios';
 
-function AuthPage() {
+function userAuthPage() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.user);
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
@@ -21,57 +21,47 @@ function AuthPage() {
     password: ""
   });
 
+// Automatically navigate to dashboard when authenticated
+const navigate = useNavigate();  
+useEffect(() => {
+    if (isAuthenticated) {
+    navigate("/Dashboard");
+    }
+  }, [isAuthenticated, navigate]);
+
   const handleChange = (e) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value
+  setFormData((prev) => ({
+    ...prev,
+    [e.target.name]: e.target.value
     }));
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-     try {
-      const endpoint = isLogin ? "login" : "signUp";
-      const url = `${import.meta.env.VITE_BACKEND_URL}/users/${endpoint}`;
-      const payload = isLogin
-        ? {
-            email: formData.email,
-            password: formData.password,
-          }
-        : {
-            fullName: formData.fullName,
-            email: formData.email,
-            phone: formData.phone,
-            address: formData.address,
-            password: formData.password,
-          };
-
-      const response = await axios.post(url, payload);
-      const { token } = response.data;
-
-      localStorage.setItem("userToken", token);
-
-      dispatch(
-        isLogin
-          ? login({
-              name: formData.fullName || formData.email.split("@")[0],
-              email: formData.email,
-              token,
-            })
-          : signUp({
-              name: formData.fullName,
-              email: formData.email,
-              token,
-            })
-      );
-    } catch (error) {
-      console.error("Auth error:", error);
-      toast.error("Login or Signup failed: " + error.response?.data?.message || error.message);
-    } finally {
-        setLoading(false)
+  e.preventDefault();
+  setLoading(true);
+  
+  try {
+    if (isLogin) {
+      const resultAction = await dispatch(login(formData));
+      if (login.fulfilled.match(resultAction)) {
+        toast.success("Login successful");
+      } else {
+        toast.error(resultAction.payload || "User does not exist! Please create an account");
+      }
+    } else {
+      const resultAction = await dispatch(signUp(formData));
+      if (signUp.fulfilled.match(resultAction)) {
+        toast.success("Signup successful");
+      } else {
+        toast.error(resultAction.payload || "Signup failed");
+      }
     }
-  };
+  } catch (error) {
+    toast.error(error.message || "An error occurred");
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <Container style={{ marginTop: "150px", marginBottom: "100px", paddingTop: "20px" }}>
@@ -83,7 +73,9 @@ function AuthPage() {
 
           {isAuthenticated ? (
             <>
+              <p>{user.id}</p>
               <p>Welcome, {user.name}!</p>
+              <p>{user.email}</p> 
               <div className="d-flex flex-column flex-md-row justify-content-center gap-3 mt-4">
                 <button style={{
                   backgroundColor: '#91443f'}} 
@@ -158,13 +150,11 @@ function AuthPage() {
                 style={{
                   backgroundColor: '#91443f',
                   border: 'none',
-                  width: '100p%'
+                  width: '100%'
                 }} 
                   className="btn btn-primary"
-                   disabled={loading}
-                >
+                   disabled={loading}>
                   {loading ? "loading..." : isLogin ? "Login" : "Sign Up"}
-                  {isLogin ? "Login" : "Sign Up"}
                 </button>
               </form>
 
@@ -187,4 +177,4 @@ function AuthPage() {
   );
 }
 
-export default AuthPage;
+export default userAuthPage;

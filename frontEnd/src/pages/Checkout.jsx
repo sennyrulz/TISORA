@@ -9,6 +9,7 @@ import image3 from "../assets/master.CzeoQWmc.svg";
 import image4 from "../assets/visa.sxIq5Dot.svg";
 import image5 from "../assets/web.png";
 import image6 from "../assets/ozow.BrS1cEol.svg";
+import { signUp, login, logout } from "../redux/authSlice";
 
 const Checkout = () => {
   const [formData, setFormData] = useState({
@@ -39,6 +40,10 @@ const Checkout = () => {
 
   const cartItems = useSelector((state) => state.cart.cart);
   const dispatch = useDispatch();
+
+  const user = useSelector((state) => state.user.user);
+  const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+ 
 
   // Calculate total dynamically
   const calculateTotal = () => {
@@ -121,6 +126,7 @@ const Checkout = () => {
   return (
     <div className="container my-5 pt-5">
       <Row className="justify-content-center">
+
         {/* Left Column - Form */}
         <Col md={7} className="px-4">
           <Form onSubmit={handleSubmit}>
@@ -128,9 +134,11 @@ const Checkout = () => {
             <Row className="justify-content-between mb-2">
               <Col className="text-start">
                 <h5>Contact</h5>
+
               </Col>
+              {/*THis line of code isnt redirecting properly*/}
               <Col className="text-end">
-                <a href="/login" className="text-decoration-underline" style={{ color: "black" }}> Log in </a>
+                <a href="/AuthPage" className="text-decoration-underline" style={{ color: "black" }}> Log in </a>
               </Col>
             </Row>
 
@@ -673,15 +681,23 @@ const Checkout = () => {
             </Col>
           </Row>
         </Col>
+
+        
         {/* Mobile-only Pay Button (below Order Summary) */}
+        {isAuthenticated && user ? (
+        <>
         <div className="d-block d-md-none mt-3 px-4">
           <Button
             type="submit"
             className="btn btn-dark bg-black rounded-0 w-100 p-3"
-          >
+            onClick={() => dispatch(Checkout())}>
             Pay Now
           </Button>
         </div>
+        </>
+         ) : (
+            <p>Please log in to proceed.</p>
+          )}
       </Row>
 
       <ToastContainer

@@ -7,7 +7,7 @@ import NewIn from "./pages/NewIn";
 import Shop from "./pages/Shop";
 import Discover from "./pages/Discover";
 import Search from "./components/Search";
-import User from "./pages/AuthPage";
+import User from "./pages/userAuth";
 import Cart from "./components/Cart";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
@@ -22,7 +22,8 @@ import NewsLetterBox from "./Components/NewsLetterBox";
 import { Modal, Button, Container } from "react-bootstrap";
 import Checkout from "./components/Checkout";
 import { Cloudinary } from "@cloudinary/url-gen";
-import AuthPage from "./pages/AuthPage";
+import UserAuth from "./pages/userAuth";
+import Dashboard from "./pages/Dashboard";
 
 
 const cld = new Cloudinary({ cloud: { cloudName: 'dr1ay8vmn' }});
@@ -105,9 +106,11 @@ function App() {
           <Route path="/shop" element={<Shop />} />
           <Route path="/discover" element={<Discover />} />
           <Route path="/search" element={<Search />} />
-          <Route path="/authPage" element={<AuthPage />} />
+          <Route path="/user" element={<UserAuth />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />
+          <Route path="/Dashboard" element={<Dashboard/>} />
+
         </Routes>
         <NewsLetterBox />
         <Footer />

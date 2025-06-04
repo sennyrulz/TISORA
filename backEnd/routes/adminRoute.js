@@ -10,12 +10,12 @@ import {
 const route = express.Router();
 
 //public url
-route.post("/admin/signUp", createAdmin);
-route.post("/admin/login", loginAdmin);
+route.post("/signUp", createAdmin);
+route.post("/login", loginAdmin);
 
 // Apply middleware to protected routes
-route.get("/admin/dashboard", getAdmin);
-route.put("/admin/:id", updateAdmin);
-route.delete("/admin/:id",  deleteAdmin);
+route.get("/dashboard", getAdmin);
+route.put("/:id", updateAdmin);
+route.delete("/:id",  deleteAdmin);
 
 export default route;
