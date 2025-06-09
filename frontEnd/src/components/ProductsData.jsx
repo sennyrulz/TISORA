@@ -1,7 +1,6 @@
 export const productsData = [
-  
   { 
-   id: "MAVERICK-001",
+  //  id: "MAVERICK-001",
     Img1: [
         {
           "publicId": "IMG_4074_2_i0u7ds",
@@ -25,11 +24,14 @@ export const productsData = [
     material: "100% Cotton Ghana Batik",
     sizes: "(M-XXL)",
     price: 25000,
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
   },
 
   { 
-   id: "CELO-002",
-
+  //  id: "CELO-002",
     Img1: [
         {
           "publicId": "image00032_kpqkuj",
@@ -53,11 +55,14 @@ export const productsData = [
     material: "100% Adire cotton",
     sizes: "(M-XXL)",
     price: 35000,
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
   },
 
   { 
-   id: "LYRA-003",
-
+  //  id: "LYRA-003",
     Img1: [
         {
           "publicId": "image00030_xcmudx",
@@ -85,12 +90,15 @@ export const productsData = [
 
     material: "100% Cotton Ghana Batik",
     sizes: "(M-XXL)",
-    price: 45000
+    price: 45000,
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
   },
 
   { 
-   id: "IRIS-004",
-
+  //  id: "IRIS-004",
     Img1: [
         {
           "publicId": "image00069_gqdbuw",
@@ -114,12 +122,15 @@ export const productsData = [
 
     material: "100% Cotton Ghana Batik",
     sizes: "(M-XXL)",
-    price: 20000
+    price: 20000,
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },  
   },
 
   {    
-   id: "MAIA-005",
-
+  //  id: "MAIA-005",
     Img1: [
       {
         "publicId": "image00052_jqfl3e",
@@ -141,6 +152,10 @@ export const productsData = [
     material: "100% Adire cotton",
     sizes: "(M-XXL)",
     price: 35000,
+    userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    },
   },
 
   { 
@@ -168,8 +183,7 @@ export const productsData = [
   },
 
   { 
-   id: "ADE-007",
-
+  //  id: "ADE-007",
     Img1: [{
         "publicId": "image00011_gwdlce",
         "size": 1000
@@ -189,12 +203,15 @@ export const productsData = [
 
     material: "100% Ghana Batik, hand-crafted",
     sizes: "(M-XXL)",
-    price: 40000
+    price: 40000,
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
   },
 
   {
-   id: "ELAN-008",
-
+  //  id: "ELAN-008",
     Img1: [{
         "publicId": "image00025_omlkze",
         "size": 1000
@@ -217,12 +234,15 @@ export const productsData = [
     ],
     material: "100% Linen",
     sizes: "(M-XXL)",
-    price: 30000
+    price: 30000,
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
   },
 
   {
-   id: "IKEMBA-009",
-
+  //  id: "IKEMBA-009",
     Img1: [{
         "publicId": "image00025_omlkze",
         "size": 1000
@@ -244,6 +264,10 @@ export const productsData = [
     ],
     material: "100% linen Adire (hand-dyed)",
     sizes: "(M-XXL)",
-    price: 30000
+    price: 30000,
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
   },
 ]

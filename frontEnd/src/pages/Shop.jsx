@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Col, Container, Row, Form } from "react-bootstrap";
-import { productsData } from "../components/Product";
+import { productsData } from "../components/ProductsData";
 import ProductCard from "../components/ProductCard";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../redux/cartSlice";

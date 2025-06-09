@@ -1,11 +1,11 @@
 import express from 'express';
-import { initializePayment, getAllPayment, verifyPayment, handlePaystackWebhook } from '../controllers/orderController.js';
+import { initiatePayment, getAllPayments, verifyPayment, paystackWebhook } from '../controllers/paymentController.js';
 
 const router = express.Router();
 
-router.post('/payments/initialize', initializePayment);
-router.get('/payments/verify/:ref', verifyPayment);
-router.get("/payments/all", getAllPayment);
-router.post("/payments/webhook", express.raw({ type: "application/json" }), handlePaystackWebhook);
+router.post('/payments/initialize', initiatePayment);
+router.get('/payments/verify/:reference', verifyPayment);
+router.get("/payments/all", getAllPayments);
+router.post("/payments/webhook", express.raw({ type: "application/json" }), paystackWebhook);
 
 export default router;

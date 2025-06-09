@@ -1,11 +1,22 @@
 import mongoose from "mongoose";
 
 const paymentSchema = new mongoose.Schema({
-  reference: { type: String, required: true, unique: true },
+  reference: { 
+    type: String, 
+    required: true, 
+    unique: true 
+},
   customer: {
-    name: { type: String },
-    email: { type: String, required: true },
-    phone: { type: String }
+    name: { 
+        type: String 
+    },
+    email: { 
+        type: String, 
+        required: true 
+    },
+    phone: { 
+        type: String 
+    }
   },
   items: [
     {
@@ -15,10 +26,20 @@ const paymentSchema = new mongoose.Schema({
       price: Number
     }
   ],
-  totalAmount: { type: Number, required: true },
-  paymentMethod: { type: String },
-  status: { type: String, default: "pending" }, // pending, success, failed
-  paidAt: { type: Date },
+  totalAmount: { 
+    type: Number, 
+    required: true 
+},
+  paymentMethod: { 
+    type: String 
+},
+  status: { 
+    type: String, 
+    default: "pending" 
+}, // pending, success, failed
+  paidAt: { 
+    type: Date 
+},
 }, { timestamps: true });
 
 const Payment = mongoose.model("Payment", paymentSchema);

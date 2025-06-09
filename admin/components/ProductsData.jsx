@@ -2,28 +2,7 @@ import mongoose from "mongoose";
 
 const productSchema = new mongoose.Schema(
   {
-    productName: { 
-        type: String, 
-        required: true 
-    },
-    price: { 
-        type: Number, 
-        required: true 
-    },
-    desc: { 
-        type: String, 
-        required: true 
-    },
-    userId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-    },
-    category: {
-      type: String,
-      enum: ["new", "discount", "used"],
-      default: "new",
-    },
-    pictures: {
+      pictures: {
       type: [
         {
           url: { 
@@ -48,6 +27,27 @@ const productSchema = new mongoose.Schema(
         message:
           "A product can have a maximum of 2 images, and each must not exceed 10MB.",
       },
+    },
+    productName: { 
+        type: String, 
+        required: true 
+    },
+    price: { 
+        type: Number, 
+        required: true 
+    },
+    desc: { 
+        type: String, 
+        required: true 
+    },
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Admin",
+    },
+    category: {
+      type: String,
+      enum: ["new", "discount", "used"],
+      default: "new",
     },
   },
   { timestamps: true }

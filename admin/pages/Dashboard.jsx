@@ -32,7 +32,8 @@ function Dashboard() {
                     backgroundColor: '#91443f',
                     color: 'white' }}
                     className="btn"
-                    onClick={() => dispatch(logout())}>
+                    onClick={() => dispatch(logout()
+                    )}>
                   Logout
                 </button>
               </div>

@@ -3,6 +3,69 @@ import Payment from '../models/paymentModel.js';
 import crypto from 'crypto';
 
 
+const PAYSTACK_SECRET_KEY = process.env.PAYSTACK_SECRET_KEY;
+
+export const verifyPayment = async (req, res) => {
+  const hash = crypto
+    .createHmac('sha512', PAYSTACK_SECRET_KEY)
+    .update(JSON.stringify(req.body))
+    .digest('hex');
+
+  // Compare with Paystack signature
+  if (hash !== req.headers['x-paystack-signature']) {
+    return res.status(401).json({ message: 'Invalid signature' });
+  }
+
+  const event = req.body;
+
+  if (event.event === 'charge.success') {
+    const paymentData = event.data;
+
+    const {
+      reference,
+      amount,
+      currency,
+      status,
+      paid_at,
+      customer,
+      metadata
+    } = paymentData;
+
+    try {
+      // Check if already recorded
+      const existing = await Payment.findOne({ reference });
+      if (existing) {
+        return res.status(200).json({ message: 'Already processed' });
+      }
+
+      const newPayment = new Payment({
+        reference,
+        status,
+        amount: amount / 100,
+        currency,
+        paidAt: paid_at,
+        customer: {
+          name: customer.first_name + ' ' + customer.last_name,
+          email: customer.email,
+          phone: customer.phone
+        },
+        items: metadata.items || [],
+        metadata: metadata.customer || {},
+        raw: paymentData
+      });
+
+      await newPayment.save();
+      return res.status(200).json({ message: 'Payment verified and saved' });
+    } catch (err) {
+      console.error('Error saving payment:', err);
+      return res.status(500).json({ message: 'Payment verification failed' });
+    }
+  }
+
+  res.status(200).json({ message: 'Webhook received' });
+};
+
+
 export const initiatePayment = async (req, res) => {
   try {
     const { customer, items, totalAmount, paymentMethod } = req.body;

@@ -51,7 +51,11 @@ const Sidebar = () => {
           <li className='sidebar-list-item' onClick= {() => navigate('/inventories')}>
               <BsListCheck className='icon'/> Inventories
           </li>
-          <li className='sidebar-list-item' onClick= {() => navigate( '/orders')}></li>
+
+          <li className='sidebar-list-item' onClick= {() => navigate( '/products')}>
+             <BsFillBellFill className='icon' /> Products
+          </li>
+
           <li className="sidebar-list-item" onClick={() => handleNavigate('/settings')}>
             <BsFillGearFill className='icon' /> Settings
           </li>
