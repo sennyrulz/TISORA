@@ -57,9 +57,8 @@ function App() {
   };
 
   return (
-  
-      <>
-        <Nav />
+    <>
+      <Nav />
         <Routes>
           <Route path="/"
             element={
@@ -77,28 +76,22 @@ function App() {
                   </div>
 
                 <Container>
-                
                   {/* Product Scroll */}
-                  <div className="cardScroll d-flex px-5 gap-5 mb-5 overflow-auto" style={{ whiteSpace: "nowrap" }}>
-                    
-                  {productsData.slice(1, 7).map((product) => (
-                    <div 
-                      key={product.id} 
+                  <div className="cardScroll d-flex px-10 gap-5 mb-5 overflow-auto" 
+                    style={{ whiteSpace: "nowrap" }}>
+                      
+                    {productsData.slice(1, 7).map((product) => (
+                      <div key={product.id} 
                         style={{ flex: "0 0 auto", scrollSnapAlign: "start"}}>
-                        <ProductCard
-                          id={product.id}
-                          cldImg={product.publicId}
-                          name={product.name}
-                          price={product.price}
-                          addToCart={addToCart} 
-                          onSelect={(product) => {
-                            setSelectedProduct(product);
-                            setShowModal(true);
-                          }}/>
-                    </div>
+                          <ProductCard
+                            {...product}
+                              onAddToCart={(product) => {
+                              setShowModal(true);}}/>
+                      </div>
                     ))}
                   </div> 
                 </Container>
+
                 <BrandTopic />
               </>
             }/>
@@ -109,7 +102,7 @@ function App() {
           <Route path="/user" element={<UserAuth />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />
-          <Route path="/Dashboard" element={<Dashboard/>} />
+          <Route path="/dashboard" element={<Dashboard/>} />
 
         </Routes>
         <NewsLetterBox />

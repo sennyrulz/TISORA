@@ -23,11 +23,6 @@ function userAuthPage() {
 
 // Automatically navigate to dashboard when authenticated
 const navigate = useNavigate();  
-useEffect(() => {
-    if (isAuthenticated) {
-    navigate("/Dashboard");
-    }
-  }, [isAuthenticated, navigate]);
 
   const handleChange = (e) => {
   setFormData((prev) => ({
@@ -45,6 +40,9 @@ useEffect(() => {
       const resultAction = await dispatch(login(formData));
       if (login.fulfilled.match(resultAction)) {
         toast.success("Login successful");
+
+        //navigate to dashboard
+        navigate("/Dashboard")
       } else {
         toast.error(resultAction.payload || "User does not exist! Please create an account");
       }
@@ -52,6 +50,9 @@ useEffect(() => {
       const resultAction = await dispatch(signUp(formData));
       if (signUp.fulfilled.match(resultAction)) {
         toast.success("Signup successful");
+
+         //navigate to signin
+        navigate("/user/login");
       } else {
         toast.error(resultAction.payload || "Signup failed");
       }
@@ -79,7 +80,12 @@ useEffect(() => {
               <div className="d-flex flex-column flex-md-row justify-content-center gap-3 mt-4">
                 <button style={{
                   backgroundColor: '#91443f'}} 
-                  className="btn" onClick={() => dispatch(logout())}>
+                  className="btn" 
+                  onClick={() => {
+                    dispatch(logout());
+                    navigate("/user/login");
+                    }}
+                  >
                   Logout
                 </button>
               </div>

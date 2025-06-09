@@ -11,7 +11,7 @@ const NavLinks = ({ onClick }) => (
     <NavLink onClick={onClick} to="/newIn" style={{ textDecoration: 'none', color: 'white' }}>NEW IN</NavLink>
     <NavLink onClick={onClick} to="/shop" style={{ textDecoration: 'none', color: 'white' }}>SHOP</NavLink>
     <NavLink onClick={onClick} to="/discover" style={{ textDecoration: 'none', color: 'white' }}>DISCOVER</NavLink>
-    <NavLink onClick={onClick} to="/AuthPage" style={{ textDecoration: 'none', color: 'white' }}>SIGN IN</NavLink>
+    <NavLink onClick={onClick} to="/user" style={{ textDecoration: 'none', color: 'white' }}>SIGN IN</NavLink>
   </div>
 );
 
@@ -42,7 +42,7 @@ const Nav = () => {
             <NavLink to="/search">
               <FontAwesomeIcon icon={faSearch} />
             </NavLink>
-            <NavLink to="/userAuth">
+            <NavLink to="/user">
               <FontAwesomeIcon icon={faUser} />
             </NavLink>
             <NavLink to="/cart">

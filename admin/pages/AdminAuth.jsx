@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";  // useEffect from react
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { signUp, login, logout } from "../store/authSlice.js";
+import { signUp, login, logout } from "../store/adminAuthSlice.js";
 import { toast, ToastContainer } from "react-toastify";
 import { Container, Row, Col } from "react-bootstrap";
 import axios from 'axios';
@@ -89,7 +89,11 @@ return (
               <div className="d-flex flex-column flex-md-row justify-content-center gap-3 mt-4">
                 <button style={{
                   backgroundColor: '#91443f'}} 
-                  className="btn" onClick={() => dispatch(logout())}>
+                  className="btn" 
+                  onClick={() => {
+                    dispatch(logout());
+                    navigate("/admin/login");
+                    }}>
                   Logout
                 </button>
               </div>

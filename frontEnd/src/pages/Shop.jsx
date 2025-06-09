@@ -12,17 +12,6 @@ const Shop = () => {
   // const [cart, setCart] = useState([]);
   const [sort, setSort] = useState("low-to-high"); // low-to-high, high-to-low
 
-  // useEffect(() => {
-  //   setSort("low-to-high");
-  // }, []);
-
-  // const addToCart = (product) => {
-  //   if (!product) return;
-  //   setCart((prevCart) => [...prevCart, product]);
-  //   toast.success(`✅ Added to Cart: ${product.productName}`);
-  //   console.log("✅ Added to Cart:", product);
-  // };
-
   const handleAddToCart = (product) => {
     dispatch(addToCart(product));
     toast.success(`${product.productName} added to cart`);
@@ -35,10 +24,10 @@ const Shop = () => {
   }, [sort, productsData]);
 
   return (
-    <Container className="mt-5 py-4">
+    <Container className="mt-5 py-4 px-0 md:px-5 md:pl-5">
       <Row className="text-start px-3 px-md-0">
         <Col md={6} className="d-flex flex-column">
-          <h3 className="fw-medium mt-5 fs-5 fs-md-4">Products</h3>
+          <h3 className="fw-medium mt-5 fs-9 fs-md-4">Products</h3>
           <div
             className="d-flex align-items-center gap-1"
             style={{
@@ -70,7 +59,7 @@ const Shop = () => {
         </Col>
       </Row>
 
-      <Row className="g-4">
+      <Row className="gap-4">
         {sortedProducts.length === 0 ? (
           <Col>
             <p className="text-muted fs-5 text-center w-100">

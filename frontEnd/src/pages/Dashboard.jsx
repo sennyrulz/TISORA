@@ -28,13 +28,15 @@ function Dashboard() {
               <p>Welcome, {user.fullName || user.name}!</p>
               <p>Email: {user.email}</p>
               <div className="d-flex flex-column flex-md-row justify-content-center gap-3 mt-4">
-                <button style = {{ 
-                    backgroundColor: '#91443f',
-                    color: 'white' }}
-                    className="btn"
-                    onClick={() => dispatch(logout())}>
-                  Logout
-                </button>
+               <button 
+                style={{ backgroundColor: '#91443f', color: 'white' }}
+                className="btn"
+                onClick={() => {
+                  dispatch(logout());
+                  navigate("/user/login");
+                }}>
+                Logout
+              </button>
               </div>
             </>
           ) : (

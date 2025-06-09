@@ -18,7 +18,7 @@ function App() {
     <div className='grid-container'>
         <Routes>
           {/* Admin Login Route */}
-            <Route path="/admin" element={<AdminAuth />} />
+            <Route path="/" element={<AdminAuth />} />
 
           {/* Protected Dashboard Route */}
             <Route

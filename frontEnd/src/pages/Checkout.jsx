@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from 'axios'
 import { Container, Row, Col, Form, Button, Image, Card } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
@@ -123,6 +124,21 @@ const Checkout = () => {
     // Redirect to payment page - dispatch an action or call your payment API
   };
 
+  const initiatePayment = async (cartItems, customer, totalAmount) => {
+  try {
+    const response = await axios.post('/api/payments/initiate', {
+      customer,
+      items: cartItems,
+      totalAmount,
+      paymentMethod: "Paystack",
+    });
+
+    window.location.href = response.data.url; // redirect to Paystack payment page
+  } catch (err) {
+    console.error("Payment error", err);
+  }
+};
+
   return (
     <div className="container my-5 pt-5">
       <Row className="justify-content-center">
@@ -238,8 +254,7 @@ const Checkout = () => {
                 placeholder="Apartment, suite, etc. (optional)"
                 name="apartment"
                 value={formData.apartment}
-                onChange={handleChange}
-              />
+                onChange={handleChange} />
             </Form.Group>
 
             <Row className="mb-3">
@@ -250,8 +265,7 @@ const Checkout = () => {
                   name="city"
                   value={formData.city}
                   onChange={handleChange}
-                  isInvalid={!!errors.city}
-                />
+                  isInvalid={!!errors.city} />
                 <Form.Control.Feedback type="invalid">
                   {errors.city}
                 </Form.Control.Feedback>
@@ -261,8 +275,7 @@ const Checkout = () => {
                   name="state"
                   value={formData.state}
                   onChange={handleChange}
-                  isInvalid={!!errors.state}
-                >
+                  isInvalid={!!errors.state} >
                   <option value="" disabled>
                     State
                   </option>
@@ -281,8 +294,7 @@ const Checkout = () => {
                   placeholder="Postal Code (optional)"
                   name="postalCode"
                   value={formData.postalCode}
-                  onChange={handleChange}
-                />
+                  onChange={handleChange} />
               </Col>
             </Row>
 
@@ -293,8 +305,7 @@ const Checkout = () => {
                 name="phone"
                 value={formData.phone}
                 onChange={handleChange}
-                isInvalid={!!errors.phone}
-              />
+                isInvalid={!!errors.phone} />
               <Form.Control.Feedback type="invalid">
                 {errors.phone}
               </Form.Control.Feedback>
@@ -332,8 +343,7 @@ const Checkout = () => {
                 className={`border ${borderRadiusClass} ${
                   isSelected ? "border-primary bg-light-blue" : ""}`}
                   onClick={() => setFormData({ ...formData, shippingMethod: method })}
-                  style={{ padding: "0.8rem", cursor: "pointer", borderTop: idx === 0 ? "1px solid #dee2e6" : "none",}}
-                >
+                  style={{ padding: "0.8rem", cursor: "pointer", borderTop: idx === 0 ? "1px solid #dee2e6" : "none",}}>
                   <Form.Group className="m-0">
                     <div className="d-flex justify-content-between align-items-start small">
                       <Form.Check
@@ -343,8 +353,7 @@ const Checkout = () => {
                       checked={isSelected}
                       onChange={() =>
                         setFormData({ ...formData,
-                          shippingMethod: method })}
-                  />
+                          shippingMethod: method })} />
                       <span className="text-end fw-semibold">{labelMap[method].price}</span>
                     </div>
                   </Form.Group>
@@ -362,8 +371,7 @@ const Checkout = () => {
             <div className="mb-4">
               <div
                 className="border rounded-top px-3 border-primary"
-                style={{ backgroundColor: "#F0F5FF", padding: "15px 0 15px 0" }}
-              >
+                style={{ backgroundColor: "#F0F5FF", padding: "15px 0 15px 0" }} >
                 <div className="d-flex justify-content-between align-items-center">
                   <p className="mb-0 small">Paystack</p>
                   <div className="d-flex gap-2">
@@ -371,8 +379,7 @@ const Checkout = () => {
                       (img, index) => (
                         <span
                           key={index}
-                          className="d-inline-flex align-items-center justify-content-center"
-                        >
+                          className="d-inline-flex align-items-center justify-content-center">
                           <img src={img} alt={`Card ${index}`} height="23" />
                         </span>
                       )
@@ -383,8 +390,7 @@ const Checkout = () => {
 
               <div
                 className="border rounded-bottom pb-3 pt-2 px-3"
-                style={{ backgroundColor: "#F4F4F4" }}
-              >
+                style={{ backgroundColor: "#F4F4F4" }}>
                 <div className="text-center">
                   <img src={image5} alt="Paystack Illustration" width={80} />
                   <p className="mt-2 mb-0 small">
@@ -408,8 +414,7 @@ const Checkout = () => {
                     checked={formData.billingSameAsShipping === true}
                     onChange={(e) =>
                       setFormData({ ...formData, billingSameAsShipping: true })
-                    }
-                  />
+                    }/>
                 </Form.Group>
               </div>
               <div className={`border ${formData.billingSameAsShipping ? "rounded-bottom" : "rounded-0 border-primary bg-light-blue"}`} 
@@ -423,8 +428,7 @@ const Checkout = () => {
                     checked={formData.billingSameAsShipping === false}
                     onChange={(e) =>
                       setFormData({ ...formData, billingSameAsShipping: false })
-                    }
-                  />
+                    } />
                 </Form.Group>
               </div>
               {!formData.billingSameAsShipping && (
@@ -435,8 +439,7 @@ const Checkout = () => {
                       name="country"
                       value={formData.country}
                       onChange={handleChange}
-                      isInvalid={!!errors.country}
-                    >
+                      isInvalid={!!errors.country}>
                       <option value="" disabled>
                         Country/Region
                       </option>
@@ -458,8 +461,7 @@ const Checkout = () => {
                         name="firstName"
                         value={formData.firstName}
                         onChange={handleChange}
-                        isInvalid={!!errors.firstName}
-                      />
+                        isInvalid={!!errors.firstName}/>
                       <Form.Control.Feedback type="invalid">
                         {errors.firstName}
                       </Form.Control.Feedback>
@@ -471,8 +473,7 @@ const Checkout = () => {
                         name="lastName"
                         value={formData.lastName}
                         onChange={handleChange}
-                        isInvalid={!!errors.lastName}
-                      />
+                        isInvalid={!!errors.lastName}/>
                       <Form.Control.Feedback type="invalid">
                         {errors.lastName}
                       </Form.Control.Feedback>
@@ -486,8 +487,7 @@ const Checkout = () => {
                       name="address"
                       value={formData.address}
                       onChange={handleChange}
-                      isInvalid={!!errors.address}
-                    />
+                      isInvalid={!!errors.address}/>
                     <Form.Control.Feedback type="invalid">
                       {errors.address}
                     </Form.Control.Feedback>
@@ -499,8 +499,7 @@ const Checkout = () => {
                       placeholder="Apartment, suite, etc. (optional)"
                       name="apartment"
                       value={formData.apartment}
-                      onChange={handleChange}
-                    />
+                      onChange={handleChange}/>
                   </Form.Group>
 
                   <Row className="mb-3">
@@ -511,8 +510,7 @@ const Checkout = () => {
                         name="city"
                         value={formData.city}
                         onChange={handleChange}
-                        isInvalid={!!errors.city}
-                      />
+                        isInvalid={!!errors.city}/>
                       <Form.Control.Feedback type="invalid">
                         {errors.city}
                       </Form.Control.Feedback>
@@ -522,8 +520,7 @@ const Checkout = () => {
                         name="state"
                         value={formData.state}
                         onChange={handleChange}
-                        isInvalid={!!errors.state}
-                      >
+                        isInvalid={!!errors.state}>
                         <option value="" disabled>
                           State
                         </option>
@@ -542,8 +539,7 @@ const Checkout = () => {
                         placeholder="Postal Code (optional)"
                         name="postalCode"
                         value={formData.postalCode}
-                        onChange={handleChange}
-                      />
+                        onChange={handleChange}/>
                     </Col>
                   </Row>
 
@@ -554,8 +550,7 @@ const Checkout = () => {
                       name="phone"
                       value={formData.phone}
                       onChange={handleChange}
-                      isInvalid={!!errors.phone}
-                    />
+                      isInvalid={!!errors.phone}/>
                     <Form.Control.Feedback type="invalid">
                       {errors.phone}
                     </Form.Control.Feedback>
@@ -567,8 +562,7 @@ const Checkout = () => {
             <div className="d-none d-md-block mt-5">
               <Button
                 type="submit"
-                className="btn btn-dark bg-black rounded-0 w-100 p-2 mb-4"
-              >
+                className="btn btn-dark bg-black rounded-0 w-100 p-2 mb-4">
                 Pay Now
               </Button>
             </div>
@@ -595,8 +589,7 @@ const Checkout = () => {
                     height={70}
                     className="mt-2"
                     style={{ objectFit: "cover", borderRadius: "0.25rem" }}
-                    loading="lazy"
-                  />
+                    loading="lazy"/>
                   <div
                     style={{
                       position: "absolute",
@@ -608,8 +601,7 @@ const Checkout = () => {
                       padding: "2px 6px",
                       borderRadius: "999px",
                       fontWeight: "bold",
-                    }}
-                  >
+                    }} >
                     {product.quantity}
                   </div>
                 </div>
@@ -635,15 +627,13 @@ const Checkout = () => {
                   placeholder="Discount code or gift card"
                   className="rounded-0 p-2"
                   value={discountCode}
-                  onChange={(e) => setDiscountCode(e.target.value)}
-                />
+                  onChange={(e) => setDiscountCode(e.target.value)}/>
               </Col>
               <Col xs={3}>
                 <Button
                   variant="dark"
                   className="w-100 rounded-0 p-2"
-                  onClick={handleApplyDiscount}
-                >
+                  onClick={handleApplyDiscount}>
                   Apply
                 </Button>
               </Col>
@@ -704,8 +694,7 @@ const Checkout = () => {
         position="top-right"
         autoClose={2000}
         hideProgressBar={true}
-        closeOnClick
-      />
+        closeOnClick />
     </div>
   );
 };

@@ -6,9 +6,8 @@ import bootstrap from "bootstrap/dist/js/bootstrap.bundle.min.js";
 import { addToCart } from "../redux/cartSlice";
 import productModel from "../../../backEnd/models//productModel"
 import { productsData } from "./Product";
-{productsData.map(product =>(
-  <ProductCard key={product.id} {...product}/>
-))} 
+
+
 
 
 function ProductCard({id, Img1, Img2, productName, desc, features, material, sizes, price, onAddToCart }) {
@@ -81,7 +80,8 @@ function ProductCard({id, Img1, Img2, productName, desc, features, material, siz
   return (
     <>
       <div className="singleCard d-flex flex-column justify-content-between pb-4 mb-5 
-      border border-1 shadow-sm w-100">
+         border border-1 shadow-sm w-25 fit-content" style={{ minWidth: "360px", minHeight: "300px"}}>
+
         <p className='d-none'>{id}</p>
 
         <div className="bg-secondary" style={{ height: "300px" }}>
@@ -92,13 +92,12 @@ function ProductCard({id, Img1, Img2, productName, desc, features, material, siz
         </div>
 
         <div className="text-center">
+          <span>
+            <h5 className="mt-4 text-size-md">{productName}</h5>
+            <p className="fw-medium text-center">{desc || 'No description'}</p>
+            <p className="fw-bold text-black">Price: ₦{price ? price.toLocaleString() : '0'}</p>
+          </span>
           
-          <h5 className="mt-3 mx-5 text-size-sm">{productName}</h5>
-          <p className="fw-medium mx-5">{desc || 'No description'}</p>
-          {/* <p className="fw-bold text-black">{material || 'No material'}</p>
-          <p className="fw-bold text-black">{sizes || 'No sizes'}</p> */}
-          <p className="fw-bold text-black">Price: ₦{price ? price.toLocaleString() : '0'}</p>
-
           <button className="w-90 bg-white text-black p-2 px-5 border hover:bg-red-800 hover:text-white transition-all duration-300"
             onClick={openModal}>Choose Options
           </button>

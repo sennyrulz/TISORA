@@ -6,6 +6,7 @@ import adminRoute from "./routes/adminRoute.js";
 import mongoose from "mongoose";
 import fileUpload from 'express-fileupload';
 import paymentRoute from './routes/paymentRoute.js';
+import adminPaymentRoutes from './routes/adminPaymentRoutes.js'
 import productRoute from './routes/productRoute.js';
 import cors from "cors";
 import dotenv from "dotenv";
@@ -18,6 +19,13 @@ app.use(cors({
   origin: ['http://localhost:5173', 'http://localhost:5174'],
   credentials: true,
 }));
+
+// Middleware
+app.use(fileUpload({ useTempFiles: true }));
+app.use(express.json());
+app.use('/api/payments/webhook', express.raw({ type: 'application/json' })); // raw for webhook
+app.use(express.urlencoded({ extended: true }));
+
 
 app.use((req, res, next) => {
   if (req.method === 'OPTIONS') {
@@ -37,16 +45,14 @@ mongoose
   .then(() => console.log('MongoDB Connected'))
   .catch(err => console.error('MongoDB connection error:', err));
 
-// Middleware
-app.use(fileUpload({ useTempFiles: true }));
-app.use(express.json());
-
 
 // Routes endpoints
 app.use(userRoute);
 app.use(paymentRoute);
 app.use(adminRoute);
 app.use(productRoute);
+app.use(paymentRoute);
+app.use(adminPaymentRoutes);
 
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {

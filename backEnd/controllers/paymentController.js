@@ -1,28 +1,38 @@
-import Goods from '../models/productModel.js';
+import axios from 'axios';
+import Payment from '../models/paymentModel.js';
+import crypto from 'crypto';
 
-// Payment initiation (you already have this)
+
 export const initiatePayment = async (req, res) => {
   try {
     const { customer, items, totalAmount, paymentMethod } = req.body;
+
     const response = await axios.post(
       "https://api.paystack.co/transaction/initialize",
       {
         email: customer.email,
         amount: Math.round(totalAmount * 100),
-        metadata: {
-          customer,
-          items,
-        },
+        metadata: { customer, items },
       },
       {
         headers: {
           Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
           "Content-Type": "application/json",
-        },
-      }
+        }
+      },
     );
 
-    const { authorization_url } = response.data.data;
+    const { reference, authorization_url } = response.data.data;
+
+    await Payment.create({
+      customer,
+      items,
+      totalAmount,
+      paymentMethod,
+      reference,
+      status: "pending",
+    });
+
     res.status(200).json({ url: authorization_url });
   } catch (error) {
     console.error(error);
@@ -30,48 +40,68 @@ export const initiatePayment = async (req, res) => {
   }
 };
 
-// Update product by ID
-export const updateProducts = async (req, res) => {
-  const { id } = req.params;
-  const updates = req.body;
+export const verifyWebhook = async (req, res) => {
+  const secret = process.env.PAYSTACK_SECRET_KEY;
+  const hash = crypto
+    .createHmac("sha512", secret)
+    .update(JSON.stringify(req.body))
+    .digest("hex");
 
+  if (hash !== req.headers["x-paystack-signature"]) {
+    return res.status(401).send("Unauthorized webhook");
+  }
+
+  const event = req.body;
+
+  if (event.event === "charge.success") {
+    const payment = await Payment.findOne({ reference: event.data.reference });
+
+    if (payment) {
+      payment.status = "success";
+      payment.paidAt = event.data.paid_at;
+      await payment.save();
+    }
+  }
+
+  res.sendStatus(200);
+};
+
+export const getAllPayments = async (req, res) => {
   try {
-    const product = await Goods.findById(id);
-    if (!product) {
-      return res.status(404).json({ message: 'Product not found' });
-    }
-    if (product.adminId.toString() !== req.user.userId) {
-      return res.status(403).json({ message: 'Unauthorized' });
-    }
-
-    Object.assign(product, updates);
-    await product.save();
-
-    return res.status(200).json({ message: 'Product updated', product });
+    const payments = await Payment.find().sort({ createdAt: -1 });
+    res.status(200).json(payments);
   } catch (error) {
-    console.error('Error updating product:', error);
-    return res.status(500).json({ message: 'Failed to update product' });
+    console.error(error);
+    res.status(500).json({ message: 'Error fetching payments' });
   }
 };
 
-// Delete product by ID
-export const deleteProducts = async (req, res) => {
-  const { id } = req.params;
+export const paystackWebhook = async (req, res) => {
+  const hash = crypto.createHmac('sha512', process.env.PAYSTACK_SECRET_KEY)
+    .update(JSON.stringify(req.body))
+    .digest('hex');
 
-  try {
-    const product = await Goods.findById(id);
-    if (!product) {
-      return res.status(404).json({ message: 'Product not found' });
-    }
-    if (product.adminId.toString() !== req.user.userId) {
-      return res.status(403).json({ message: 'Unauthorized' });
-    }
-
-    await product.remove();
-
-    return res.status(200).json({ message: 'Product deleted successfully' });
-  } catch (error) {
-    console.error('Error deleting product:', error);
-    return res.status(500).json({ message: 'Failed to delete product' });
+  if (hash !== req.headers['x-paystack-signature']) {
+    return res.status(400).json({ message: 'Invalid signature' });
   }
+
+  const event = req.body;
+
+  if (event.event === 'charge.success') {
+    const data = event.data;
+    
+    const payment = await Payment.findOneAndUpdate(
+      { reference: data.reference },
+      {
+        status: 'success',
+        paidAt: data.paid_at,
+        email: data.customer.email
+      },
+      { new: true, upsert: true }
+    );
+
+    console.log('💰 Payment success recorded:', payment.reference);
+  }
+
+  res.sendStatus(200);
 };

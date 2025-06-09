@@ -10,8 +10,8 @@ import {
 const route = express.Router();
 
 //public url
-route.post("/signUp", createAdmin);
-route.post("/login", loginAdmin);
+route.post("/admin/signUp", createAdmin);
+route.post("/admin/login", loginAdmin);
 
 // Apply middleware to protected routes
 route.get("/dashboard", getAdmin);

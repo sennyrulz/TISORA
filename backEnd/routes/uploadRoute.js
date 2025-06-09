@@ -6,7 +6,7 @@ import { authenticateToken } from '../middlewares/authMid.js'
 const route =express.Router();
 
 route.post(
-    "/admin/dashboard/products/upload", 
+    "/products/upload", 
     authenticateToken, 
     upload.array("image", 2), 
     createProducts
