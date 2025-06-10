@@ -8,8 +8,9 @@ import axios from 'axios';
 
 function userAuthPage() {
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.user.user);
-  const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+  const userState = useSelector((state) => state.user);
+  const user = userState?.user;
+  const isAuthenticated = userState?.isAuthenticated;
    const [loading, setLoading] = useState(false);
 
   const [isLogin, setIsLogin] = useState(true); // Toggle between Login and Signup
@@ -52,7 +53,7 @@ const navigate = useNavigate();
         toast.success("Signup successful");
 
          //navigate to signin
-        navigate("/user/login");
+        navigate("/login");
       } else {
         toast.error(resultAction.payload || "Signup failed");
       }
@@ -84,8 +85,7 @@ const navigate = useNavigate();
                   onClick={() => {
                     dispatch(logout());
                     navigate("/user/login");
-                    }}
-                  >
+                    }}>
                   Logout
                 </button>
               </div>

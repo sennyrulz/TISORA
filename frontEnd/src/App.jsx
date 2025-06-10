@@ -83,10 +83,8 @@ function App() {
                     {productsData.slice(1, 7).map((product) => (
                       <div key={product.id} 
                         style={{ flex: "0 0 auto", scrollSnapAlign: "start"}}>
-                          <ProductCard
-                            {...product}
-                              onAddToCart={(product) => {
-                              setShowModal(true);}}/>
+                          <ProductCard {...product} onAddToCart={(product) => {
+                            setShowModal(true);}}/>
                       </div>
                     ))}
                   </div> 

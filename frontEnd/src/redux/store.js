@@ -1,8 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
-import rootReducer from "./rootReducer"; // Import your reducers
+import userReducer from "./authSlice"; 
 
 const store = configureStore({
-  reducer: rootReducer,
+  reducer: userReducer,
   devTools: process.env.NODE_ENV !== "production",
 });
 

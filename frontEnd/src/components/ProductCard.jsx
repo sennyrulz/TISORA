@@ -26,6 +26,7 @@ function ProductCard({id, Img1, Img2, productName, desc, features, material, siz
   const dispatch = useDispatch();
 
 
+
   useEffect(() => {
     const handleModalClose = () => setSelectedProduct(null);
     const modalElement = modalRef.current;
@@ -94,7 +95,7 @@ function ProductCard({id, Img1, Img2, productName, desc, features, material, siz
         <div className="text-center">
           <span>
             <h5 className="mt-4 text-size-md">{productName}</h5>
-            <p className="fw-medium text-center">{desc || 'No description'}</p>
+            {/* <p className="fw-medium text-center">{desc || 'No description'}</p> */}
             <p className="fw-bold text-black">Price: ₦{price ? price.toLocaleString() : '0'}</p>
           </span>
           
