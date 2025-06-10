@@ -9,19 +9,22 @@ import "react-toastify/dist/ReactToastify.css";
 
 const Shop = () => {
   const dispatch = useDispatch();
-  // const [cart, setCart] = useState([]);
+  const [products, setProducts] = useState([]);
   const [sort, setSort] = useState("low-to-high"); // low-to-high, high-to-low
+
+  useEffect(() => {
+    setProducts(productsData);
+  }, []);
 
   const handleAddToCart = (product) => {
     dispatch(addToCart(product));
-    toast.success(`${product.productName} added to cart`);
   };
 
   const sortedProducts = React.useMemo(() => {
-    return [...productsData].sort((a, b) =>
+    return [...products].sort((a, b) =>
       sort === "low-to-high" ? a.price - b.price : b.price - a.price
     );
-  }, [sort, productsData]);
+  }, [sort, products]);
 
   return (
     <Container className="mt-5 py-4 px-0 md:px-5 md:pl-5">
@@ -85,11 +88,11 @@ const Shop = () => {
       {/* ✅ Ensure ScrollCards receives addToCart */}
       {/* <ScrollCards products={productModel} addToCart={addToCart} /> */}
 
-      <ToastContainer
+      {/* <ToastContainer
         position="top-right"
         autoClose={2000}
         hideProgressBar={true}
-        closeOnClick/>
+        closeOnClick/> */}
     </Container>
   );
 };
