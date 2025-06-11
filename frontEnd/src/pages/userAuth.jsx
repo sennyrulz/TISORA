@@ -1,19 +1,19 @@
-import React, { useEffect, useState } from "react";  // useEffect from react
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { signUp, login, logout } from "../redux/userAuthSlice";
 import { toast, ToastContainer } from "react-toastify";
-import { Container } from "react-bootstrap";
-import { X } from 'lucide-react';
+import { Container, Row, Col } from "react-bootstrap";
 
-function userAuthPage({ isOpen, onClose }) {
+function UserAuthPage() {
   const dispatch = useDispatch();
   const userState = useSelector((state) => state.user);
   const user = userState?.user;
   const isAuthenticated = userState?.isAuthenticated;
-  const [loading, setLoading] = useState(false);
 
+  const [loading, setLoading] = useState(false);
   const [isLogin, setIsLogin] = useState(true); // Toggle between Login and Signup
+
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -21,27 +21,32 @@ function userAuthPage({ isOpen, onClose }) {
     address: "",
     password: ""
   });
-  const [msg, setMsg] = useState("");
 
-  const navigate = useNavigate();  
+  const navigate = useNavigate();
 
-    const handleChange = (e) => {
+  // Redirect if already logged in
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/Dashboard");
+    }
+  }, [isAuthenticated, navigate]);
+
+  const handleChange = (e) => {
     setFormData((prev) => ({
       ...prev,
       [e.target.name]: e.target.value
-      }));
-    };
+    }));
+  };
 
-    const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    
+
     try {
       if (isLogin) {
         const resultAction = await dispatch(login(formData));
         if (login.fulfilled.match(resultAction)) {
           toast.success("Login successful");
-          onClose();
           navigate("/Dashboard");
         } else {
           toast.error(resultAction.payload || "User does not exist! Please create an account");
@@ -50,8 +55,15 @@ function userAuthPage({ isOpen, onClose }) {
         const resultAction = await dispatch(signUp(formData));
         if (signUp.fulfilled.match(resultAction)) {
           toast.success("Signup successful");
-          // setMsg(res.message)
-          onClose();
+
+          // Reset form and navigate to login
+          setFormData({
+            fullName: "",
+            email: "",
+            phone: "",
+            address: "",
+            password: ""
+          });
           navigate("/login");
         } else {
           toast.error(resultAction.payload || "Signup failed");
@@ -59,139 +71,137 @@ function userAuthPage({ isOpen, onClose }) {
       }
     } catch (error) {
       toast.error(error.message || "An error occurred");
-      {msg && <div className={style.success_msg}>{msg}</div>}
     } finally {
       setLoading(false);
     }
   };
 
-  if (!isOpen) return null;
-
   return (
-    <>
-      <div className={`auth-sidebar-overlay ${isOpen ? 'active' : ''}`} onClick={onClose} />
-      <div className={`auth-sidebar ${isOpen ? 'active' : ''}`}>
-        <div className="auth-sidebar-content">
-          <button className="close-button" onClick={onClose}>
-            <X size={24} />
-          </button>
-          
-          <h2 className="mb-3">
+    <Container style={{ marginTop: "150px", marginBottom: "100px", paddingTop: "20px" }}>
+      <Row className="justify-content-center">
+        <Col md={{ span: 6, offset: 2 }} className="text-start">
+          <h1 className="mb-3 pt-md-5 pb-md-3 fw-normal" style={{ fontSize: "3rem" }}>
             {isLogin ? "Login" : "Sign Up"}
-          </h2>
+          </h1>
 
           {isAuthenticated ? (
             <>
-              <p>Welcome, {user.name}!</p>
-              <p>{user.email}</p> 
-              <button 
-                className="btn w-100"
-                style={{ backgroundColor: '#91443f' }}
-                onClick={() => {
-                  dispatch(logout());
-                  onClose();
-                  navigate("/user/login");
-                }}
-              >
-                Logout
-              </button>
+              <p>{user?.id}</p>
+              <p>Welcome, {user?.name}!</p>
+              <p>{user?.email}</p>
+              <div className="d-flex flex-column flex-md-row justify-content-center gap-3 mt-4">
+                <button
+                  style={{ backgroundColor: '#91443f' }}
+                  className="btn"
+                  onClick={() => {
+                    dispatch(logout());
+                    navigate("/user/login");
+                  }}
+                >
+                  Logout
+                </button>
+              </div>
             </>
           ) : (
-            <form onSubmit={handleSubmit}>
-              {!isLogin && (
-                <>
-                  <div className="mb-3">
-                    <label>Full Name</label>
-                    <input
-                      type="text"
-                      name="fullName"
-                      className="form-control"
-                      value={formData.fullName}
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
+            <>
+              <form onSubmit={handleSubmit}>
+                {!isLogin && (
+                  <>
+                    <div className="mb-3">
+                      <label>Full Name</label>
+                      <input
+                        type="text"
+                        name="fullName"
+                        className="form-control"
+                        value={formData.fullName}
+                        onChange={handleChange}
+                        required
+                        disabled={loading}
+                      />
+                    </div>
 
-                  <div className="mb-3">
-                    <label>Phone</label>
-                    <input 
-                      type="number"
-                      name='phone'
-                      className="form-control"
-                      value={formData.phone}
-                      onChange={handleChange}
-                      required 
-                    />
-                  </div>
+                    <div className="mb-3">
+                      <label>Phone</label>
+                      <input
+                        type="number"
+                        name="phone"
+                        className="form-control"
+                        value={formData.phone}
+                        onChange={handleChange}
+                        required
+                        disabled={loading}
+                      />
+                    </div>
 
-                  <div className="mb-3">
-                    <label>Address</label>
-                    <input 
-                      type="text"
-                      name="address"
-                      className="form-control"
-                      value={formData.address}
-                      onChange={handleChange}
-                      required 
-                    />
-                  </div>
-                </>
-              )}
+                    <div className="mb-3">
+                      <label>Address</label>
+                      <input
+                        type="text"
+                        name="address"
+                        className="form-control"
+                        value={formData.address}
+                        onChange={handleChange}
+                        required
+                        disabled={loading}
+                      />
+                    </div>
+                  </>
+                )}
 
-              <div className="mb-3">
-                <label>Email</label>
-                <input 
-                  type="email"
-                  name="email"
-                  className="form-control"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required 
-                />
-              </div>
+                <div className="mb-3">
+                  <label>Email</label>
+                  <input
+                    type="email"
+                    name="email"
+                    className="form-control"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                    disabled={loading}
+                  />
+                </div>
 
-              <div className="mb-3">
-                <label>Password</label>
-                <input
-                  type="password"
-                  name="password"
-                  className="form-control"
-                  value={formData.password}
-                  onChange={handleChange}
-                  required 
-                />
-              </div>
+                <div className="mb-3">
+                  <label>Password</label>
+                  <input
+                    type="password"
+                    name="password"
+                    className="form-control"
+                    autoComplete="off"
+                    value={formData.password}
+                    onChange={handleChange}
+                    required
+                    disabled={loading}
+                  />
+                </div>
 
-              <button 
-                type="submit" 
-                className="btn w-100"
-                style={{ backgroundColor: '#91443f' }}
-                disabled={loading}
-              >
-                {loading ? "Loading..." : isLogin ? "Login" : "Sign Up"}
-              </button>
-            </form>
+                <button
+                  type="submit"
+                  style={{
+                    backgroundColor: '#91443f',
+                    border: 'none',
+                    width: '100%'
+                  }}
+                  className="btn btn-primary"
+                  disabled={loading}
+                >
+                  {loading ? "Loading..." : isLogin ? "Login" : "Sign Up"}
+                </button>
+              </form>
+
+              <p className="mt-4">
+                {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
+                <button className="btn btn-link p-0" onClick={() => setIsLogin(!isLogin)}>
+                  {isLogin ? "Sign Up" : "Login"}
+                </button>
+              </p>
+            </>
           )}
-
-          <p className="mt-4 text-center">
-            {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
-            <button 
-              className="btn btn-link p-0" 
-              onClick={() => setIsLogin(!isLogin)}
-            >
-              {isLogin ? "Sign Up" : "Login"}
-            </button>
-          </p>
-        </div>
-        <ToastContainer
-          position="top-right"
-          autoClose={2000}
-          hideProgressBar={true}
-          closeOnClick
-        />
-      </div>
-    </>
+        </Col>
+      </Row>
+      <ToastContainer position="top-right" autoClose={2000} hideProgressBar closeOnClick />
+    </Container>
   );
 }
 
-export default userAuthPage;
+export default UserAuthPage;

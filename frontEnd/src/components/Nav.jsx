@@ -6,7 +6,7 @@ import { faSearch, faUser, faShoppingCart } from '@fortawesome/free-solid-svg-ic
 import { Menu, X } from 'lucide-react';
 import logo from '../assets/Tisora.svg';
 import QuickCart from './QuickCart';
-import UserAuth from '../pages/userAuth';
+import AuthSidebar from './AuthSidebar';
 
 const NavLinks = ({ onClick }) => (
   <div className="nav-links1 py-10 pb-4 d-flex justify-center">
@@ -25,7 +25,6 @@ const Nav = () => {
   return (
     <div className="container-fluid nav-container px-5">
       <div className="row justify-content-between align-items-center">
-
         {/* Logo */}
         <div className="col-lg-2 col-6 d-flex justify-content-start">
           <Link to="/">
@@ -40,19 +39,12 @@ const Nav = () => {
 
         {/* Right-side Icons & Mobile Menu */}
         <div className="col-lg-4 col-6 d-flex justify-content-end align-items-center">
-
           {/* Icons */}
           <div className="nav-icons d-flex gap-10">
             <NavLink to="/search">
               <FontAwesomeIcon icon={faSearch} />
             </NavLink>
-            <NavLink
-              to="#"
-              onClick={(e) => {
-                e.preventDefault();
-                setShowAuthSidebar(true);
-              }}
-            >
+            <NavLink to="#" onClick={() => setShowAuthSidebar(true)}>
               <FontAwesomeIcon icon={faUser} />
             </NavLink>
             <NavLink 
@@ -87,7 +79,7 @@ const Nav = () => {
       />
 
       {/* Auth Sidebar */}
-      <UserAuth 
+      <AuthSidebar 
         isOpen={showAuthSidebar}
         onClose={() => setShowAuthSidebar(false)}
       />
