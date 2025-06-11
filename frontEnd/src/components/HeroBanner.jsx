@@ -43,21 +43,21 @@ const navigate = useNavigate();
     </button>
 
   </div>
-    
-    <div className='hero-container' style={{ height: "450px", margin: '-900px 0 200px 0', zIndex:-1 }}>
-      <img className='heroBanner1' style={{ height: "450px" }} src={heroImage} alt="Hero Banner" />
-      
-      <div className='social-icons'>
-        <a href="https://wa.me/1234567890" target="_blank" rel="noopener noreferrer">
+     <span className='social-icons'>
+        <a href="https://wa.me/+2347046684044" target="_blank" rel="noopener noreferrer">
           <img style={{ cursor: 'pointer' }} src={whatsapp} alt="Whatsapp" />
         </a>
-        <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
+        <a href="https://www.instagram.com/tisoraa/" target="_blank" rel="noopener noreferrer">
           <img style={{ cursor: 'pointer' }} src={instagram} alt="Instagram" />
         </a>
-        <a href="https://tiktok.com" target="_blank" rel="noopener noreferrer">
+        <a href="https://www.tiktok.com/@tisora.fashion" target="_blank" rel="noopener noreferrer">
           <img style={{ cursor: 'pointer' }} src={TikTok} alt="Tiktok" />
         </a>
-      </div>
+      </span>
+
+    <div className='hero-container' style={{ height: "450px", margin: '-900px 0 200px 0', zIndex:-1 }}>      
+          <img className='heroBanner1' style={{ height: "450px" }} src={heroImage} alt="Hero Banner" />
+
     </div>
   </>
   )

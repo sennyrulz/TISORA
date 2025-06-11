@@ -222,11 +222,11 @@ export const productsData = [
   {
    id: "IKEMBA-009",
     Img1: [{
-        "publicId": "image00025_omlkze",
+        "publicId": "image00004_bwhasv",
         "size": 1000
       }],
     Img2: [{
-        "publicId": "image00022_wk3slu",
+        "publicId": "image00004_bwhasv",
         "size": 1000
       }],
 

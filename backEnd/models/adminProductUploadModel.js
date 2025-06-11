@@ -2,7 +2,7 @@ import mongoose from "mongoose"
 
 const adminProductUploadSchema = new mongoose.Schema (
   { 
-    Id: {
+    id: {
       type: mongoose.Schema.Types.ObjectId, 
       ref: "Admin" 
     },

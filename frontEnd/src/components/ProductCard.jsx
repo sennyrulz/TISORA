@@ -80,8 +80,8 @@ function ProductCard({id, Img1, Img2, productName, desc, features, material, siz
 
   return (
     <>
-      <div className="singleCard d-flex flex-column justify-content-between pb-4 mb-5 
-         border border-1 shadow-sm w-25 fit-content" style={{ minWidth: "360px", minHeight: "300px"}}>
+      <div className="singleCard bg-white d-flex flex-column justify-content-between pb-4 mb-5 
+         border border-1 shadow-md fit-content" style={{ minWidth: "240px", minHeight: "300px"}}>
 
         <p className='d-none'>{id}</p>
 
@@ -99,7 +99,8 @@ function ProductCard({id, Img1, Img2, productName, desc, features, material, siz
             <p className="fw-bold text-black">Price: ₦{price ? price.toLocaleString() : '0'}</p>
           </span>
           
-          <button className="w-90 bg-white text-black p-2 px-5 border hover:bg-red-800 hover:text-white transition-all duration-300"
+          <button className="w-90 text-white p-2 px-5 border hover:bg-red-800 hover:text-white transition-all duration-300"
+            style={{background:'#853c38'}}
             onClick={openModal}>Choose Options
           </button>
         </div>

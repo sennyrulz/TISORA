@@ -1,6 +1,9 @@
 import userModel from '../models/userModel.js';
 // import User from '../models/userModel.js'
 import bcrypt from 'bcrypt';
+import Token from '../models/token.js'
+import sendEmail from '../utils/sendEmail.js'
+import crypto from 'crypto'
 // import jwt from 'jsonwebtoken';
 
 // Login User
@@ -15,7 +18,16 @@ export const loginUser = async (req, res) => {
 
     const user = await userModel.findOne({ email });
     if (!user) {
-      return res.status(401).json({ message: "This account does not exist, please sign up." });
+      let token = await Token.findOne({userId:user.id});
+      if (!token){
+        token = await new Token({
+          userId: user.id,
+          token: crypto.randomBytes(32).toString("hex"),
+        }).save();
+          const url = `${process.env.VITE_BACKEND_URL}user/${user.id}/verify/${token.token}`
+          await sendEmail(user.email,"Verify Email", url);
+      return res.status(401).json({ message: "Email has been sent to your account, please verify!" })
+      }
     }
 
     const isValid = bcrypt.compareSync(password, user.password);
@@ -60,7 +72,18 @@ export const createUser = async (req, res) => {
     ...others,
   });
 
-    const savedUser = await newUser.save();
+  //generate token
+  const token = await new Token({
+    id: user.id,
+    token:crypto.randomBytes(32).toString("hex")
+  }).save();
+  const url = `${process.env.VITE_BACKEND_URL}user/${user.id}/verify/${token.token}`
+  await sendEmail(user.email,"Verify Email", url);
+
+
+  res.status(201).send({message:"An email has been sent to your account, Please verify!"})
+    
+  const savedUser = await newUser.save();
       return res.json(savedUser);    
     } catch (error) {
       console.log(error.message);
@@ -96,3 +119,28 @@ export const deleteUser = async (req, res) => {
         return res.json(deletedUser);
     } catch (error) {} 
 };
+
+export const verifyUser = async (req, res) => {
+  try {
+    const user = await user.findOne({id:req.params.id});
+    if(!user) {
+      return res.status(400).send({message:"Invalid link"})
+    };
+
+    const token = await Token.findOne({
+      userid: user.id,
+      token:req.params.token
+    });
+
+    if(!token) {
+      return res.status(400).send({message:"invalid link"})
+    };
+
+    await user.updateOne({id:user.id, verified:true});
+    await token.remove()
+
+    res.status(200).send({message:"Email verified successfully"})
+  } catch (error) {
+    return res.status(500).json({ message: 'something went wrong'})
+  };
+}

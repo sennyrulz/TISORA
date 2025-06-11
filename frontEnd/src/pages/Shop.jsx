@@ -25,7 +25,7 @@ const Shop = () => {
 
   return (
     <Container className="mt-5 py-4 px-0 md:px-5 md:pl-5">
-      <Row className="text-start px-3 px-md-0">
+      <Row className="text-start px-3 px-md-0" style={{marginLeft:'150px'}}>
         <Col md={6} className="d-flex flex-column">
           <h3 className="fw-medium mt-5 fs-9 fs-md-4">Products</h3>
           <div
@@ -59,7 +59,7 @@ const Shop = () => {
         </Col>
       </Row>
 
-      <Row className="gap-4">
+      <Row className="shopRow" style={{marginLeft:'150px'}}>
         {sortedProducts.length === 0 ? (
           <Col>
             <p className="text-muted fs-5 text-center w-100">

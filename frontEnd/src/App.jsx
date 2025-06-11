@@ -24,6 +24,7 @@ import Checkout from "./components/Checkout";
 import { Cloudinary } from "@cloudinary/url-gen";
 import UserAuth from "./pages/userAuth";
 import Dashboard from "./pages/Dashboard";
+import EmailVerify from "./pages/emailVerify"
 
 
 const cld = new Cloudinary({ cloud: { cloudName: 'dr1ay8vmn' }});
@@ -101,6 +102,8 @@ function App() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/dashboard" element={<Dashboard/>} />
+          <Route path="/users/:id/verify/:token" element={<EmailVerify/>} />
+
 
         </Routes>
         <NewsLetterBox />

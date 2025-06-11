@@ -29,10 +29,10 @@ const NewsLetterBox = () => {
 
                     {/* Right: Social Media Icons */}
                     <Col xs={12} md={6} className="d-flex justify-content-center justify-content-md-end gap-3">
-                        <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer">
+                        <a href="https://www.instagram.com/tisoraa/" target="_blank" rel="noopener noreferrer">
                             <img src={image1} alt="Instagram" style={{ width: "20px" }} />
                         </a>
-                        <a href="https://www.tiktok.com" target="_blank" rel="noopener noreferrer">
+                        <a href="https://www.tiktok.com/@tisora.fashion" target="_blank" rel="noopener noreferrer">
                             <img src={image2} alt="TikTok" style={{ width: "20px" }} />
                         </a>
                     </Col>

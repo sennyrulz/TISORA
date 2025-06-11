@@ -366,3 +366,9 @@ body {
   }
 }
 
+@media screen and (max-width: 480px) {
+  .shopRow {
+   margin-left: -150px;  
+  }
+}
+

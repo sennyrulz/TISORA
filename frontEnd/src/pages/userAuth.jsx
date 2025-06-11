@@ -21,6 +21,7 @@ function userAuthPage() {
     address: "",
     password: ""
   });
+const [msg, setMsg] = useState("");
 
 // Automatically navigate to dashboard when authenticated
 const navigate = useNavigate();  
@@ -41,7 +42,6 @@ const navigate = useNavigate();
       const resultAction = await dispatch(login(formData));
       if (login.fulfilled.match(resultAction)) {
         toast.success("Login successful");
-
         //navigate to dashboard
         navigate("/Dashboard")
       } else {
@@ -51,15 +51,16 @@ const navigate = useNavigate();
       const resultAction = await dispatch(signUp(formData));
       if (signUp.fulfilled.match(resultAction)) {
         toast.success("Signup successful");
-
+        setMsg(res.message)
          //navigate to signin
-        navigate("/login");
+        // navigate("/login");
       } else {
         toast.error(resultAction.payload || "Signup failed");
       }
     }
   } catch (error) {
     toast.error(error.message || "An error occurred");
+    {msg && <div className={style.success_msg}>{msg}</div>}
   } finally {
     setLoading(false);
   }
@@ -84,7 +85,7 @@ const navigate = useNavigate();
                   className="btn" 
                   onClick={() => {
                     dispatch(logout());
-                    navigate("/user/login");
+                    navigate("/login");
                     }}>
                   Logout
                 </button>
@@ -166,7 +167,8 @@ const navigate = useNavigate();
 
               <p className="mt-4">
                 {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
-                <button className="btn btn-link p-0" onClick={() => setIsLogin(!isLogin)}>
+                <button className="btn btn-link p-0" 
+                  onClick={() => setIsLogin(!isLogin)}>
                   {isLogin ? "Sign Up" : "Login"}
                 </button>
               </p>
