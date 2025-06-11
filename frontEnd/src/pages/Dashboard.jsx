@@ -10,12 +10,12 @@ import Sidebar from "../components/Sidebar"
 
 function Dashboard() {
   const navigate = useNavigate();
+  const userState = useSelector((state) => state.user);  // 👈 move this up
   const user = userState?.user;
-  const userState = useSelector((state) => state.user);
   const isAuthenticated = userState?.isAuthenticated;
   const dispatch = useDispatch();
 
-    // Redirect to login if no longer authenticated
+  // Redirect to login if no longer authenticated
   useEffect(() => {
     if (!isAuthenticated) {
       navigate('/login');
@@ -32,7 +32,6 @@ function Dashboard() {
           </h1>
           {isAuthenticated && user ? (
             <>
-
               <p>ID: {user.id || user._id}</p>
               <p>Welcome, {user.fullName || user.name}!</p>
               <p>Email: {user.email}</p>
@@ -52,4 +51,5 @@ function Dashboard() {
     </Container>
   );
 }
+
 export default Dashboard;

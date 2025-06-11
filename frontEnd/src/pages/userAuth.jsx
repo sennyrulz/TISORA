@@ -21,50 +21,49 @@ function userAuthPage({ isOpen, onClose }) {
     address: "",
     password: ""
   });
-const [msg, setMsg] = useState("");
+  const [msg, setMsg] = useState("");
 
-// Automatically navigate to dashboard when authenticated
-const navigate = useNavigate();  
+  const navigate = useNavigate();  
 
-  const handleChange = (e) => {
-  setFormData((prev) => ({
-    ...prev,
-    [e.target.name]: e.target.value
-    }));
-  };
+    const handleChange = (e) => {
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value
+      }));
+    };
 
-  const handleSubmit = async (e) => {
-  e.preventDefault();
-  setLoading(true);
-  
-  try {
-    if (isLogin) {
-      const resultAction = await dispatch(login(formData));
-      if (login.fulfilled.match(resultAction)) {
-        toast.success("Login successful");
-        onClose();
-        navigate("/Dashboard");
+    const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    
+    try {
+      if (isLogin) {
+        const resultAction = await dispatch(login(formData));
+        if (login.fulfilled.match(resultAction)) {
+          toast.success("Login successful");
+          onClose();
+          navigate("/Dashboard");
+        } else {
+          toast.error(resultAction.payload || "User does not exist! Please create an account");
+        }
       } else {
-        toast.error(resultAction.payload || "User does not exist! Please create an account");
+        const resultAction = await dispatch(signUp(formData));
+        if (signUp.fulfilled.match(resultAction)) {
+          toast.success("Signup successful");
+          // setMsg(res.message)
+          onClose();
+          navigate("/login");
+        } else {
+          toast.error(resultAction.payload || "Signup failed");
+        }
       }
-    } else {
-      const resultAction = await dispatch(signUp(formData));
-      if (signUp.fulfilled.match(resultAction)) {
-        toast.success("Signup successful");
-        // setMsg(res.message)
-        onClose();
-        navigate("/login");
-      } else {
-        toast.error(resultAction.payload || "Signup failed");
-      }
+    } catch (error) {
+      toast.error(error.message || "An error occurred");
+      {msg && <div className={style.success_msg}>{msg}</div>}
+    } finally {
+      setLoading(false);
     }
-  } catch (error) {
-    toast.error(error.message || "An error occurred");
-    {msg && <div className={style.success_msg}>{msg}</div>}
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
   if (!isOpen) return null;
 

@@ -10,30 +10,31 @@ import image3 from "../assets/master.CzeoQWmc.svg";
 import image4 from "../assets/visa.sxIq5Dot.svg";
 import image5 from "../assets/web.png";
 import image6 from "../assets/ozow.BrS1cEol.svg";
+import CheckOut from "../../../backEnd/models/checkOutModel";
 import { signUp, login, logout } from "../redux/authSlice";
 
 const Checkout = () => {
-  const [formData, setFormData] = useState({
-    email: "",
-    country: "",
-    firstName: "",
-    lastName: "",
-    address: "",
-    apartment: "",
-    city: "",
-    state: "",
-    postalCode: "",
-    phone: "",
-    shippingMethod: "standard",
-    saveInfo: false,
-    emailOffers: false,
-    billingSameAsShipping: true,
-    cardNumber: "",
-    cardExpiry: "",
-    cardCvc: "",
-    cardName: "",
-    paymentMethod: "paystack",
-  });
+  // const [formData, setFormData] = useState({
+  //   email: "",
+  //   country: "",
+  //   firstName: "",
+  //   lastName: "",
+  //   address: "",
+  //   apartment: "",
+  //   city: "",
+  //   state: "",
+  //   postalCode: "",
+  //   phone: "",
+  //   shippingMethod: "standard",
+  //   saveInfo: false,
+  //   emailOffers: false,
+  //   billingSameAsShipping: true,
+  //   cardNumber: "",
+  //   cardExpiry: "",
+  //   cardCvc: "",
+  //   cardName: "",
+  //   paymentMethod: "paystack",
+  // });
 
   const [errors, setErrors] = useState({});
   const [discountCode, setDiscountCode] = useState("");
@@ -140,9 +141,9 @@ const Checkout = () => {
 };
 
   return (
+    
     <div className="container my-5 pt-5">
       <Row className="justify-content-center">
-
         {/* Left Column - Form */}
         <Col md={7} className="px-4">
           <Form onSubmit={handleSubmit}>
@@ -154,10 +155,10 @@ const Checkout = () => {
               </Col>
               {/*THis line of code isnt redirecting properly*/}
               <Col className="text-end">
-                <a href="/AuthPage" className="text-decoration-underline" style={{ color: "black" }}> Log in </a>
+                <a href="/userAuth" className="text-decoration-underline" style={{ color: "black" }}> Log in </a>
               </Col>
             </Row>
-
+            <CheckOut />
             <Form.Group className="mb-3" controlId="email">
               <Form.Control
                 type="email"

@@ -13,7 +13,7 @@ const NavLinks = ({ onClick }) => (
     <NavLink onClick={onClick} to="/newIn" style={{ textDecoration: 'none', color: 'white' }}>NEW IN</NavLink>
     <NavLink onClick={onClick} to="/shop" style={{ textDecoration: 'none', color: 'white' }}>SHOP</NavLink>
     <NavLink onClick={onClick} to="/discover" style={{ textDecoration: 'none', color: 'white' }}>DISCOVER</NavLink>
-    <NavLink onClick={onClick} to="/user" style={{ textDecoration: 'none', color: 'white' }}>SIGN IN</NavLink>
+    <NavLink onClick={onClick} to="/userAuth" style={{ textDecoration: 'none', color: 'white' }}>SIGN IN</NavLink>
   </div>
 );
 

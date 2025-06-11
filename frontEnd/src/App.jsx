@@ -98,11 +98,11 @@ function App() {
           <Route path="/shop" element={<Shop />} />
           <Route path="/discover" element={<Discover />} />
           <Route path="/search" element={<Search />} />
-          <Route path="/user" element={<UserAuth />} />
+          <Route path="/userAuth" element={<UserAuth />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/dashboard" element={<Dashboard/>} />
-          <Route path="/users/:id/verify/:token" element={<EmailVerify/>} />
+          <Route path="/:id/verify/:token" element={<EmailVerify/>} />
 
 
         </Routes>

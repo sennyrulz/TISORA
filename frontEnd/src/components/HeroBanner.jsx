@@ -44,7 +44,7 @@ const navigate = useNavigate();
 
   </div>
      <span className='social-icons'>
-        <a href="https://wa.me/+2347046684044" target="_blank" rel="noopener noreferrer">
+        <a href="https://wa.me/+2348087439193" target="_blank" rel="noopener noreferrer">
           <img style={{ cursor: 'pointer' }} src={whatsapp} alt="Whatsapp" />
         </a>
         <a href="https://www.instagram.com/tisoraa/" target="_blank" rel="noopener noreferrer">
