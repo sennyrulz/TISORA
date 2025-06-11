@@ -5,6 +5,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faUser, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import { Menu, X } from 'lucide-react';
 import logo from '../assets/Tisora.svg';
+import QuickCart from './QuickCart';
+import UserAuth from '../pages/userAuth';
 
 const NavLinks = ({ onClick }) => (
   <div className="nav-links1 py-10 pb-4 d-flex justify-center">
@@ -17,6 +19,8 @@ const NavLinks = ({ onClick }) => (
 
 const Nav = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [showQuickCart, setShowQuickCart] = useState(false);
+  const [showAuthSidebar, setShowAuthSidebar] = useState(false);
 
   return (
     <div className="container-fluid nav-container px-5">
@@ -42,10 +46,22 @@ const Nav = () => {
             <NavLink to="/search">
               <FontAwesomeIcon icon={faSearch} />
             </NavLink>
-            <NavLink to="/user">
+            <NavLink
+              to="#"
+              onClick={(e) => {
+                e.preventDefault();
+                setShowAuthSidebar(true);
+              }}
+            >
               <FontAwesomeIcon icon={faUser} />
             </NavLink>
-            <NavLink to="/cart">
+            <NavLink 
+              to="#" 
+              onClick={(e) => {
+                e.preventDefault();
+                setShowQuickCart(true);
+              }}
+            >
               <FontAwesomeIcon icon={faShoppingCart} />
             </NavLink>
           </div>
@@ -63,6 +79,18 @@ const Nav = () => {
           <NavLinks onClick={() => setIsOpen(false)} />
         </div>
       )}
+
+      {/* Quick Cart */}
+      <QuickCart 
+        isOpen={showQuickCart} 
+        onClose={() => setShowQuickCart(false)} 
+      />
+
+      {/* Auth Sidebar */}
+      <UserAuth 
+        isOpen={showAuthSidebar}
+        onClose={() => setShowAuthSidebar(false)}
+      />
     </div>
   );
 };

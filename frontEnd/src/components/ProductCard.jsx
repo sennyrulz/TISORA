@@ -6,6 +6,7 @@ import bootstrap from "bootstrap/dist/js/bootstrap.bundle.min.js";
 import { addToCart } from "../redux/cartSlice";
 import productModel from "../../../backEnd/models//productModel"
 import { productsData } from "./Product";
+import QuickCart from "./QuickCart";
 
 
 
@@ -20,6 +21,7 @@ function ProductCard({id, Img1, Img2, productName, desc, features, material, siz
 
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [modalMainPublicId, setModalMainPublicId] = useState(publicId1);
+  const [showQuickCart, setShowQuickCart] = useState(false);
 
   const modalRef = useRef(null);
   const modalId = `productModal-${id}`;
@@ -66,6 +68,7 @@ function ProductCard({id, Img1, Img2, productName, desc, features, material, siz
       material,
       sizes,
       price,
+      image: `https://res.cloudinary.com/dr1ay8vmn/image/upload/w_300,h_300,c_fill/${publicId1}.jpg`
     };
     if (onAddToCart) {
       onAddToCart(product); 
@@ -75,6 +78,7 @@ function ProductCard({id, Img1, Img2, productName, desc, features, material, siz
     }
     const modalInstance = bootstrap.Modal.getInstance(modalRef.current);
     modalInstance?.hide();
+    setShowQuickCart(true);
   };
 // console.log("ProductCard props:", { productName, desc, material, sizes, price });
 
@@ -185,6 +189,12 @@ function ProductCard({id, Img1, Img2, productName, desc, features, material, siz
           </div>
         </div>
       </div>
+
+      {/* Quick Cart */}
+      <QuickCart 
+        isOpen={showQuickCart} 
+        onClose={() => setShowQuickCart(false)} 
+      />
     </>
   );
 }

@@ -20,7 +20,16 @@ const Cart = () => {
           <div className="text-center py-5 my-4">
             <h1 className="fs-1 mb-5">Your cart is empty</h1>
             <a href="/shop">
-              <Button className="btn btn-dark bg-black rounded-0 px-5 py-2">Continue Shopping</Button>
+              <Button 
+                className="btn rounded-0 px-5 py-2" 
+                style={{ 
+                  backgroundColor: '#91443f', 
+                  color: 'white',
+                  border: 'none'
+                }}
+              >
+                Continue Shopping
+              </Button>
             </a>
             <div className="mt-5">
               <h2>Have an account?</h2>
@@ -55,8 +64,8 @@ const Cart = () => {
                   <Image
                     src={product.image}
                     alt={product.name}
-                    width={70}
-                    height={70}
+                    width={100}
+                    height={100}
                     className="me-4"
                     style={{ objectFit: "cover" }}
                     loading="lazy"
@@ -66,11 +75,43 @@ const Cart = () => {
                       {product.productName}
                     </p>
                     <p className="m-0 text-muted small">
-                      ₦{(product.price * product.quantity).toLocaleString()} NGN
+                      ₦{(product.price * product.quantity).toLocaleString()}
                     </p>
                     <p className="m-0 text-muted small">
                       Size: {product.sizes}
                     </p>
+                    {/* Mobile-only: Quantity controls under sizes */}
+                    <div className="d-md-none mt-4 d-flex align-items-center gap-3">
+                      <div className="d-flex align-items-center"
+                        style={{ border: "1px solid #ccc", padding: "4px 8px", gap: "10px",}}
+                      >
+                        <button onClick={() => dispatch(decrementQuantity({ id: product.id }))}
+                          style={{ border: "none", background: "transparent", fontSize: "1rem",}}
+                          className="p-0 px-1 d-flex align-items-center justify-content-center small"
+                        >
+                          -
+                        </button>
+                        
+                        <span className="small"
+                          style={{ minWidth: "20px", textAlign: "center", fontSize: "1rem",}}
+                        >
+                          {product.quantity}
+                        </span>
+                        
+                        <button onClick={() => dispatch(incrementQuantity({ id: product.id }))}
+                          style={{ border: "none", background: "transparent", fontSize: "1rem",}}
+                          className="p-0 px-1 d-flex align-items-center justify-content-center small"
+                        >
+                          +
+                        </button>
+                      </div>
+                      
+                      <Button variant="link"
+                        onClick={() => dispatch(removeFromCart(product.id))}
+                        className="p-0 border-0">
+                        <img src={deleteIcon} alt="delete icon" width={20} height={20} />
+                      </Button>
+                    </div>
                   </div>
                 </Col>
 
@@ -78,7 +119,7 @@ const Cart = () => {
                   <div className="d-none d-md-flex align-items-center gap-3">
                     <div
                       className="d-flex align-items-center rounded-0"
-                      style={{ border: "1px solid #ccc", borderRadius: "6px", padding: "4px 8px", gap: "10px"}}>
+                      style={{ border: "1px solid #ccc", padding: "4px 8px", gap: "10px"}}>
                       <button onClick={() => dispatch(decrementQuantity({ id: product.id }))}
                         style={{border: "none", background: "transparent",fontSize: "1rem"}}
                         className="p-0 px-0 p-md-0 px-md-1 d-flex align-items-center justify-content-center small">
@@ -103,45 +144,11 @@ const Cart = () => {
                   </div>
                 </Col>
 
-                <Col xs={2} className="d-flex flex-column align-items-end justify-content-center">
-                <div>
-                  ₦{(product.price * product.quantity).toLocaleString()}
-                </div>
-                
-                {/* Mobile-only: Quantity controls + Delete button under Total */}
-                <div className="d-md-none mt-4 d-flex align-items-center gap-3">
-                  <div className="d-flex align-items-center"
-                    style={{ border: "1px solid #ccc", borderRadius: "6px", padding: "4px 8px", gap: "10px",}}
-                  >
-                    <button onClick={() => dispatch(decrementQuantity({ id: product.id }))}
-                      style={{ border: "none", background: "transparent", fontSize: "1rem",}}
-                      className="p-0 px-1 d-flex align-items-center justify-content-center small"
-                    >
-                      -
-                    </button>
-                    
-                    <span className="small"
-                      style={{ minWidth: "20px", textAlign: "center", fontSize: "1rem",}}
-                    >
-                      {product.quantity}
-                    </span>
-                    
-                    <button onClick={() => dispatch(incrementQuantity({ id: product.id }))}
-                      style={{ border: "none", background: "transparent", fontSize: "1rem",}}
-                      className="p-0 px-1 d-flex align-items-center justify-content-center small"
-                    >
-                      +
-                    </button>
+                <Col xs={2} className="d-flex flex-column align-items-end">
+                  <div className="mt-2">
+                    ₦{(product.price * product.quantity).toLocaleString()}
                   </div>
-                  
-                  <Button variant="link"
-                    onClick={() => dispatch(removeFromCart(product.id))}
-                    className="p-0 border-0">
-                    <img src={deleteIcon} alt="delete icon" width={20} height={20} />
-                  </Button>
-                </div>
-              </Col>
-
+                </Col>
               </Row>
             ))}
 
@@ -176,7 +183,14 @@ const Cart = () => {
                       </a>{" "}calculated at checkout
                     </div>
                     <a href="/Checkout">
-                      <Button variant="dark" className="w-100 my-4 bg-black rounded-0">
+                      <Button 
+                        className="btn rounded-0 py-2 w-100 my-4" 
+                        style={{ 
+                          backgroundColor: '#91443f',
+                          color: 'white',
+                          border: 'none'
+                        }}
+                      >
                         PROCEED TO CHECKOUT
                       </Button>
                     </a>
