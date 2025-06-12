@@ -1,11 +1,11 @@
 import mongoose from "mongoose";
 
 const paymentSchema = new mongoose.Schema({
-user: {
-  type: mongoose.Schema.Types.ObjectId,
-  ref: "User",
-  required: true
-},
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true
+  },
   reference: { 
     type: String, 
     required: true, 
@@ -34,18 +34,18 @@ user: {
   totalAmount: { 
     type: Number, 
     required: true 
-},
+  },
   paymentMethod: { 
     type: String 
-},
+  },
   status: { 
     type: String, 
     enum: ["pending", "success", "failed"], 
     default: "pending" 
-}, 
+  }, 
   paidAt: { 
     type: Date 
-},
+  },
 }, { timestamps: true });
 
 const Payment = mongoose.model("Payment", paymentSchema);

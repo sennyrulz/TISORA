@@ -81,6 +81,19 @@ function ProductCard({id, Img1, Img2, productName, desc, features, material, siz
     setShowQuickCart(true);
   };
 // console.log("ProductCard props:", { productName, desc, material, sizes, price });
+  const sizeLabels = {
+  M: "Medium",
+  L: "Large",
+  XL: "Extra Large",
+  XXL: "Double Extra Large",
+  XXXL: "Triple Extra Large"
+};
+
+const enumValues = ['M', 'L', 'XL', 'XXL', 'XXXL'];
+const translated = enumValues.map(size => ({
+  value: size,
+  label: sizeLabels[size]
+}));
 
   return (
     <>
@@ -168,7 +181,10 @@ function ProductCard({id, Img1, Img2, productName, desc, features, material, siz
                   )}
                   
                   <h5 className="text-start">Size:</h5>
-                  <p className="text-start mb-4">{selectedProduct.sizes}</p>
+                  <p className="text-start mb-4">
+                    {sizeLabels[selectedProduct.sizes] || selectedProduct.sizes}
+                  </p>
+
 
                   <h5 className="text-start">Price:</h5>
                   <p className="text-start">₦{selectedProduct.price.toLocaleString()}</p>

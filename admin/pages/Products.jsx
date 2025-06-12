@@ -7,7 +7,7 @@ const Products = () => {
     productName: "",
     desc: "",
     features: "",
-    materials: "",
+    material: "",
     sizes: "",
     price: "",
   });
@@ -46,7 +46,7 @@ const Products = () => {
       productName: "",
       desc: "",
       features: "",
-      materials: "",
+      material: "",
       sizes: "",
       price: "",
     });
@@ -59,6 +59,7 @@ const Products = () => {
 
     const formData = new FormData();
     images.forEach((file) => formData.append("images", file));
+    formData.append("features", values.features.split(",").map(f => f.trim()));
     Object.entries(values).forEach(([key, val]) => formData.append(key, val));
 
     try {
@@ -92,7 +93,7 @@ const Products = () => {
       productName: product.productName,
       desc: product.desc,
       features: product.features,
-      materials: product.materials,
+      material: product.material,
       sizes: product.sizes,
       price: product.price,
     });
@@ -118,7 +119,7 @@ const Products = () => {
         <input name="productName" value={values.productName} onChange={handleChange} placeholder="Name" required />
         <textarea name="desc" value={values.desc} onChange={handleChange} placeholder="Description" required />
         <input name="features" value={values.features} onChange={handleChange} placeholder="Features" required />
-        <input name="materials" value={values.materials} onChange={handleChange} placeholder="Materials" required />
+        <input name="material" value={values.material} onChange={handleChange} placeholder="Material" required />
         <input name="sizes" value={values.sizes} onChange={handleChange} placeholder="Sizes" required />
         <input type="number" name="price" value={values.price} onChange={handleChange} placeholder="Price" required />
 
@@ -140,7 +141,7 @@ const Products = () => {
             <p><b>Price:</b> ${p.price}</p>
             <div style={{ display: "flex", gap: "0.5rem" }}>
               {p.pictures?.map((img, i) => (
-                <img key={i} src={img} alt="" style={{ width: "100px", height: "100px", objectFit: "cover" }} />
+                <img key={i} src={img.url} alt="" style={{ width: "100px", height: "100px", objectFit: "cover" }} />
               ))}
             </div>
             <button onClick={() => handleEdit(p)}>Edit</button>

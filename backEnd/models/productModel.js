@@ -15,20 +15,21 @@ const productSchema = new mongoose.Schema (
             required: true 
         }, // File size in bytes
         },
-      ], validate: [
-        {
-          validator: function (pics) {
-            return pics.length <= 2; // Max 2 images
-          },
-          message: "A product can have a maximum of 2 images.",
-        },
-        {
-          validator: function (pics) {
-            return pics.every((pic) => pic.size <= 10 * 1024 * 1024); // Max 10MB
-          },
-          message: "Each picture must not exceed 10MB.",
-        },
-      ],
+      ], 
+      // validate: [
+      //   {
+      //     validator: function (pics) {
+      //       return pics.length <= 2; // Max 2 images
+      //     },
+      //     message: "A product can have a maximum of 2 images.",
+      //   },
+      //   {
+      //     validator: function (pics) {
+      //       return pics.every((pic) => pic.size <= 10 * 1024 * 1024); // Max 10MB
+      //     },
+      //     message: "Each picture must not exceed 10MB.",
+      //   },
+      // ],
     },
     productName: { 
         type: String, 
@@ -47,16 +48,23 @@ const productSchema = new mongoose.Schema (
         required: true 
     },
     sizes: { 
-        type: String, 
+        type: String,
+        enum: ['M', 'L', 'XL', 'XXL', 'XXXL'],
         required: true 
     },
     price: { 
         type: String, 
         required: true 
     },  
+     admin:{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Admin",
+      required: true
+    },
   },{ timestamps: true }
 );
 
-const Goods = mongoose.model("Goods", productSchema);
 
-export default Goods;
+const Product = mongoose.model("Product", productSchema);
+
+export default Product;

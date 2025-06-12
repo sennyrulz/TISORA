@@ -48,7 +48,10 @@ const adminProductUploadSchema = new mongoose.Schema (
         required: true,
       },
 
-    features: [],
+    features: {
+      type: [String],
+      required: true
+    },
 
     material: 
     { 

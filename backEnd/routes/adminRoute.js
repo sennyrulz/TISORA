@@ -1,11 +1,6 @@
 import express from 'express'
 // import { authenticateAdmin } from "../middlewares/adminMid.js";
-import {
-  loginAdmin,
-  getAdmin,
-  createAdmin,
-  updateAdmin,
-  deleteAdmin} from "../controllers/adminController.js";
+import { loginAdmin, getAdmin, createAdmin, updateAdmin,deleteAdmin} from "../controllers/adminController.js";
 
 const route = express.Router();
 

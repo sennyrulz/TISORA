@@ -1,77 +1,76 @@
-import mongoose from "mongoose"
+import mongoose from "mongoose";
 
-const adminOrderSchema = new mongoose.Schema (
-    { 
-      Id: {
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: "Admin" 
-      },
-  
-      Img1: [
+const adminOrderSchema = new mongoose.Schema(
+  {
+    adminId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Admin",
+      required: true,
+    },
+
+    images: {
+      type: [
         {
-          publicId:{
+          publicId: {
             type: String,
             required: true,
-            unique: true
           },
           size: {
-          type: Number,
-          required: true
+            type: Number,
+            required: true,
+            validate: {
+              validator: function (v) {
+                return v <= 10 * 1024 * 1024; // 10MB max
+              },
+              message: "Each image must be 10MB or smaller.",
+            },
+          },
         },
-      }
-    ],
-  
-    Img2: [
-      {
-        publicId:{
-          type: String,
-          required: true,
-          unique: true
-        },
-        size: {
-          type: Number,
-          required: true
-        },
-      }
-    ],
-  
-    orderName:
-      { 
-        type: String,
-        required: true,
-        unique: true
-      },
-  
-      desc:
+      ],
+      validate: [
         {
-          type: String,
-          required: true,
+          validator: function (arr) {
+            return arr.length <= 2;
+          },
+          message: "Maximum of 2 images allowed.",
         },
-  
-      features: [],
-  
-      material: 
-      { 
-        type: String,
-        required: true,
-        unique: true
-      },
-      sizes:
-      { 
-        type: String,
-        required: true,
-        unique: true
-      },
-      price:
-      { 
-        type: String,
-        required: true,
-        unique: true
-      },
-    }, 
-        { timestamps: true }
+      ],
+    },
+
+    orderName: {
+      type: String,
+      required: true,
+    },
+
+    desc: {
+      type: String,
+      required: true,
+    },
+
+    features: {
+      type: [String],
+      default: [],
+    },
+
+    material: {
+      type: String,
+      required: true,
+    },
+
+    sizes: {
+      type: String,
+      enum: ["S", "M", "L", "XL", "XXL", "XXXL"],
+      required: true,
+    },
+
+    price: {
+      type: Number,
+      required: true,
+    },
+  },
+  { timestamps: true }
 );
 
- const adminOrderModel = mongoose.model("adminOrder", adminOrderSchema);
+const AdminOrder = mongoose.model("AdminOrder", adminOrderSchema);
 
-export default adminOrderModel;
+export default AdminOrder;
