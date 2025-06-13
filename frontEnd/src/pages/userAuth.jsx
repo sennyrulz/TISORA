@@ -54,7 +54,7 @@ function UserAuthPage() {
       } else {
         const resultAction = await dispatch(signUp(formData));
         if (signUp.fulfilled.match(resultAction)) {
-          toast.success("Signup successful");
+          toast.success("Signup successful, An email has been sent to your account");
 
           // Reset form and navigate to login
           setFormData({
@@ -64,13 +64,14 @@ function UserAuthPage() {
             address: "",
             password: ""
           });
-          navigate("/login");
+          toast.success(resultAction.payload || "An email has been sent to your account, please verify.");
+          navigate("/users/login");
         } else {
           toast.error(resultAction.payload || "Signup failed");
         }
       }
     } catch (error) {
-      toast.error(error.message || "An error occurred");
+      toast.error(error.message || "Invalid credentials");
     } finally {
       setLoading(false);
     }
@@ -95,9 +96,8 @@ function UserAuthPage() {
                   className="btn"
                   onClick={() => {
                     dispatch(logout());
-                    navigate("/user/login");
-                  }}
-                >
+                    navigate("/users/login");
+                  }}>
                   Logout
                 </button>
               </div>

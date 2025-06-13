@@ -18,8 +18,10 @@ export const loginUser = async (req, res) => {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
-    return res.json({ id: user._id, name: user.fullName, email: user.email });
-  } catch (error) {
+res.cookie("id", user._id, { maxAge: 1000 * 60 * 60 }); // sets a cookie named "id"
+return res.json({id: user._id, name: user.fullName, email: user.email});  
+
+} catch (error) {
     console.error("Login error:", error);
     return res.status(500).json({ message: "Internal server error" });
   }
@@ -60,9 +62,10 @@ export const createUser = async (req, res) => {
 
     return res.status(201).json({ message: "An email has been sent to your account, please verify." });
   } catch (error) {
-    console.error("User creation error:", error);
-    return res.status(500).json({ message: 'Something went wrong' });
-  }
+    if (error.response?.status === 409) {
+    console.error("SignUp failed:", error)
+    return res.status(500).json({ message: 'Something went wrong' })
+  }}
 };
 
 // Get All Users

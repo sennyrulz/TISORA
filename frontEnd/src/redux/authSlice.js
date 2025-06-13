@@ -12,11 +12,16 @@ export const signUp = createAsyncThunk(
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(userData),
       });
-      if (!res.ok) throw new Error("Signup failed");
+
       const data = await res.json();
-      return data; 
-    } catch (err) {
-      return rejectWithValue(err.message);
+
+      if (!res.ok) {
+        return rejectWithValue(data.message || "Signup failed");
+      }
+
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.message || "Signup failed");
     }
   }
 );
