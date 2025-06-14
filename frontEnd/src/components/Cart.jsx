@@ -1,8 +1,10 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { Container, Row, Col, Button, Image } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import {removeFromCart, incrementQuantity, decrementQuantity} from "../redux/cartSlice";
+import { removeFromCart, incrementQuantity, decrementQuantity } from "../redux/cartSlice";
 import deleteIcon from "../assets/bin_icon.png";
+import { useNavigate } from "react-router-dom";
+import AuthSidebar from "./AuthSidebar";
 
 const calculateTotal = (cart) => {
   return cart.reduce((total, item) => total + item.price * item.quantity, 0);
@@ -10,11 +12,27 @@ const calculateTotal = (cart) => {
 
 const Cart = () => {
   const cart = useSelector((state) => state.cart.cart);
+  const userState = useSelector((state) => state.user);
+  const isAuthenticated = userState?.isAuthenticated;
+  const [showAuthSidebar, setShowAuthSidebar] = useState(false);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const subtotal = useMemo(() => calculateTotal(cart), [cart]);
+
+  const handleCheckout = () => {
+    if (!isAuthenticated) {
+      setShowAuthSidebar(true);
+    } else {
+      navigate('/Checkout');
+    }
+  };
 
   return (
     <Container className="my-5 pt-3 px-4 px-sm-4">
+      <AuthSidebar 
+        isOpen={showAuthSidebar} 
+        onClose={() => setShowAuthSidebar(false)} 
+      />
       <div className="my-4 pt-5 w-90 mx-auto">
         {cart.length === 0 ? (
           <div className="text-center py-5 my-4">
@@ -182,18 +200,17 @@ const Cart = () => {
                         shipping
                       </a>{" "}calculated at checkout
                     </div>
-                    <a href="/Checkout">
-                      <Button 
-                        className="btn rounded-0 py-2 w-100 my-4" 
-                        style={{ 
-                          backgroundColor: '#91443f',
-                          color: 'white',
-                          border: 'none'
-                        }}
-                      >
-                        PROCEED TO CHECKOUT
-                      </Button>
-                    </a>
+                    <Button 
+                      onClick={handleCheckout}
+                      className="btn rounded-0 py-2 w-100 my-4" 
+                      style={{ 
+                        backgroundColor: '#91443f',
+                        color: 'white',
+                        border: 'none'
+                      }}
+                    >
+                      PROCEED TO CHECKOUT
+                    </Button>
                   </div>
                 </div>
               </Col>

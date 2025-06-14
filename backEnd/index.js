@@ -24,9 +24,14 @@ app.use(cors({
 // Middleware
 app.use(fileUpload({ useTempFiles: true }));
 app.use(express.json());
-app.use('/payments/webhook', express.raw({ type: 'application/json' })); // raw for webhook
+app.use('/api/payments/webhook', express.raw({ type: 'application/json' })); // raw for webhook
 app.use(express.urlencoded({ extended: true }));
 
+// Debug middleware to log requests
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.url}`);
+  next();
+});
 
 app.use((req, res, next) => {
   if (req.method === 'OPTIONS') {
@@ -46,15 +51,49 @@ mongoose
   .then(() => console.log('MongoDB Connected'))
   .catch(err => console.error('MongoDB connection error:', err));
 
-
 // Routes endpoints
 app.use(userRoute);
-app.use(paymentRoute);
 app.use(adminRoute);
 app.use(productRoute);
-app.use(paymentRoute);
+app.use('/api/payments', paymentRoute);
 app.use(adminPaymentRoutes);
 
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error('Error:', err);
+  console.error('Stack:', err.stack);
+  
+  // Handle Mongoose validation errors
+  if (err.name === 'ValidationError') {
+    return res.status(400).json({
+      success: false,
+      message: Object.values(err.errors).map(val => val.message).join(', ')
+    });
+  }
+
+  // Handle Mongoose cast errors (like invalid ObjectId)
+  if (err.name === 'CastError') {
+    return res.status(400).json({
+      success: false,
+      message: `Invalid ${err.path}: ${err.value}`
+    });
+  }
+
+  // Default error
+  res.status(500).json({
+    success: false,
+    message: err.message || 'Something went wrong!'
+  });
+});
+
+// 404 handler
+app.use((req, res) => {
+  console.log('404 Not Found:', req.method, req.url);
+  res.status(404).json({
+    success: false,
+    message: 'Route not found'
+  });
+});
 
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {

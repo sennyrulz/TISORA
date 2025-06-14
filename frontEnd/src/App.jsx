@@ -25,6 +25,8 @@ import { Cloudinary } from "@cloudinary/url-gen";
 import UserAuth from "./pages/userAuth";
 import Dashboard from "./pages/Dashboard";
 import EmailVerify from "./pages/emailVerify"
+import OrderSuccess from './pages/OrderSuccess';
+import Orders from './pages/Orders';
 
 
 const cld = new Cloudinary({ cloud: { cloudName: 'dr1ay8vmn' }});
@@ -103,6 +105,8 @@ function App() {
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/dashboard" element={<Dashboard/>} />
           <Route path="/:id/verify/:token" element={<EmailVerify/>} />
+          <Route path="/order-success" element={<OrderSuccess />} />
+          <Route path="/orders" element={<Orders />} />
 
 
         </Routes>

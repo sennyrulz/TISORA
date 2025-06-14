@@ -1,11 +1,21 @@
 import express from 'express';
-import { initiatePayment, getAllPayments, verifyPayment, paystackWebhook } from '../controllers/paymentController.js';
+import { 
+  initiatePayment, 
+  verifyTransaction, 
+  verifyWebhook, 
+  getAllPayments,
+  paystackWebhook 
+} from '../controllers/paymentController.js';
+import { authenticateToken } from '../middlewares/authMid.js';
 
 const router = express.Router();
 
-router.post('/payments/initialize', initiatePayment);
-router.get('/payments/verify/:reference', verifyPayment);
-router.get("/payments/all", getAllPayments);
-router.post("/payments/webhook", express.raw({ type: "application/json" }), paystackWebhook);
+// Protected routes - require authentication
+router.post('/initialize', authenticateToken, initiatePayment);
+router.get('/verify/:reference', authenticateToken, verifyTransaction);
+router.get("/all", authenticateToken, getAllPayments);
+
+// Webhook route - no authentication needed as it's called by Paystack
+router.post("/webhook", express.raw({ type: "application/json" }), paystackWebhook);
 
 export default router;

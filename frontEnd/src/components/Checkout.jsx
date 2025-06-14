@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import { loadPaystackScript } from "../utils/paystack";
 import { initializePayment, verifyPayment } from "../services/paystackService";
@@ -12,12 +12,13 @@ import BillingAddress from "./checkout/BillingAddress";
 import ShippingMethod from "./checkout/ShippingMethod";
 import PaymentMethod from "./checkout/PaymentMethod";
 import OrderSummary from "./checkout/OrderSummary";
+import AuthSidebar from "./AuthSidebar";
 
 const Checkout = () => {
   // Form data state for billing, shipping, and payment
   const [formData, setFormData] = useState({
       email: "",
-      country: "",
+      country: "NG",
       firstName: "",
       lastName: "",
       address: "",
@@ -52,10 +53,48 @@ const Checkout = () => {
     const [discountCode, setDiscountCode] = useState("");
     const [discount, setDiscount] = useState(0);
     const [isProcessing, setIsProcessing] = useState(false);
+    const [paystackLoaded, setPaystackLoaded] = useState(false);
+    const [showAuthSidebar, setShowAuthSidebar] = useState(false);
 
   const cartItems = useSelector((state) => state.cart.cart);
+  const userState = useSelector((state) => state.user);
+  const isAuthenticated = userState?.isAuthenticated;
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Check authentication
+    if (!isAuthenticated) {
+      setShowAuthSidebar(true);
+      return;
+    }
+
+    // Load Paystack script
+    const script = document.createElement('script');
+    script.src = 'https://js.paystack.co/v1/inline.js';
+    script.async = true;
+    script.onload = () => setPaystackLoaded(true);
+    document.body.appendChild(script);
+
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, [isAuthenticated]);
+
+  // If not authenticated, don't render checkout content
+  if (!isAuthenticated) {
+    return (
+      <>
+        <AuthSidebar 
+          isOpen={showAuthSidebar} 
+          onClose={() => {
+            setShowAuthSidebar(false);
+            navigate('/'); // Redirect to home if they close without logging in
+          }} 
+        />
+      </>
+    );
+  }
 
    // Calculate total dynamically
   const calculateTotal = () => {
@@ -123,86 +162,87 @@ const Checkout = () => {
         try {
           setIsProcessing(true);
 
-          // Prepare payment data
           const paymentData = {
             email: formData.email,
-            amount: Math.round(calculateTotal() * 100), // This will convert to kobo
+            amount: calculateTotal() * 100,
             currency: "NGN",
             metadata: {
               customer: {
                 firstName: formData.firstName,
                 lastName: formData.lastName,
                 phone: formData.phone,
+                email: formData.email
               },
               order: {
                 items: cartItems.map(item => ({
-                  name: item.name,
+                  id: item.id,
+                  productName: item.productName,
                   quantity: item.quantity,
                   price: item.price
                 })),
                 shipping: {
                   address: formData.address,
-                  apartment: formData.apartment,
                   city: formData.city,
                   state: formData.state,
                   country: formData.country,
-                  postalCode: formData.postalCode,
-                  method: formData.shippingMethod
+                  zipCode: formData.postalCode
                 }
               }
             }
           };
 
-          // Initialize payment with Backend
-          const { data } = await initializePayment(paymentData);
+          const response = await initializePayment(paymentData);
 
-          // Load Paystack script
-          const PaystackPop = await loadPaystackScript();
+          if (!response.success) {
+            throw new Error(response.message || 'Payment initialization failed');
+          }
 
-          // Configure Paystack popup
-          const handler = PaystackPop.setup({
-            key: process.env.VITE_PAYSTACK_PUBLIC_KEY,
+          const handler = window.PaystackPop.setup({
+            key: import.meta.env.VITE_PAYSTACK_PUBLIC_KEY,
             email: formData.email,
             amount: paymentData.amount,
             currency: paymentData.currency,
-            ref: data.reference,
-            metadata: paymentData.metadata,
-            callback: async function(response) {
-              try {
-                // Verify Payment on Backend
-                const verificationResult = await verifyPayment(response.reference);
-
+            ref: response.data.reference,
+            callback: function(response) {
+              verifyPayment(response.reference)
+                .then(verificationResult => {
                 if (verificationResult.success) {
                   toast.success("Payment successful! Order confirmed.");
-
-                  // Clear cart and redirect
                   dispatch(clearCart());
-                  navigate("/order-success", { state: verificationResult.data });
+                    navigate("/order-success", {
+                      state: {
+                        paymentData: {
+                          reference: response.reference,
+                          amount: paymentData.amount,
+                          email: formData.email,
+                          customer: paymentData.metadata.customer,
+                          order: paymentData.metadata.order
+                        }
+                      }
+                    });
                 } else {
-                  toast.error("Payment failed. Please contact support.");
+                    toast.error(verificationResult.message || "Payment verification failed");
                 }
-              } catch (error) {
+                })
+                .catch(error => {
                 console.error("Payment verification error:", error);
-                toast.error("Payment failed. Please contact support.");
-              } finally {
-                setIsProcessing(false);
-              }
+                  toast.error("Payment verification failed. Please contact support.");
+                });
             },
             onClose: function() {
               toast.info('Payment cancelled.');
-              setIsProcessing(false);
             }
           });
 
-          // Open Paystack popup
           handler.openIframe();
-
         } catch (error) {
           console.error("Payment initialization error:", error);
-          toast.error("Payment initialization failed. Please contact support.");
+          toast.error(error.message || "Payment initialization failed");
+        } finally {
           setIsProcessing(false);
         }
-      }
+      };
+
         const handleSubmit = (e) => {
           e.preventDefault();
           
@@ -216,6 +256,10 @@ const Checkout = () => {
             return;
           }
           // Calling paystackpayment API here
+        if (!paystackLoaded) {
+          toast.error('Payment system is loading. Please try again in a moment.');
+          return;
+        }
           handlePaystackPayment();
           setIsProcessing(true);
           console.log("Form Data Submitted:", formData);
