@@ -23,8 +23,9 @@ import { Modal, Button, Container } from "react-bootstrap";
 import Checkout from "./components/Checkout";
 import { Cloudinary } from "@cloudinary/url-gen";
 import UserAuth from "./pages/userAuth";
-import Dashboard from "./pages/Dashboard";
+import DashboardLanding from "./pages/DashboardLanding";
 import EmailVerify from "./pages/emailVerify"
+import OrdersLanding from "./pages/ordersLanding";
 
 
 const cld = new Cloudinary({ cloud: { cloudName: 'dr1ay8vmn' }});
@@ -101,7 +102,8 @@ function App() {
           <Route path="/userAuth" element={<UserAuth />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />
-          <Route path="/dashboard" element={<Dashboard/>} />
+          <Route path="/DashboardLanding" element={<DashboardLanding/>} />
+          <Route path="/OrdersLanding" element={<OrdersLanding/>} />
           <Route path="/:id/verify/:token" element={<EmailVerify/>} />
 
 

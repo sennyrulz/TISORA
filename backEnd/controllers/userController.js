@@ -42,30 +42,20 @@ export const createUser = async (req, res) => {
 
   const salt = bcrypt.genSaltSync(10);
   const hashedPassword = bcrypt.hashSync(password, salt);
-
-  const newUser = new userModel({
-    email,
-    password: hashedPassword,
-    ...others,
-  });
+  console.log(hashedPassword);
 
   try {
+    const newUser = new userModel({
+      email,
+      password: hashedPassword,
+      ...others,
+    });
     const savedUser = await newUser.save();
-
-    const token = await new Token({
-      userId: savedUser._id,
-      token: crypto.randomBytes(32).toString("hex")
-    }).save();
-
-    const url = `${process.env.VITE_BACKEND_URL}user/${savedUser._id}/verify/${token.token}`;
-    await sendEmail(savedUser.email, "Verify Email", url);
-
-    return res.status(201).json({ message: "An email has been sent to your account, please verify." });
-  } catch (error) {
-    if (error.response?.status === 409) {
-    console.error("SignUp failed:", error)
-    return res.status(500).json({ message: 'Something went wrong' })
-  }}
+        return res.json(savedUser);    
+    } catch (error) {
+        console.log(error.message);
+        return res.send("something went wrong");
+    }
 };
 
 // Get All Users
@@ -82,18 +72,21 @@ export const getUser = async (req, res) => {
 export const updateUser = async (req, res) => {
   const { id, ...others } = req.body;
   try {
-    const updatedUser = await userModel.findByIdAndUpdate(id, others, { new: true });
-    return res.json(updatedUser);
-  } catch (error) {
-    return res.status(500).json({ message: "Update failed" });
-  }
+    const updatedUser = await userModel.findByIdAndUpdate(
+      id, 
+      { ...others },
+      { new: true }
+      );
+      return res.json(updateUser);
+    } catch (error) {}
 };
 
 // Delete User
 export const deleteUser = async (req, res) => {
   const { id } = req.query;
   try {
-    const deletedUser = await userModel.findByIdAndDelete(id);
+    const deletedUser = await userModel.findByIdAndDelete
+    (id);
     return res.json(deletedUser);
   } catch (error) {
     return res.status(500).json({ message: "Deletion failed" });

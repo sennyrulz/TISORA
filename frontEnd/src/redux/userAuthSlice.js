@@ -32,7 +32,7 @@ export const login = createAsyncThunk(
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(credentials),
       });
-      if (!res.ok) throw new Error("Login failed");
+      if (!res.ok) throw new Error("User does not exist! Sign up");
       const data = await res.json();
       return data;
     } catch (err) {

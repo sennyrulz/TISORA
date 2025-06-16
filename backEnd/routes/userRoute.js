@@ -18,7 +18,7 @@ route.post("/user/login", loginUser);
 
 // Protected routes
 route.get("/:id/verify/:token", verifyUser)
-route.get("/dashboard", getUser);
+route.get("/DashboardLanding", getUser);
 route.put("/:id", updateUser);
 route.delete("/:id", deleteUser);
 

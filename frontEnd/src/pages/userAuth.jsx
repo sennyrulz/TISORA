@@ -27,7 +27,8 @@ function UserAuthPage() {
   // Redirect if already logged in
   useEffect(() => {
     if (isAuthenticated) {
-      navigate("/Dashboard");
+      navigate("/DashboardLanding");
+      navigate("/user/login");
     }
   }, [isAuthenticated, navigate]);
 
@@ -47,9 +48,9 @@ function UserAuthPage() {
         const resultAction = await dispatch(login(formData));
         if (login.fulfilled.match(resultAction)) {
           toast.success("Login successful");
-          navigate("/Dashboard");
+          navigate("/DashboardLanding");
         } else {
-          toast.error(resultAction.payload || "User does not exist! Please create an account");
+          toast.error(resultAction.payload || "User does not exist! Sign up");
         }
       } else {
         const resultAction = await dispatch(signUp(formData));
@@ -65,13 +66,13 @@ function UserAuthPage() {
             password: ""
           });
           toast.success(resultAction.payload || "An email has been sent to your account, please verify.");
-          navigate("/users/login");
+          navigate("/user/login");
         } else {
           toast.error(resultAction.payload || "Signup failed");
         }
       }
     } catch (error) {
-      toast.error(error.message || "Invalid credentials");
+      toast.error(error.message || "Invalid credentials. Please input the right details");
     } finally {
       setLoading(false);
     }
@@ -96,7 +97,7 @@ function UserAuthPage() {
                   className="btn"
                   onClick={() => {
                     dispatch(logout());
-                    navigate("/users/login");
+                    navigate("/user/login");
                   }}>
                   Logout
                 </button>
@@ -116,7 +117,6 @@ function UserAuthPage() {
                         value={formData.fullName}
                         onChange={handleChange}
                         required
-                        disabled={loading}
                       />
                     </div>
 
@@ -129,7 +129,6 @@ function UserAuthPage() {
                         value={formData.phone}
                         onChange={handleChange}
                         required
-                        disabled={loading}
                       />
                     </div>
 
@@ -142,7 +141,6 @@ function UserAuthPage() {
                         value={formData.address}
                         onChange={handleChange}
                         required
-                        disabled={loading}
                       />
                     </div>
                   </>
@@ -157,7 +155,6 @@ function UserAuthPage() {
                     value={formData.email}
                     onChange={handleChange}
                     required
-                    disabled={loading}
                   />
                 </div>
 
@@ -171,7 +168,6 @@ function UserAuthPage() {
                     value={formData.password}
                     onChange={handleChange}
                     required
-                    disabled={loading}
                   />
                 </div>
 
@@ -183,8 +179,7 @@ function UserAuthPage() {
                     width: '100%'
                   }}
                   className="btn btn-primary"
-                  disabled={loading}
-                >
+                  disabled={loading}>
                   {loading ? "Loading..." : isLogin ? "Login" : "Sign Up"}
                 </button>
               </form>

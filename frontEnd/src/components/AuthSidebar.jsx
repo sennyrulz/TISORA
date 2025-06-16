@@ -39,7 +39,7 @@ function AuthSidebar({ isOpen, onClose }) {
         const resultAction = await dispatch(login(formData)).unwrap();
         toast.success("Login successful");
         onClose();
-        navigate("/Dashboard");
+        navigate("/DashboardLanding");
       } else {
         const resultAction = await dispatch(signUp(formData)).unwrap();
         toast.success("Signup successful");
