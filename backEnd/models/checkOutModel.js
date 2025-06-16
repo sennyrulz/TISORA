@@ -80,7 +80,9 @@ const checkOutSchema = new mongoose.Schema({
       apartment: { type: String },
       city: { type: String },
       state: { type: String },
-      postalCode: { type: String },
+      postalCode: { 
+        type: String, 
+        required:false},
       phone: { type: String },
     },
   },

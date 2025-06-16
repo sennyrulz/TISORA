@@ -44,7 +44,7 @@ function AuthSidebar({ isOpen, onClose }) {
         const resultAction = await dispatch(signUp(formData)).unwrap();
         toast.success("Signup successful");
         onClose();
-        navigate("/users/login");
+        navigate("/");
       }
     } catch (error) {
       toast.error(error.message || "An error occurred");
@@ -79,7 +79,7 @@ function AuthSidebar({ isOpen, onClose }) {
                   className="btn" 
                   onClick={() => {
                     dispatch(logout());
-                    navigate("/users/login");
+                    navigate("/");
                     }}>
                   Logout
                 </button>

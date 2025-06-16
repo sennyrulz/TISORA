@@ -12,7 +12,7 @@ function DashboardLanding() {
         <Row>
           <Col>
             <Sidebar />
-            <Dashboard />
+            <Dashboard/>
           </Col>
         </Row>
     </Container>

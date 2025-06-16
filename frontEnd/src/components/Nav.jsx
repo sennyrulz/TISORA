@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { NavLink, Link } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -8,12 +9,15 @@ import logo from '../assets/Tisora.svg';
 import QuickCart from './QuickCart';
 import AuthSidebar from './AuthSidebar';
 
-const NavLinks = ({ onClick }) => (
+const NavLinks = ({ onClick, user }) => (
   <div className="nav-links1 py-10 pb-4 d-flex justify-center">
     <NavLink onClick={onClick} to="/newIn" style={{ textDecoration: 'none', color: 'white' }}>NEW IN</NavLink>
     <NavLink onClick={onClick} to="/shop" style={{ textDecoration: 'none', color: 'white' }}>SHOP</NavLink>
     <NavLink onClick={onClick} to="/discover" style={{ textDecoration: 'none', color: 'white' }}>DISCOVER</NavLink>
-    <NavLink onClick={onClick} to="/userAuth" style={{ textDecoration: 'none', color: 'white' }}>SIGN IN</NavLink>
+    <NavLink onClick={onClick} to={user ? "/DashboardLanding" : "/userAuth"} 
+      style={{ textDecoration: 'none', color: 'white' }}>
+      {user ? "DASHBOARD" : "SIGN IN"}
+    </NavLink>
   </div>
 );
 
@@ -21,6 +25,9 @@ const Nav = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [showQuickCart, setShowQuickCart] = useState(false);
   const [showAuthSidebar, setShowAuthSidebar] = useState(false);
+
+  // ✅ Move useSelector inside component
+  const { user } = useSelector((state) => state.user);
 
   return (
     <div className="container-fluid nav-container px-5">
@@ -34,12 +41,11 @@ const Nav = () => {
 
         {/* Desktop Navigation Links */}
         <div className="col-lg-6 d-none d-lg-flex justify-content-center">
-          <NavLinks onClick={() => setIsOpen(false)} />
+          <NavLinks onClick={() => setIsOpen(false)} user={user} />
         </div>
 
         {/* Right-side Icons & Mobile Menu */}
         <div className="col-lg-4 col-6 d-flex justify-content-end align-items-center">
-          {/* Icons */}
           <div className="nav-icons d-flex gap-10">
             <NavLink to="/search">
               <FontAwesomeIcon icon={faSearch} />
@@ -68,7 +74,7 @@ const Nav = () => {
       {/* Mobile Navigation Menu */}
       {isOpen && (
         <div className="mobile-menu d-lg-none">
-          <NavLinks onClick={() => setIsOpen(false)} />
+          <NavLinks onClick={() => setIsOpen(false)} user={user} />
         </div>
       )}
 

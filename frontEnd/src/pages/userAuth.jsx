@@ -28,7 +28,7 @@ function UserAuthPage() {
   useEffect(() => {
     if (isAuthenticated) {
       navigate("/DashboardLanding");
-      navigate("/user/login");
+      navigate("/");
     }
   }, [isAuthenticated, navigate]);
 
@@ -66,7 +66,7 @@ function UserAuthPage() {
             password: ""
           });
           toast.success(resultAction.payload || "An email has been sent to your account, please verify.");
-          navigate("/user/login");
+          navigate("/userAuth");
         } else {
           toast.error(resultAction.payload || "Signup failed");
         }
@@ -97,7 +97,7 @@ function UserAuthPage() {
                   className="btn"
                   onClick={() => {
                     dispatch(logout());
-                    navigate("/user/login");
+                    navigate("/");
                   }}>
                   Logout
                 </button>
