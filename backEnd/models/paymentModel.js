@@ -4,7 +4,7 @@ const paymentSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
-    required: true
+    required: true  // Changed from false to true
   },
   reference: { 
     type: String, 
@@ -12,7 +12,10 @@ const paymentSchema = new mongoose.Schema({
     unique: true 
   },
   customer: {
-    name: { 
+    firstName: { 
+        type: String 
+    },
+    lastName: { 
         type: String 
     },
     email: { 
@@ -25,8 +28,15 @@ const paymentSchema = new mongoose.Schema({
   },
   items: [
     {
-      productId: String,
-      productName: String,
+      productId: {
+        type: mongoose.Schema.Types.Mixed,  // This allows both ObjectId and String
+        ref: 'Product',
+        required: true
+      },
+      productName: {
+        type: String,
+        required: true
+      },
       quantity: Number,
       price: Number
     }
@@ -36,7 +46,8 @@ const paymentSchema = new mongoose.Schema({
     required: true 
   },
   paymentMethod: { 
-    type: String 
+    type: String,
+    default: 'paystack'
   },
   status: { 
     type: String, 

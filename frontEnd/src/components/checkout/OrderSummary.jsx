@@ -1,5 +1,6 @@
 import React from "react";
 import { Row, Col, Image, Form, Button } from "react-bootstrap";
+import { useSelector } from "react-redux";
 
 const OrderSummary = ({
   cartItems,
@@ -9,11 +10,25 @@ const OrderSummary = ({
   calculateTotal,
   formData,
 }) => {
+  const specialInstructions = useSelector((state) => state.cart.specialInstructions);
+
   return (
     <>
       <div className="d-block d-md-none mt-4 px-4">
         <h5 className="fw-bold text-start">Order Summary</h5>
       </div>
+
+      {/* Special Instructions */}
+      {specialInstructions && (
+        <Row className="mb-4 px-4">
+          <Col>
+            <div className="border mt-3 p-3">
+              <h6 className="mb-2">Special Instructions:</h6>
+              <p className="mb-0 text-muted">{specialInstructions}</p>
+            </div>
+          </Col>
+        </Row>
+      )}
 
       {/* Order details Structure */}
       {cartItems.map((product) => (

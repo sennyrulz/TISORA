@@ -1,8 +1,10 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { Container, Row, Col, Button, Image } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import {removeFromCart, incrementQuantity, decrementQuantity} from "../redux/cartSlice";
+import { removeFromCart, incrementQuantity, decrementQuantity, updateSpecialInstructions } from "../redux/cartSlice";
 import deleteIcon from "../assets/bin_icon.png";
+import { useNavigate } from "react-router-dom";
+import AuthSidebar from "./AuthSidebar";
 
 const calculateTotal = (cart) => {
   return cart.reduce((total, item) => total + item.price * item.quantity, 0);
@@ -10,11 +12,39 @@ const calculateTotal = (cart) => {
 
 const Cart = () => {
   const cart = useSelector((state) => state.cart.cart);
+  const specialInstructions = useSelector((state) => state.cart.specialInstructions);
+  const userState = useSelector((state) => state.user);
+  const isAuthenticated = userState?.isAuthenticated;
+  const [showAuthSidebar, setShowAuthSidebar] = useState(false);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const subtotal = useMemo(() => calculateTotal(cart), [cart]);
+
+  // Clear special instructions when cart is empty
+  useEffect(() => {
+    if (cart.length === 0 && specialInstructions) {
+      dispatch(updateSpecialInstructions(""));
+    }
+  }, [cart.length, specialInstructions, dispatch]);
+
+  const handleCheckout = () => {
+    if (!isAuthenticated) {
+      setShowAuthSidebar(true);
+    } else {
+      navigate('/Checkout');
+    }
+  };
+
+  const handleSpecialInstructionsChange = (e) => {
+    dispatch(updateSpecialInstructions(e.target.value));
+  };
 
   return (
     <Container className="my-5 pt-3 px-4 px-sm-4">
+      <AuthSidebar 
+        isOpen={showAuthSidebar} 
+        onClose={() => setShowAuthSidebar(false)} 
+      />
       <div className="my-4 pt-5 w-90 mx-auto">
         {cart.length === 0 ? (
           <div className="text-center py-5 my-4">
@@ -160,10 +190,13 @@ const Cart = () => {
                   <label className="form-label fw-semibold mb-2 text-muted">
                     Order special instructions
                   </label>
-                  <textarea className="form-control rounded-0"
-                  rows={5}
-                  placeholder="Write any special requests or delivery instructions..."
-                  style={{ border: "1.4px solid #aaa", padding: "8px" }}
+                  <textarea 
+                    className="form-control rounded-0"
+                    rows={5}
+                    placeholder="Write any special requests or delivery instructions..."
+                    style={{ border: "1.4px solid #aaa", padding: "8px" }}
+                    value={specialInstructions}
+                    onChange={handleSpecialInstructionsChange}
                   ></textarea>
                 </div>
               </Col>
@@ -182,18 +215,17 @@ const Cart = () => {
                         shipping
                       </a>{" "}calculated at checkout
                     </div>
-                    <a href="/Checkout">
-                      <Button 
-                        className="btn rounded-0 py-2 w-100 my-4" 
-                        style={{ 
-                          backgroundColor: '#91443f',
-                          color: 'white',
-                          border: 'none'
-                        }}
-                      >
-                        PROCEED TO CHECKOUT
-                      </Button>
-                    </a>
+                    <Button 
+                      onClick={handleCheckout}
+                      className="btn rounded-0 py-2 w-100 my-4" 
+                      style={{ 
+                        backgroundColor: '#91443f',
+                        color: 'white',
+                        border: 'none'
+                      }}
+                    >
+                      PROCEED TO CHECKOUT
+                    </Button>
                   </div>
                 </div>
               </Col>
