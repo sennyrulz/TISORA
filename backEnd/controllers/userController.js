@@ -3,32 +3,54 @@ import bcrypt from 'bcrypt';
 import Token from '../models/token.js';
 import sendEmail from '../utils/sendEmail.js';
 import crypto from 'crypto';
+import jwt from 'jsonwebtoken';
 
 // Login User
 export const loginUser = async (req, res) => {
   const { email, password } = req.body;
   try {
+    console.log("Login attempt for email:", email);
+    
     const user = await userModel.findOne({ email });
     if (!user) {
+      console.log("User not found:", email);
       return res.status(404).json({ message: "This account does not exist, please create one." });
     }
 
     const isValid = bcrypt.compareSync(password, user.password);
     if (!isValid) {
+      console.log("Invalid password for user:", email);
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
-res.cookie("id", user._id.toString(), {
-  httpOnly: true,
-  secure: process.env.NODE_ENV === 'production',
-  sameSite: 'lax',
-  maxAge: 1000 * 60 * 60, // 1 hour
-});
-return res.json({id: user._id, name: user.fullName, email: user.email});  
+    // Generate JWT token
+    const token = jwt.sign(
+      { userId: user._id, email: user.email },
+      process.env.SECRETKEY || 'my-secret-key-goes-here',
+      { expiresIn: '1h' }
+    );
 
-} catch (error) {
+    // Set token in HTTP-only cookie with secure flags
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production', // true in production
+      sameSite: 'strict', // Prevents CSRF attacks
+      maxAge: 1000 * 60 * 60, // 1 hour
+    });
+
+    // Return user data without token
+    return res.json({
+      id: user._id,
+      name: user.fullName,
+      email: user.email
+    });
+
+  } catch (error) {
     console.error("Login error:", error);
-    return res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({ 
+      message: "Internal server error",
+      error: error.message 
+    });
   }
 };
 

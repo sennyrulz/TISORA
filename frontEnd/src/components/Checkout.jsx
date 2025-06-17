@@ -57,6 +57,7 @@ const Checkout = () => {
     const [showAuthSidebar, setShowAuthSidebar] = useState(false);
 
   const cartItems = useSelector((state) => state.cart.cart);
+  const specialInstructions = useSelector((state) => state.cart.specialInstructions);
   const userState = useSelector((state) => state.user);
   const isAuthenticated = userState?.isAuthenticated;
   const dispatch = useDispatch();
@@ -81,7 +82,7 @@ const Checkout = () => {
     };
   }, [isAuthenticated]);
 
-  // If not authenticated, don't render checkout content
+  // If not authenticated, show auth sidebar
   if (!isAuthenticated) {
     return (
       <>
@@ -186,7 +187,8 @@ const Checkout = () => {
                   state: formData.state,
                   country: formData.country,
                   zipCode: formData.postalCode
-                }
+                },
+                specialInstructions: specialInstructions
               }
             }
           };

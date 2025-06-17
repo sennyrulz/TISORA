@@ -4,7 +4,7 @@ const paymentSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
-    required: true  // Changed from false to true
+    required: false  // Changed from true to false
   },
   reference: { 
     type: String, 
@@ -57,6 +57,10 @@ const paymentSchema = new mongoose.Schema({
   paidAt: { 
     type: Date 
   },
+  specialInstructions: {
+    type: String,
+    default: ""
+  }
 }, { timestamps: true });
 
 const Payment = mongoose.model("Payment", paymentSchema);

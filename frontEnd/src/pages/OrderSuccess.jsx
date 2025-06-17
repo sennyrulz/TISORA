@@ -66,6 +66,19 @@ const OrderSuccess = () => {
 
                     <hr className="my-4" />
 
+                    {paymentData.order?.specialInstructions && (
+                      <>
+                        <div className="mb-4">
+                          <div className="d-flex align-items-center mb-2">
+                            <FaBoxOpen style={{ color: '#91443f' }} className="me-2" />
+                            <p className="text-muted mb-0">Special Instructions</p>
+                          </div>
+                          <p className="mb-0 text-start fw-medium">{paymentData.order.specialInstructions}</p>
+                        </div>
+                        <hr className="my-4" />
+                      </>
+                    )}
+
                     <div>
                       <div className="d-flex align-items-center mb-2">
                         <FaEnvelopeOpen style={{ color: '#91443f' }} className="me-2" />
