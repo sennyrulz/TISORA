@@ -5,13 +5,17 @@ import bcrypt from 'bcrypt';
 
 import sendEmail from '../utils/sendEmail.js';
 import crypto from 'crypto';
+import jwt from 'jsonwebtoken';
 
 // Login User
 export const loginUser = async (req, res) => {
   const { email, password } = req.body;
   try {
+    console.log("Login attempt for email:", email);
+    
     const user = await userModel.findOne({ email });
     if (!user) {
+      console.log("User not found:", email);
       return res.status(404).json({ message: "This account does not exist, please create one." });
     }
 
@@ -20,25 +24,33 @@ export const loginUser = async (req, res) => {
       return res.send("Invalid credentials" );
     }
 //create a token
-const token = jwt.sign(
-  {id:user._id, user:user.user},
-  process.env.JWT_SECRET,
-  { expiresIn:"1hr" }
-);
+    const token = jwt.sign(
+      { userId: user._id, email: user.email },
+      process.env.SECRETKEY || 'my-secret-key-goes-here',
+      { expiresIn: '1h' }
+    );
 
-//return basic information. e.g. dashboard add dp if provided img:user.img
-res.cookie("token", token, {
-  maxAge: 1000 * 60 * 60, // 1 hour
-  httpOnly: true,
-    secure: true,
-    // secure: process.env.NODE_ENV === 'production',
-  // sameSite: 'lax',
-});
-return res.json({id: user._id, name: user.fullName, email: user.email});  
+    // Set token in HTTP-only cookie with secure flags
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production', // true in production
+      sameSite: 'strict', // Prevents CSRF attacks
+      maxAge: 1000 * 60 * 60, // 1 hour
+    });
 
-} catch (error) {
+    // Return user data without token
+    return res.json({
+      id: user._id,
+      name: user.fullName,
+      email: user.email
+    });
+
+  } catch (error) {
     console.error("Login error:", error);
-    return res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({ 
+      message: "Internal server error",
+      error: error.message 
+    });
   }
 };
 

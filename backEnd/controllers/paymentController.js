@@ -136,7 +136,7 @@ export const initiatePayment = async (req, res) => {
   
   try {
     const { email, amount, currency, metadata } = req.body;
-    const userId = req.user.userId; // Using userId from JWT token
+    // const userId = req.user.userId; // Temporarily comment out user ID requirement
 
     if (!email || !amount) {
       console.log('Missing required fields:', { email, amount });
@@ -155,7 +155,7 @@ export const initiatePayment = async (req, res) => {
         currency: currency || 'NGN',
         metadata: {
           ...metadata,
-          userId // Include user ID in metadata
+          // userId // Temporarily comment out user ID
         }
       },
       {
@@ -174,13 +174,13 @@ export const initiatePayment = async (req, res) => {
 
     const { reference, authorization_url } = response.data.data;
 
-    // Create payment record with user ID
+    // Create payment record
     console.log('Creating payment record...');
     await Payment.create({
-      user: userId,
+      // user: userId, // Temporarily comment out user ID
       customer: metadata.customer,
       items: metadata.order.items.map(item => ({
-        productId: item._id || item.id, // Handle both ._id and .id
+        productId: item._id || item.id,
         productName: item.productName,
         quantity: item.quantity,
         price: item.price
@@ -189,10 +189,10 @@ export const initiatePayment = async (req, res) => {
       paymentMethod: 'paystack',
       reference,
       status: "pending",
+      specialInstructions: metadata.order.specialInstructions || ""
     });
 
-    console.log('Payment initialized successfully');
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: 'Payment initialized successfully',
       data: {
@@ -202,7 +202,7 @@ export const initiatePayment = async (req, res) => {
     });
   } catch (error) {
     console.error('Payment initialization error:', error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message || 'Payment initialization failed'
     });

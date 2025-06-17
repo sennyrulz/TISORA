@@ -1,27 +1,22 @@
 const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5001';
 
 const getAuthToken = () => {
-    // Get token from cookie
+    // Get token from HTTP-only cookie
     const cookies = document.cookie.split(';');
-    const idCookie = cookies.find(cookie => cookie.trim().startsWith('id='));
-    if (idCookie) {
-        return idCookie.split('=')[1].trim();
+    const tokenCookie = cookies.find(cookie => cookie.trim().startsWith('token='));
+    if (tokenCookie) {
+        return tokenCookie.split('=')[1].trim();
     }
     return null;
 };
 
 export const initializePayment = async (paymentData) => {
     try {
-        const token = getAuthToken();
-        if (!token) {
-            throw new Error('Authentication required. Please login to continue.');
-        }
-
         const response = await fetch(`${API_BASE_URL}/api/payments/initialize`, {
             method: 'POST',
+            credentials: 'include',
             headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify(paymentData),
         });
@@ -41,18 +36,13 @@ export const initializePayment = async (paymentData) => {
 
 export const verifyPayment = async (reference) => {
     try {
-        const token = getAuthToken();
-        if (!token) {
-            throw new Error('Authentication required. Please login to continue.');
-        }
-        
         console.log('Verifying payment with reference:', reference);
         
         const response = await fetch(`${API_BASE_URL}/api/payments/verify/${reference}`, {
             method: 'GET',
+            credentials: 'include',
             headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Content-Type': 'application/json'
             },
         });
 
