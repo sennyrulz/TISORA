@@ -1,17 +1,17 @@
 import express from 'express';
 import { 
-  initiatePayment, 
+  initializePayment, 
   verifyTransaction, 
   verifyWebhook, 
   getAllPayments,
   paystackWebhook 
 } from '../controllers/paymentController.js';
-// import { authenticateToken } from '../middlewares/authMid.js'; // Temporarily comment out
+import { authenticateToken } from '../middlewares/authMid.js'; // Temporarily comment out
 
 const router = express.Router();
 
 // Temporarily remove authentication
-router.post('/initialize', initiatePayment);
+router.post('/initialize', authenticateToken, initializePayment);
 router.get('/verify/:reference', verifyTransaction);
 router.get("/all", getAllPayments);
 

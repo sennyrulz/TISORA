@@ -18,7 +18,10 @@ export const authenticateToken = (req, res, next) => {
   jwt.verify(token, process.env.SECRETKEY || 'my-secret-key-goes-here', (err, user) => {
     if (err) return res.status(403).json({ message: "Forbidden: Invalid token" });
 
-    req.user = user;
+   req.user = {
+  _id: user.id,
+    admin: user.admin || false
+   };
     next();
   });
 };

@@ -49,8 +49,8 @@ app.use((req, res, next) => {
 
 // Create Connection
 mongoose
-  .connect(process.env.MONGODBURL
-  || "mongodb://localhost:27017/Tisora")
+  .connect(process.env.MONGODBURL)
+  // || "mongodb://localhost:27017/Tisora")
   .then(() => console.log('MongoDB Connected'))
   .catch(err => console.error('MongoDB connection error:', err));
 

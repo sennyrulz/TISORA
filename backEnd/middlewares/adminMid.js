@@ -8,7 +8,7 @@
     }
     
     const token = authHeader.split(" ")[1];
-    jwt.verify(token, process.env.JWT_SECRET, (error, payload) => {
+    jwt.verify(token, process.env.SECRETKEY, (error, payload) => {
       if (error) {
         return res.status(403).json({ message: "Forbidden: Invalid token" });
       }
