@@ -22,62 +22,69 @@ const uploadToCloudinary = (buffer) => {
 
 // Get all products
 export const getProducts = async (req, res) => {
-     const {adminId} = req.cookies
+     const {adminId} = req.query
     try {
-        const products = await productModel.find().populate({creator:adminId});
+        const products = await productModel.find({admin:adminId});
         return res.json(products);
     } catch (error) {
         console.error("Error fetching products:", error);
-        return res.status(500).json({ message: 'Server error' });
+        return res.send( 'Something went wrong' );
     }
 };
 
 // Create a new product
 export const createProducts = async (req, res) => {
-    const { pictures, productName, desc, features, materials, sizes, price } = req.body;
-    const {adminId} = req.cookies
+  const { productName, desc, features, materials, sizes, price } = req.body;
+  const { _id } = req.admin;
 
-    // Validate required fields
-    if (!productName || !desc || !features || !materials || !sizes || !price || !pictures) {
-        return res.status(400).json({ message: 'All fields are required' });
-    }
+  if (!productName || !desc || !features || !materials || !sizes || !price) {
+    return res.status(400).json({ message: 'All fields are required' });
+  }
 
-   // Validate image upload
   if (!req.files || req.files.length < 2) {
     return res.status(400).json({ message: 'At least two images are required' });
   }
 
   try {
-    // Upload all images to Cloudinary
-    const pictures = await Promise.all(
+    const imageUrls = await Promise.all(
       req.files.map(file => uploadToCloudinary(file.buffer))
     );
 
-    const newProduct = new productModel({admin: adminId, ...body})
-    const savedProduct = await newProduct.save();
-       return res.json(savedProduct || "Product created successfully");
+    const newProduct = new productModel({
+      admin: _id,
+      productName,
+      desc,
+      features,
+      materials,
+      sizes,
+      price,
+      pictures: imageUrls
+    });
 
-    } catch (error) {
-        console.error("Error creating product:", error);
-        return res.status(500).json({ message: 'Failed to create product' });
-    }
+    const savedProduct = await newProduct.save();
+    return res.status(201).json(savedProduct);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: error.message });
+  }
 };
 
+
 // Update an existing product
-export const updateProducts = async (req, res) => {
-    const { productId, adminId } = req.query;
+export const updateProducts = async(req, res) => {
+    const { productId, adminId } = req.body;
 
     const product = await productModel.findById(productId);
         if(!product){
-            return res.send("products does not exist")
+            return res.send("product does not exist")
         }
         //check if the owner
         if(adminId != product.admin){
             res.send("products does not belong to you. You cannot update this products")
         }
         try {
-            await productModel.findByIdAndUpdate(productId, {...body}, {new: true});
-            res.send("products updated successfully")
+            await productModel.findByIdAndUpdate(productId, {...updates}, {new: true});
+            res.send("product updated successfully")
         } catch (error) {
             return res.send("something went wrong")
         }
@@ -86,18 +93,18 @@ export const updateProducts = async (req, res) => {
 // Delete a product
 export const deleteProducts = async (req, res) => {
     const { productId } = req.query;
-    const { adminId } = req.body;
+    const { _id, admin } = req.user;
 
  //check for product existence
     const product = await productModel.findById(productId);
         if(!product){
             return res.send("product does not exist")
         }
-        console.log(adminId);
+        console.log(admin);
         console.log(product.admin);
         //check if its the admin deleting product
-        if (adminId != product.admin){
-            return res.send("You cannot delete this product. you are not the owner");
+        if (_id != product.admin && !admin) {
+            return res.send("Unable to delete this product. you are not the owner");
         }
 
    try {

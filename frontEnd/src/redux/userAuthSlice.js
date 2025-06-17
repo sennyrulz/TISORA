@@ -6,16 +6,17 @@ export const signUp = createAsyncThunk(
   "user/signUp",
   async (userData, { rejectWithValue }) => {
     try {
-      const res = await fetch("http://localhost:5001/user/signup", {
+      const res = await axios.post("http://localhost:5001/user/signup", {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(credentials),
+        body: JSON.stringify(userData), // ✅ Correct usage
       });
-        const data = await res.json();
+      const data = await res.json();
 
       if (!res.ok) {
-        return rejectWithValue(data.message || "SignUp failed");
+        const errorData = await res.json();
+        return rejectWithValue(errorData.message || "SignUp failed");
       }
 
       return data;
@@ -25,13 +26,14 @@ export const signUp = createAsyncThunk(
   }
 );
 
+
 // Async thunk for login
 export const login = createAsyncThunk(
   "user/login",
   async (credentials, { rejectWithValue }) => {
     try {
       console.log("🚀 Sending login request with:", credentials);
-      const res = await fetch("http://localhost:5001/user/login", {
+      const res = await axios.post("http://localhost:5001/user/login", {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
@@ -40,9 +42,8 @@ export const login = createAsyncThunk(
       console.log("🌐 Response status:", res.status);
 
       if (!res.ok) {
-        const errText = await res.text(); // fetch raw error
-        console.error("❌ Response error:", errText);
-        throw new Error("User does not exist! Sign up");
+        const errorData = await res.json(); 
+        return rejectWithValue(errorData.message || "Login failed");
       }
 
       const data = await res.json();

@@ -1,6 +1,8 @@
+import jwt from "jsonwebtoken"
 import userModel from '../models/userModel.js';
 import bcrypt from 'bcrypt';
-import Token from '../models/token.js';
+// import Token from '../models/token.js';
+
 import sendEmail from '../utils/sendEmail.js';
 import crypto from 'crypto';
 
@@ -15,14 +17,22 @@ export const loginUser = async (req, res) => {
 
     const isValid = bcrypt.compareSync(password, user.password);
     if (!isValid) {
-      return res.status(401).json({ message: "Invalid credentials" });
+      return res.send("Invalid credentials" );
     }
+//create a token
+const token = jwt.sign(
+  {id:user._id, user:user.user},
+  process.env.JWT_SECRET,
+  { expiresIn:"1hr" }
+);
 
-res.cookie("id", user._id.toString(), {
-  httpOnly: true,
-  secure: process.env.NODE_ENV === 'production',
-  sameSite: 'lax',
+//return basic information. e.g. dashboard add dp if provided img:user.img
+res.cookie("token", token, {
   maxAge: 1000 * 60 * 60, // 1 hour
+  httpOnly: true,
+    secure: true,
+    // secure: process.env.NODE_ENV === 'production',
+  // sameSite: 'lax',
 });
 return res.json({id: user._id, name: user.fullName, email: user.email});  
 
@@ -75,10 +85,10 @@ export const getUser = async (req, res) => {
 
 // Update User
 export const updateUser = async (req, res) => {
-  const { id, ...others } = req.body;
+  const { _id, ...others } = req.body;
   try {
     const updatedUser = await userModel.findByIdAndUpdate(
-      id, 
+      _id, 
       { ...others },
       { new: true }
       );
@@ -88,10 +98,10 @@ export const updateUser = async (req, res) => {
 
 // Delete User
 export const deleteUser = async (req, res) => {
-  const { id } = req.query;
+  const { _id } = req.query;
   try {
     const deletedUser = await userModel.findByIdAndDelete
-    (id);
+    (_id);
     return res.json(deletedUser);
   } catch (error) {
     return res.status(500).json({ message: "Deletion failed" });
@@ -101,7 +111,7 @@ export const deleteUser = async (req, res) => {
 // Verify User
 export const verifyUser = async (req, res) => {
   try {
-    const user = await userModel.findById(req.params.id);
+    const user = await userModel.findById(req.params._id);
     if (!user) {
       return res.status(400).json({ message: "Invalid link" });
     }
