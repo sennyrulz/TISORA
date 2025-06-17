@@ -38,9 +38,10 @@ function Dashboard() {
             <button
               style={{ backgroundColor: '#91443f', color: 'white' }}
               className="btn"
-              onClick={handleLogout}
-            >
-              Logout
+              onClick={() => {
+                dispatch(logout());
+                navigate("/");
+                }}> Logout
             </button>
           </div>
         </>

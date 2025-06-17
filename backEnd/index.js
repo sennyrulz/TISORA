@@ -11,6 +11,7 @@ import productRoute from './routes/productRoute.js';
 // import emailVerifyRoute from './routes/emailVerifyRoute.js'
 import cors from "cors";
 import dotenv from "dotenv";
+import cookieParser from "cookie-parser"
 
 dotenv.config();
 const app = express();
@@ -26,6 +27,7 @@ app.use(fileUpload({ useTempFiles: true }));
 app.use(express.json());
 app.use('/api/payments/webhook', express.raw({ type: 'application/json' })); // raw for webhook
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser);
 
 // Debug middleware to log requests
 app.use((req, res, next) => {

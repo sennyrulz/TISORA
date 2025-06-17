@@ -26,9 +26,9 @@ function UserAuthPage() {
 
   // Redirect if already logged in
   useEffect(() => {
+    console.log("Auth status changed:", isAuthenticated, user);
     if (isAuthenticated) {
       navigate("/DashboardLanding");
-      navigate("/");
     }
   }, [isAuthenticated, navigate]);
 
@@ -42,41 +42,46 @@ function UserAuthPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    console.log("🚀 Sending login request with:", formData);
 
     try {
       if (isLogin) {
-        const resultAction = await dispatch(login(formData));
-        if (login.fulfilled.match(resultAction)) {
-          toast.success("Login successful");
-          navigate("/DashboardLanding");
-        } else {
-          toast.error(resultAction.payload || "User does not exist! Sign up");
-        }
-      } else {
-        const resultAction = await dispatch(signUp(formData));
-        if (signUp.fulfilled.match(resultAction)) {
-          toast.success("Signup successful, An email has been sent to your account");
+        const loginData = {
+        email: formData.email,
+        password: formData.password,
+      };
 
-          // Reset form and navigate to login
-          setFormData({
-            fullName: "",
-            email: "",
-            phone: "",
-            address: "",
-            password: ""
-          });
-          toast.success(resultAction.payload || "An email has been sent to your account, please verify.");
-          navigate("/userAuth");
-        } else {
-          toast.error(resultAction.payload || "Signup failed");
-        }
-      }
-    } catch (error) {
-      toast.error(error.message || "Invalid credentials. Please input the right details");
-    } finally {
-      setLoading(false);
+  const resultAction = await dispatch(login(loginData));
+    if (login.fulfilled.match(resultAction)) {
+    toast.success("Login successful");
+    navigate("/DashboardLanding");
+   } else {
+    toast.error(resultAction.payload || "User does not exist! Sign up");
     }
-  };
+  } else {
+    const resultAction = await dispatch(signUp(formData));
+    if (signUp.fulfilled.match(resultAction)) {
+    toast.success("Signup successful");
+
+    // Reset form and navigate to login
+    setFormData({
+      fullName: "",
+      email: "",
+      phone: "",
+      address: "",
+      password: ""
+    });
+    navigate("/userAuth");
+    } else {
+      toast.error(resultAction.payload || "Signup failed");
+    }
+  }
+  } catch (error) {
+    toast.error(error.message || "Invalid credentials!!");
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <Container style={{ marginTop: "150px", marginBottom: "100px", paddingTop: "20px" }}>

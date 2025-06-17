@@ -18,7 +18,12 @@ export const loginUser = async (req, res) => {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
-res.cookie("id", user._id, { maxAge: 1000 * 60 * 60 }); // sets a cookie named "id"
+res.cookie("id", user._id.toString(), {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === 'production',
+  sameSite: 'lax',
+  maxAge: 1000 * 60 * 60, // 1 hour
+});
 return res.json({id: user._id, name: user.fullName, email: user.email});  
 
 } catch (error) {

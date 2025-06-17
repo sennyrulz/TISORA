@@ -3,6 +3,8 @@ import Product from "../models/productModel.js";
 
 // Create a new order
 export const createOrder = async (req, res) => {
+   const body = req.body;
+    const {userId} = req.cookies
   try {
     const { products, totalAmount } = req.body;
 

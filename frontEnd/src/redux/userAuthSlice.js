@@ -10,13 +10,17 @@ export const signUp = createAsyncThunk(
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(userData),
+        body: JSON.stringify(credentials),
       });
-      if (!res.ok) throw new Error("Signup failed");
-      const data = await res.json();
-      return data; 
+        const data = await res.json();
+
+      if (!res.ok) {
+        return rejectWithValue(data.message || "SignUp failed");
+      }
+
+      return data;
     } catch (err) {
-      return rejectWithValue(err.message);
+      return rejectWithValue(err.message || "Network error");
     }
   }
 );
@@ -26,20 +30,31 @@ export const login = createAsyncThunk(
   "user/login",
   async (credentials, { rejectWithValue }) => {
     try {
+      console.log("🚀 Sending login request with:", credentials);
       const res = await fetch("http://localhost:5001/user/login", {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(credentials),
       });
-      if (!res.ok) throw new Error("User does not exist! Sign up");
+      console.log("🌐 Response status:", res.status);
+
+      if (!res.ok) {
+        const errText = await res.text(); // fetch raw error
+        console.error("❌ Response error:", errText);
+        throw new Error("User does not exist! Sign up");
+      }
+
       const data = await res.json();
+      console.log("✅ Login successful, response:", data);
       return data;
     } catch (err) {
+      console.error("🔥 Thunk login error:", err.message);
       return rejectWithValue(err.message);
     }
   }
 );
+
 
 const userSlice = createSlice({
   name: "user",

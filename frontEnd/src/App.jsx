@@ -26,8 +26,8 @@ import UserAuth from "./pages/userAuth";
 import DashboardLanding from "./pages/DashboardLanding";
 import EmailVerify from "./pages/emailVerify"
 import OrdersLanding from "./pages/ordersLanding";
-import Orders from "./pages/Orders";
 import OrderSuccess from "./pages/OrderSuccess"
+import Orders from "./components/Orders";
 
 
 const cld = new Cloudinary({ cloud: { cloudName: 'dr1ay8vmn' }});
@@ -106,7 +106,8 @@ function App() {
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/:id/verify/:token" element={<EmailVerify/>} />
           <Route path="/order-success" element={<OrderSuccess />} />
-          <Route path="/orders" element={<Orders />} />
+          <Route path="/Orders" element={<Orders />} />
+
             
           <Route path="/DashboardLanding" element={<DashboardLanding/>} />
           <Route path="/OrdersLanding" element={<OrdersLanding/>} />

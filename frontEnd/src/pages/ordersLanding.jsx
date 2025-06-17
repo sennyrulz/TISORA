@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { Container, Row, Col } from "react-bootstrap";
 import Sidebar from "../components/Sidebar.jsx"
-import DashboardOrders from "../components/DashboardOrders.jsx";
+import Orders from "../components/Orders.jsx";
 
 
 const OrdersLanding = () => {
@@ -13,7 +13,7 @@ const OrdersLanding = () => {
             <Row>
                 <Col>
                     <Sidebar />
-                    <DashboardOrders />
+                    <Orders />
                 </Col>
             </Row>
         </Container>

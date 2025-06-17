@@ -133,6 +133,7 @@ export const verifyWebhook = async (req, res) => {
 
 export const initiatePayment = async (req, res) => {
   console.log('Initiating payment with data:', req.body);
+  
   try {
     const { email, amount, currency, metadata } = req.body;
     const userId = req.user.userId; // Using userId from JWT token
