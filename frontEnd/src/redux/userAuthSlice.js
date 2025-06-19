@@ -1,60 +1,37 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from 'axios';
 
 // Async thunk for signup
 export const signUp = createAsyncThunk(
   "user/signUp",
   async (userData, { rejectWithValue }) => {
     try {
-      const res = await axios.post("http://localhost:5001/user/signup", {
-        method: "POST",
-        credentials: "include",
+      const res = await axios.post("http://localhost:5001/user/signup", userData, {
+        withCredentials: true,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(userData), // ✅ Correct usage
       });
-      const data = await res.json();
-
-      if (!res.ok) {
-        const errorData = await res.json();
-        return rejectWithValue(errorData.message || "SignUp failed");
-      }
-
-      return data;
+      return res.data;
     } catch (err) {
-      return rejectWithValue(err.message || "Network error");
+      return rejectWithValue(err.response?.data?.message || err.message);
     }
   }
 );
-
 
 // Async thunk for login
 export const login = createAsyncThunk(
   "user/login",
   async (credentials, { rejectWithValue }) => {
     try {
-      console.log("🚀 Sending login request with:", credentials);
-      const res = await axios.post("http://localhost:5001/user/login", {
-        method: "POST",
-        credentials: "include",
+      const res = await axios.post("http://localhost:5001/user/login", credentials, {
+        withCredentials: true,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(credentials),
       });
-      console.log("🌐 Response status:", res.status);
-
-      if (!res.ok) {
-        const errorData = await res.json(); 
-        return rejectWithValue(errorData.message || "Login failed");
-      }
-
-      const data = await res.json();
-      console.log("✅ Login successful, response:", data);
-      return data;
+      return res.data;
     } catch (err) {
-      console.error("🔥 Thunk login error:", err.message);
-      return rejectWithValue(err.message);
+      return rejectWithValue(err.response?.data?.message || err.message);
     }
   }
 );
-
 
 const userSlice = createSlice({
   name: "user",

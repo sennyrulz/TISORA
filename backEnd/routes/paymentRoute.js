@@ -11,7 +11,7 @@ import { authenticateToken } from '../middlewares/authMid.js';
 const router = express.Router();
 
 // Protected routes - require authentication
-router.post('/initialize', authenticateToken, initiatePayment);
+router.post('/initialize', authenticateToken, initializePayment);
 router.get('/verify/:reference', authenticateToken, verifyTransaction);
 router.get("/all", authenticateToken, getAllPayments);
 
