@@ -6,43 +6,41 @@ import { toast, ToastContainer } from "react-toastify";
 import { Container, Row, Col } from "react-bootstrap";
 
 function UserAuthPage() {
-  const dispatch = useDispatch();
   const userState = useSelector((state) => state.user);
-  const user = userState?.user;
-  const isAuthenticated = userState?.isAuthenticated;
+const user = userState?.user;
+const isAuthenticated = userState?.isAuthenticated;
+  // const user = userState?.user;
+  // const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
 
   const [loading, setLoading] = useState(false);
   const [isLogin, setIsLogin] = useState(true); // Toggle between Login and Signup
 
   const [formData, setFormData] = useState({
     fullName: "",
-    email: "",
     phone: "",
     address: "",
+    email: "",
     password: ""
   });
-
+  
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   // Redirect if already logged in
   useEffect(() => {
-    console.log("Auth status changed:", isAuthenticated, user);
     if (isAuthenticated) {
       navigate("/DashboardLanding");
     }
   }, [isAuthenticated, navigate]);
 
   const handleChange = (e) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value
-    }));
-  };
+   const { name, value } = e.target;
+  setFormData((prev) => ({ ...prev, [name]: value }));
+};
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    console.log("🚀 Sending login request with:", formData);
 
     try {
       if (isLogin) {
@@ -53,7 +51,7 @@ function UserAuthPage() {
 
   const resultAction = await dispatch(login(loginData));
     if (login.fulfilled.match(resultAction)) {
-    toast.success("Login successful");
+    toast.success("login successful");
     navigate("/DashboardLanding");
    } else {
     toast.error(resultAction.payload || "User does not exist! Sign up");
@@ -62,7 +60,6 @@ function UserAuthPage() {
     const resultAction = await dispatch(signUp(formData));
     if (signUp.fulfilled.match(resultAction)) {
     toast.success("Signup successful");
-
     // Reset form and navigate to login
     setFormData({
       fullName: "",
@@ -77,7 +74,7 @@ function UserAuthPage() {
     }
   }
   } catch (error) {
-    toast.error(error.message || "Invalid credentials!!");
+    toast.error(resultAction.payload || "Signup failed");
   } finally {
     setLoading(false);
   }
@@ -117,6 +114,7 @@ function UserAuthPage() {
                       <label>Full Name</label>
                       <input
                         type="text"
+                        placeholder="Fullname"
                         name="fullName"
                         className="form-control"
                         value={formData.fullName}
@@ -129,6 +127,7 @@ function UserAuthPage() {
                       <label>Phone</label>
                       <input
                         type="number"
+                        placeholder="Phone Number"
                         name="phone"
                         className="form-control"
                         value={formData.phone}
@@ -142,6 +141,7 @@ function UserAuthPage() {
                       <input
                         type="text"
                         name="address"
+                        placeholder="address"
                         className="form-control"
                         value={formData.address}
                         onChange={handleChange}
@@ -155,6 +155,7 @@ function UserAuthPage() {
                   <label>Email</label>
                   <input
                     type="email"
+                    placeholder="johndoe@gmail.com"
                     name="email"
                     className="form-control"
                     value={formData.email}
@@ -167,6 +168,7 @@ function UserAuthPage() {
                   <label>Password</label>
                   <input
                     type="password"
+                    placeholder="********"
                     name="password"
                     className="form-control"
                     autoComplete="off"

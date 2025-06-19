@@ -3,7 +3,7 @@ import Payment from '../models/paymentModel.js';
 import crypto from 'crypto';
 
 
-const PAYSTACK_SECRET_KEY = process.env.PAYSTACK_SECRET_KEY;
+const PAYSTACK_SECRETKEY = process.env.PAYSTACK_SECRETKEY;
 
 export const verifyTransaction = async (req, res) => {
   try {
@@ -15,7 +15,7 @@ export const verifyTransaction = async (req, res) => {
       `https://api.paystack.co/transaction/verify/${reference}`,
       {
         headers: {
-          Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
+          Authorization: `Bearer ${process.env.PAYSTACK_SECRETKEY}`,
         },
       }
     );
@@ -73,7 +73,7 @@ export const verifyTransaction = async (req, res) => {
 
 export const verifyWebhook = async (req, res) => {
   const hash = crypto
-    .createHmac('sha512', PAYSTACK_SECRET_KEY)
+    .createHmac('sha512', PAYSTACK_SECRETKEY)
     .update(JSON.stringify(req.body))
     .digest('hex');
 
@@ -131,7 +131,7 @@ export const verifyWebhook = async (req, res) => {
   res.status(200).json({ message: 'Webhook received' });
 };
 
-export const initiatePayment = async (req, res) => {
+export const initializePayment = async (req, res) => {
   console.log('Initiating payment with data:', req.body);
   
   try {
@@ -145,10 +145,9 @@ export const initiatePayment = async (req, res) => {
         message: 'Email and amount are required'
       });
     }
-
     console.log('Calling Paystack API...');
-    const response = await axios.post(
-      "https://api.paystack.co/transaction/initialize",
+    
+    const response = await axios.post("https://api.paystack.co/transaction/initialize",
       {
         email,
         amount: Math.round(amount),
@@ -160,7 +159,7 @@ export const initiatePayment = async (req, res) => {
       },
       {
         headers: {
-          Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
+          Authorization: `Bearer ${process.env.PAYSTACK_SECRETKEY}`,
           "Content-Type": "application/json",
         }
       }
@@ -226,7 +225,7 @@ export const getAllPayments = async (req, res) => {
 };
 
 export const paystackWebhook = async (req, res) => {
-  const hash = crypto.createHmac('sha512', process.env.PAYSTACK_SECRET_KEY)
+  const hash = crypto.createHmac('sha512', process.env.PAYSTACK_SECRETKEY)
     .update(JSON.stringify(req.body))
     .digest('hex');
 

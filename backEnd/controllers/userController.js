@@ -1,9 +1,10 @@
+import jwt from "jsonwebtoken"
 import userModel from '../models/userModel.js';
 import bcrypt from 'bcrypt';
-import Token from '../models/token.js';
+// import Token from '../models/token.js';
 import sendEmail from '../utils/sendEmail.js';
 import crypto from 'crypto';
-import jwt from 'jsonwebtoken';
+
 
 // Login User
 export const loginUser = async (req, res) => {
@@ -19,11 +20,9 @@ export const loginUser = async (req, res) => {
 
     const isValid = bcrypt.compareSync(password, user.password);
     if (!isValid) {
-      console.log("Invalid password for user:", email);
-      return res.status(401).json({ message: "Invalid credentials" });
+      return res.send("Invalid credentials" );
     }
-
-    // Generate JWT token
+//create a token
     const token = jwt.sign(
       { userId: user._id, email: user.email },
       process.env.SECRETKEY || 'my-secret-key-goes-here',
@@ -97,10 +96,10 @@ export const getUser = async (req, res) => {
 
 // Update User
 export const updateUser = async (req, res) => {
-  const { id, ...others } = req.body;
+  const { _id, ...others } = req.body;
   try {
     const updatedUser = await userModel.findByIdAndUpdate(
-      id, 
+      _id, 
       { ...others },
       { new: true }
       );
@@ -110,10 +109,10 @@ export const updateUser = async (req, res) => {
 
 // Delete User
 export const deleteUser = async (req, res) => {
-  const { id } = req.query;
+  const { _id } = req.query;
   try {
     const deletedUser = await userModel.findByIdAndDelete
-    (id);
+    (_id);
     return res.json(deletedUser);
   } catch (error) {
     return res.status(500).json({ message: "Deletion failed" });
@@ -123,7 +122,7 @@ export const deleteUser = async (req, res) => {
 // Verify User
 export const verifyUser = async (req, res) => {
   try {
-    const user = await userModel.findById(req.params.id);
+    const user = await userModel.findById(req.params._id);
     if (!user) {
       return res.status(400).json({ message: "Invalid link" });
     }

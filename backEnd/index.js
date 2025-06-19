@@ -23,8 +23,9 @@ app.use(cors({
 }));
 
 // Middleware
-app.use(fileUpload({ useTempFiles: true }));
 app.use(express.json());
+// app.use(cookieParser);
+app.use(fileUpload({ useTempFiles: true }));
 app.use('/api/payments/webhook', express.raw({ type: 'application/json' })); // raw for webhook
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());

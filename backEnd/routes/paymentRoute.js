@@ -1,6 +1,6 @@
 import express from 'express';
 import { 
-  initiatePayment, 
+  initializePayment, 
   verifyTransaction, 
   verifyWebhook, 
   getAllPayments,
