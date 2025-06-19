@@ -1,5 +1,4 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from 'axios';
 
 // Async thunk for signup
 export const signUp = createAsyncThunk(
@@ -10,12 +9,13 @@ export const signUp = createAsyncThunk(
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(credentials),
+        body: JSON.stringify(userData),
       });
-        const data = await res.json();
+      const data = await res.json();
 
       if (!res.ok) {
-        return rejectWithValue(data.message || "SignUp failed");
+        const errorData = await res.json();
+        return rejectWithValue(errorData.message || "SignUp failed");
       }
 
       return data;
@@ -24,6 +24,7 @@ export const signUp = createAsyncThunk(
     }
   }
 );
+
 
 // Async thunk for login
 export const login = createAsyncThunk(
@@ -40,9 +41,8 @@ export const login = createAsyncThunk(
       console.log("🌐 Response status:", res.status);
 
       if (!res.ok) {
-        const errText = await res.text(); // fetch raw error
-        console.error("❌ Response error:", errText);
-        throw new Error("User does not exist! Sign up");
+        const errorData = await res.json(); 
+        return rejectWithValue(errorData.message || "Login failed");
       }
 
       const data = await res.json();
