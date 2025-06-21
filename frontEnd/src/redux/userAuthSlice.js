@@ -1,16 +1,15 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from 'axios';
 
 // Async thunk for signup
 export const signUp = createAsyncThunk(
   "user/signUp",
   async (userData, { rejectWithValue }) => {
     try {
-      const res = await axios.post("http://localhost:5001/user/signup", {
+      const res = await fetch("http://localhost:5001/user/signup", {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(userData), // ✅ Correct usage
+        body: JSON.stringify(userData),
       });
       const data = await res.json();
 
@@ -33,7 +32,7 @@ export const login = createAsyncThunk(
   async (credentials, { rejectWithValue }) => {
     try {
       console.log("🚀 Sending login request with:", credentials);
-      const res = await axios.post("http://localhost:5001/user/login", {
+      const res = await fetch("http://localhost:5001/user/login", {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },

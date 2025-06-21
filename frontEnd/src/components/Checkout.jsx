@@ -63,6 +63,8 @@ const Checkout = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const token = localStorage.getItem("token"); // or get it from Redux
+
   useEffect(() => {
     // Check authentication
     if (!isAuthenticated) {
@@ -193,8 +195,10 @@ const Checkout = () => {
             }
           };
 
-          const response = await initializePayment(paymentData);
-
+          const response = await initializePayment(paymentData, token);
+          if (response.status === true) {
+          window.location.href = response.data.authorization_url;
+    }
           if (!response.success) {
             throw new Error(response.message || 'Payment initialization failed');
           }
@@ -224,6 +228,8 @@ const Checkout = () => {
                     });
                 } else {
                     toast.error(verificationResult.message || "Payment verification failed");
+                    dispatch(clearCart()); // 🧹 Clear the cart
+                  //Create a redirect page saying thank you(Optional)
                 }
                 })
                 .catch(error => {

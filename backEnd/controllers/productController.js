@@ -20,22 +20,14 @@ const uploadToCloudinary = (buffer) => {
   });
 };
 
-// Get all products
-export const getProducts = async (req, res) => {
-     const {adminId} = req.query
-    try {
-        const products = await productModel.find({admin:adminId});
-        return res.json(products);
-    } catch (error) {
-        console.error("Error fetching products:", error);
-        return res.send( 'Something went wrong' );
-    }
-};
-
 // Create a new product
 export const createProducts = async (req, res) => {
   const { productName, desc, features, materials, sizes, price } = req.body;
-  const { _id } = req.admin;
+  const {_id} = req.user;
+
+   if (_id == product.admin && admin) {
+    return res.send("post created successfully");
+    } 
 
   if (!productName || !desc || !features || !materials || !sizes || !price) {
     return res.status(400).json({ message: 'All fields are required' });
@@ -51,7 +43,7 @@ export const createProducts = async (req, res) => {
     );
 
     const newProduct = new productModel({
-      admin: _id,
+      // user: _id,
       productName,
       desc,
       features,
@@ -63,27 +55,46 @@ export const createProducts = async (req, res) => {
 
     const savedProduct = await newProduct.save();
     return res.status(201).json(savedProduct);
+
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: error.message });
   }
 };
 
+// Get all products
+export const getProducts = async (req, res) => {
+     const {userId} = req.query
+    try {
+        const products = await productModel.find({creator:userId});
+        return res.json(products);
+    } catch (error) {
+        console.error("Error fetching products:", error);
+        return res.send( 'Something went wrong' );
+    }
+};
 
 // Update an existing product
 export const updateProducts = async(req, res) => {
-    const { productId, adminId } = req.body;
+    const { productId, userId } = req.body;
+    const body = req.body;
 
     const product = await productModel.findById(productId);
         if(!product){
             return res.send("product does not exist")
         }
         //check if the owner
-        if(adminId != product.admin){
+        if(userId != product.creator){
             res.send("products does not belong to you. You cannot update this products")
         }
+
+        if (_id != post.creator && !admin) {
+            return res.send("Unable to delete. You are not the owner");
+        } 
+
         try {
             await productModel.findByIdAndUpdate(productId, {...updates}, {new: true});
+            
             res.send("product updated successfully")
         } catch (error) {
             return res.send("something went wrong")

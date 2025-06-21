@@ -68,7 +68,7 @@ const isAuthenticated = userState?.isAuthenticated;
       address: "",
       password: ""
     });
-    navigate("/userAuth");
+    // navigate("/userAuth");
     } else {
       toast.error(resultAction.payload || "Signup failed");
     }

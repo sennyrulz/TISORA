@@ -26,7 +26,20 @@ const Shop = () => {
     );
   }, [sort, products]);
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const productsPerPage = 8;
+
+  const indexOfLastProduct = currentPage * productsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+  const currentProducts = sortedProducts.slice(indexOfFirstProduct, indexOfLastProduct);
+
+  const totalPages = Math.ceil(sortedProducts.length / productsPerPage);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+
   return (
+    <>
     <Container className="mt-5 py-4 px-0 md:px-5 md:pl-5">
       <Row className="text-start px-3 px-md-0" style={{marginLeft:'150px'}}>
         <Col md={6} className="d-flex flex-column">
@@ -70,7 +83,7 @@ const Shop = () => {
             </p>
           </Col>
         ) : (
-          sortedProducts.map((product) => (
+          currentProducts.map((product) => (
             <Col
               key={product.id}
               lg={3}
@@ -88,13 +101,48 @@ const Shop = () => {
       {/* ✅ Ensure ScrollCards receives addToCart */}
       {/* <ScrollCards products={productModel} addToCart={addToCart} /> */}
 
-      {/* <ToastContainer
+      <ToastContainer
         position="top-right"
         autoClose={2000}
         hideProgressBar={true}
-        closeOnClick/> */}
+        closeOnClick/>
     </Container>
-  );
-};
+    {totalPages > 1 && (
+      <nav className="mt-4">
+        <ul className="pagination justify-content-center">
+          <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+            <button 
+              className="page-link" 
+              onClick={() => paginate(currentPage - 1)}
+              style={{ color: '#91443f' }} >
+                Previous
+            </button>
+          </li>
+          {[...Array(totalPages).keys()].map(number => (
+          <li key={number + 1} className={`page-item ${currentPage === number + 1 ? 'active' : ''}`}>
+                <button 
+                className="page-link" 
+                onClick={() => paginate(number + 1)}
+                style={{ 
+                color: currentPage === number + 1 ? 'white' : '#91443f',
+                backgroundColor: currentPage === number + 1 ? '#91443f' : 'white'
+                }}>
+                {number + 1}
+              </button>
+          </li>
+            ))}
+          <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
+            <button 
+              className="page-link" 
+              onClick={() => paginate(currentPage + 1)}
+              style={{ color: '#91443f' }}>
+                Next
+            </button>
+          </li>
+        </ul>
+      </nav>
+    )}
+    </>
+  )};
 
-export default Shop;
+export default Shop
