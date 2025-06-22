@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FaReceipt, FaShoppingBag, FaEnvelope, FaCalendarAlt, FaHome, FaFilter, FaCalendar, FaSearch, FaBoxOpen } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import axios from 'axios';
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
@@ -23,9 +24,10 @@ const Orders = () => {
 
   const fetchOrders = async () => {
     try {
-      const response = await fetch('http://localhost:5001/api/payments/all');
-      const data = await response.json();
-      
+      const response = await axios.get('http://localhost:5001/api/payments/all', {
+        withCredentials: true
+      });
+      const data = response.data;
       if (data.success) {
         setOrders(data.data);
       } else {
@@ -43,24 +45,10 @@ const Orders = () => {
   const isWithinDateRange = (orderDate, filter) => {
     const date = new Date(orderDate);
     const now = new Date();
-    
+
     // Set time to start of day for accurate comparison
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const lastWeek = new Date(today);
-    lastWeek.setDate(lastWeek.getDate() - 7);
-    const lastMonth = new Date(today);
-    lastMonth.setMonth(lastMonth.getMonth() - 1);
-
-    // Set order date to start of day for comparison
     const orderDay = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-
-    console.log('Date Filter Debug:', {
-      filter,
-      orderDate: orderDay.toISOString(),
-      today: today.toISOString(),
-      lastWeek: lastWeek.toISOString(),
-      lastMonth: lastMonth.toISOString()
-    });
 
     let isInRange = false;
     switch (filter) {
@@ -68,16 +56,20 @@ const Orders = () => {
         isInRange = orderDay.toDateString() === today.toDateString();
         break;
       case 'week':
-        isInRange = orderDay >= lastWeek && orderDay <= today;
+        // Last 7 days including today
+        const sevenDaysAgo = new Date(today);
+        sevenDaysAgo.setDate(today.getDate() - 6); // 6 days ago + today = 7 days
+        isInRange = orderDay >= sevenDaysAgo && orderDay <= today;
         break;
       case 'month':
-        isInRange = orderDay >= lastMonth && orderDay <= today;
+        // Last 30 days including today
+        const thirtyDaysAgo = new Date(today);
+        thirtyDaysAgo.setDate(today.getDate() - 29); // 29 days ago + today = 30 days
+        isInRange = orderDay >= thirtyDaysAgo && orderDay <= today;
         break;
       default:
         isInRange = true;
     }
-
-    console.log('Is in range:', isInRange);
     return isInRange;
   };
 
@@ -191,9 +183,8 @@ const Orders = () => {
                     className="form-select"
                   >
                     <option value="all">All Status</option>
+                    <option value="success">Success</option>
                     <option value="pending">Pending</option>
-                    <option value="processing">Processing</option>
-                    <option value="completed">Completed</option>
                     <option value="failed">Failed</option>
                   </select>
                 </div>

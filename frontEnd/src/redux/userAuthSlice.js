@@ -11,20 +11,19 @@ export const signUp = createAsyncThunk(
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(userData),
       });
+      
       const data = await res.json();
-
+      
       if (!res.ok) {
-        const errorData = await res.json();
-        return rejectWithValue(errorData.message || "SignUp failed");
+        return rejectWithValue(data.message || "Signup failed");
       }
-
+      
       return data;
     } catch (err) {
       return rejectWithValue(err.message || "Network error");
     }
   }
 );
-
 
 // Async thunk for login
 export const login = createAsyncThunk(
@@ -38,19 +37,18 @@ export const login = createAsyncThunk(
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(credentials),
       });
-      console.log("🌐 Response status:", res.status);
-
-      if (!res.ok) {
-        const errorData = await res.json(); 
-        return rejectWithValue(errorData.message || "Login failed");
-      }
-
+      
       const data = await res.json();
       console.log("✅ Login successful, response:", data);
+      
+      if (!res.ok) {
+        return rejectWithValue(data.message || "Login failed");
+      }
+      
       return data;
     } catch (err) {
       console.error("🔥 Thunk login error:", err.message);
-      return rejectWithValue(err.message);
+      return rejectWithValue(err.message || "Network error");
     }
   }
 );
