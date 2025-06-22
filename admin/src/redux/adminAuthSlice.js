@@ -1,8 +1,8 @@
 import { createSlice, createAsyncThunk  } from "@reduxjs/toolkit";
-import axios from 'axios';
 
 // Async thunk for signup
-export const adminSignUp = createAsyncThunk("admin/signUp",
+export const adminSignUp = createAsyncThunk(
+  "admin/signUp",
   async (adminData, { rejectWithValue }) => {
     try {
       const res = await fetch("http://localhost:5001/admin/signup", {
@@ -11,29 +11,42 @@ export const adminSignUp = createAsyncThunk("admin/signUp",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(adminData),
       });
-      if (!res.ok) throw new Error("Signup failed");
-      const data = await res.json();
-      return data; 
+      if (!res.ok) {
+       const errorData = await res.json();
+        return rejectWithValue(errorData.message || "SignUp failed");
+      }
+
+    return data;
     } catch (err) {
-      return rejectWithValue(err.message);
+      return rejectWithValue(err.message || "Network error");
     }
   }
 );
 
 // Async thunk for login
-export const adminLogin = createAsyncThunk("admin/login",
+export const adminLogin = createAsyncThunk(
+  "admin/login",
   async (credentials, { rejectWithValue }) => {
     try {
+       console.log("🚀 Sending login request with:", credentials);
       const res = await fetch("http://localhost:5001/admin/login", {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(credentials),
       });
-      if (!res.ok) throw new Error("Login failed");
+        console.log("🌐 Response status:", res.status);
+
+     if (!res.ok) {
+        const errorData = await res.json(); 
+        return rejectWithValue(errorData.message || "Login failed");
+      }
       const data = await res.json();
+      console.log("✅ Login successful, response:", data);
       return data;
+
     } catch (err) {
+      console.error("🔥 Thunk login error:", err.message);
       return rejectWithValue(err.message);
     }
   }
@@ -42,27 +55,48 @@ export const adminLogin = createAsyncThunk("admin/login",
 const adminAuthSlice = createSlice({
   name: "admin",
   initialState: {
-    admin: null, // Stores admin details (null when logged out)
-    isAuthenticated: false, // Tracks login state
+    admin: null, 
+    isAuthenticated: false, 
+    loading: false,
+    error: null,
   },
-  reducers: {
-    adminSignUp: (state, action) => {
-      state.admin = action.payload; // Get admin data (e.g., name, email)
-      state.isAuthenticated = true;
-    },
-    adminLogin: (state, action) => {
-      state.admin = action.payload; // Set admin data (e.g., name, email)
-      state.isAuthenticated = true;
-    },
-    adminLogout: (state) => {
-      state.admin = null; // Clear admin data
+reducers: {
+    logout: (state) => {
+      state.user = null;
       state.isAuthenticated = false;
+      state.error = null;
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(signUp.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(signUp.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload;
+        state.isAuthenticated = true;
+      })
+      .addCase(signUp.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(login.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(login.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload;
+        state.isAuthenticated = true;
+      })
+      .addCase(login.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
   },
 });
 
-// Export actions
 export const { adminLogout } = adminAuthSlice.actions;
-
-// Export reducer
 export default adminAuthSlice.reducer;
