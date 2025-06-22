@@ -10,27 +10,23 @@ const getAuthToken = () => {
     return null;
 };
 
-export const initializePayment = async (paymentData) => { //added token here
+export const initializePayment = async (paymentData) => {
     try {
-        const response = await fetch(`${API_BASE_URL}/api/payments/initialize`, paymentData, {
+        const response = await fetch(`${API_BASE_URL}/api/payments/initialize`, {
             method: 'POST',
             credentials: 'include',
             headers: {
-                // 'Authorization': `Bearer ${PAYSTACK_SECRETKEY}`, // added this line
                 'Content-Type': 'application/json'
             },
-        
-        body: JSON.stringify(paymentData),
+            body: JSON.stringify(paymentData),
         });
 
-//    const paymentUrl = res.data.data.authorization_url;
-    // return paymentUrl;
-  const data = await response.json();
-  return data;
-  } catch (error) {
-    console.error("Payment initialization error:", error);
-    throw error;
-  }
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error("Payment initialization error:", error);
+        throw error;
+    }
 };
 
 export const verifyPayment = async (reference) => {
