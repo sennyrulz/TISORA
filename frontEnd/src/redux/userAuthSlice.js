@@ -5,21 +5,22 @@ export const signUp = createAsyncThunk(
   "user/signUp",
   async (userData, { rejectWithValue }) => {
     try {
-<<<<<<< HEAD
       const res = await fetch("http://localhost:5001/user/signup", {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(userData),
-=======
-      const res = await axios.post("http://localhost:5001/user/signup", userData, {
-        withCredentials: true,
-        headers: { "Content-Type": "application/json" },
->>>>>>> e22bc19de604dfc00da9d797c70fe181cb892483
       });
-      return res.data;
+      
+      const data = await res.json();
+      
+      if (!res.ok) {
+        return rejectWithValue(data.message || "Signup failed");
+      }
+      
+      return data;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || err.message);
+      return rejectWithValue(err.message || "Network error");
     }
   }
 );
@@ -29,20 +30,25 @@ export const login = createAsyncThunk(
   "user/login",
   async (credentials, { rejectWithValue }) => {
     try {
-<<<<<<< HEAD
       console.log("🚀 Sending login request with:", credentials);
       const res = await fetch("http://localhost:5001/user/login", {
         method: "POST",
         credentials: "include",
-=======
-      const res = await axios.post("http://localhost:5001/user/login", credentials, {
-        withCredentials: true,
->>>>>>> e22bc19de604dfc00da9d797c70fe181cb892483
         headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(credentials),
       });
-      return res.data;
+      
+      const data = await res.json();
+      console.log("✅ Login successful, response:", data);
+      
+      if (!res.ok) {
+        return rejectWithValue(data.message || "Login failed");
+      }
+      
+      return data;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || err.message);
+      console.error("🔥 Thunk login error:", err.message);
+      return rejectWithValue(err.message || "Network error");
     }
   }
 );
