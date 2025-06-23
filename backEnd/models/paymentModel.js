@@ -60,6 +60,17 @@ const paymentSchema = new mongoose.Schema({
   specialInstructions: {
     type: String,
     default: ""
+  },
+  billingAddress: {
+    country: { type: String },
+    firstName: { type: String },
+    lastName: { type: String },
+    address: { type: String },
+    apartment: { type: String },
+    city: { type: String },
+    state: { type: String },
+    postalCode: { type: String },
+    phone: { type: String }
   }
 }, { timestamps: true });
 
