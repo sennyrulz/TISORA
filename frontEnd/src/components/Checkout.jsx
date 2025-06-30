@@ -31,6 +31,17 @@ const Checkout = () => {
       saveInfo: false,
       emailOffers: false,
       billingSameAsShipping: true,
+      billingAddress: {
+        country: "NG",
+        firstName: "",
+        lastName: "",
+        address: "",
+        apartment: "",
+        city: "",
+        state: "",
+        postalCode: "",
+        phone: "",
+      },
       cardNumber: "",
       cardExpiry: "",
       cardCvc: "",
@@ -79,6 +90,26 @@ const Checkout = () => {
     script.onload = () => setPaystackLoaded(true);
     document.body.appendChild(script);
 
+    // Load saved preferences from localStorage
+    const savedPrefs = localStorage.getItem('checkoutPrefs');
+    if (savedPrefs) {
+      const prefs = JSON.parse(savedPrefs);
+      setFormData((prev) => ({
+        ...prev,
+        saveInfo: prefs.saveInfo || false,
+        emailOffers: prefs.emailOffers || false,
+        email: prefs.saveInfo && prefs.email ? prefs.email : prev.email,
+        firstName: prefs.saveInfo && prefs.firstName ? prefs.firstName : prev.firstName,
+        lastName: prefs.saveInfo && prefs.lastName ? prefs.lastName : prev.lastName,
+        address: prefs.saveInfo && prefs.address ? prefs.address : prev.address,
+        apartment: prefs.saveInfo && prefs.apartment ? prefs.apartment : prev.apartment,
+        city: prefs.saveInfo && prefs.city ? prefs.city : prev.city,
+        state: prefs.saveInfo && prefs.state ? prefs.state : prev.state,
+        postalCode: prefs.saveInfo && prefs.postalCode ? prefs.postalCode : prev.postalCode,
+        phone: prefs.saveInfo && prefs.phone ? prefs.phone : prev.phone,
+      }));
+    }
+
     return () => {
       document.body.removeChild(script);
     };
@@ -110,10 +141,23 @@ const Checkout = () => {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData({
-      ...formData,
-      [name]: type === "checkbox" ? checked : value,
-    });
+    // Handle billing address fields if billingSameAsShipping is false
+    if (!formData.billingSameAsShipping && [
+      "country", "firstName", "lastName", "address", "apartment", "city", "state", "postalCode", "phone"
+    ].includes(name) && e.target.closest('.billing-address')) {
+      setFormData({
+        ...formData,
+        billingAddress: {
+          ...formData.billingAddress,
+          [name]: type === "checkbox" ? checked : value,
+        },
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: type === "checkbox" ? checked : value,
+      });
+    }
   };
 
   const handleApplyDiscount = () => {
@@ -165,6 +209,21 @@ const Checkout = () => {
         try {
           setIsProcessing(true);
 
+          // Determine billing address
+          const billing = formData.billingSameAsShipping
+            ? {
+                country: formData.country,
+                firstName: formData.firstName,
+                lastName: formData.lastName,
+                address: formData.address,
+                apartment: formData.apartment,
+                city: formData.city,
+                state: formData.state,
+                postalCode: formData.postalCode,
+                phone: formData.phone,
+              }
+            : formData.billingAddress;
+
           const paymentData = {
             email: formData.email,
             amount: calculateTotal() * 100,
@@ -185,11 +244,13 @@ const Checkout = () => {
                 })),
                 shipping: {
                   address: formData.address,
+                  apartment: formData.apartment,
                   city: formData.city,
                   state: formData.state,
                   country: formData.country,
                   zipCode: formData.postalCode
                 },
+                billing,
                 specialInstructions: specialInstructions
               }
             }
@@ -213,8 +274,9 @@ const Checkout = () => {
               verifyPayment(response.reference)
                 .then(verificationResult => {
                 if (verificationResult.success) {
-                  toast.success("Payment successful! Order confirmed.");
+                  toast.success("Order confirmed!");
                   dispatch(clearCart());
+                  setTimeout(() => {
                     navigate("/order-success", {
                       state: {
                         paymentData: {
@@ -226,6 +288,7 @@ const Checkout = () => {
                         }
                       }
                     });
+                  }, 1000); // I added 1 seconds delay for the toast notification to show before navigating to the order success page
                 } else {
                     toast.error(verificationResult.message || "Payment verification failed");
                     dispatch(clearCart()); // 🧹 Clear the cart
@@ -263,6 +326,23 @@ const Checkout = () => {
             }
             return;
           }
+          // Save preferences to localStorage
+          const prefs = {
+            saveInfo: formData.saveInfo,
+            emailOffers: formData.emailOffers,
+          };
+          if (formData.saveInfo) {
+            prefs.email = formData.email;
+            prefs.firstName = formData.firstName;
+            prefs.lastName = formData.lastName;
+            prefs.address = formData.address;
+            prefs.apartment = formData.apartment;
+            prefs.city = formData.city;
+            prefs.state = formData.state;
+            prefs.postalCode = formData.postalCode;
+            prefs.phone = formData.phone;
+          }
+          localStorage.setItem('checkoutPrefs', JSON.stringify(prefs));
           // Calling paystackpayment API here
         if (!paystackLoaded) {
           toast.error('Payment system is loading. Please try again in a moment.');
@@ -271,13 +351,7 @@ const Checkout = () => {
           handlePaystackPayment();
           setIsProcessing(true);
           console.log("Form Data Submitted:", formData);
-          toast.success("Order Placed!");
-          
-          // setTimeout(() => {
-          //   console.log("Form Data Submitted:", formData);
-          //   // TODO: Call Paystack or redirect here
-          //   // setIsProcessing(false); // Reset processing state if needed
-          //   }, 1000);
+          // toast.success("Order Placed!"); // Removed from here
           };
       
       return (

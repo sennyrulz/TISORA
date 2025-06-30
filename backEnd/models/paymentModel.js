@@ -41,22 +41,19 @@ const paymentSchema = new mongoose.Schema({
     type: String,
     default: ""
   },
-   items: [
-    {
-      productId: {
-        type: mongoose.Schema.Types.Mixed,  // This allows both ObjectId and String
-        ref: 'Product',
-        required: true
-      },
-      productName: {
-        type: String,
-        required: true
-      },
-      quantity: Number,
-      price: Number
-    }
-  ],
-  user: { 
+  billingAddress: {
+    country: { type: String },
+    firstName: { type: String },
+    lastName: { type: String },
+    address: { type: String },
+    apartment: { type: String },
+    city: { type: String },
+    state: { type: String },
+    postalCode: { type: String },
+    phone: { type: String }
+  },
+
+    user: { 
     type: mongoose.Schema.Types.ObjectId, 
     ref: "User", 
     required: true 
@@ -65,8 +62,8 @@ const paymentSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId, 
     ref: "Admin", 
     required: true },
-  },
-{ timestamps: true });
+    
+}, { timestamps: true });
 
 const Payment = mongoose.model("Payment", paymentSchema);
 export default Payment;

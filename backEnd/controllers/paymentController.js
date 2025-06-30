@@ -188,8 +188,10 @@ export const initializePayment = async (req, res) => {
       paymentMethod: 'paystack',
       reference,
       status: "pending",
-      specialInstructions: metadata.order.specialInstructions || ""
+      specialInstructions: metadata.order.specialInstructions || "",
+      billingAddress: metadata.order.billing || {},
     });
+    console.log('New Payment:', newPayment);
 
     return res.status(200).json({
       success: true,

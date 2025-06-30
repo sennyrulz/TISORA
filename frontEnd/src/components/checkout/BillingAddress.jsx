@@ -60,13 +60,13 @@ const BillingAddress = ({
         </div>
         {!formData.billingSameAsShipping && (
           <div
-            className="border rounded-bottom p-3 mb-4 border-top-0"
+            className="border rounded-bottom p-3 mb-4 border-top-0 billing-address"
             style={{ backgroundColor: "#F4F4F4" }}
           >
             <Form.Group className="mb-3" controlId="country">
               <Form.Select
                 name="country"
-                value={formData.country}
+                value={formData.billingAddress.country}
                 onChange={handleChange}
                 refs={refs.country}
                 isInvalid={!!errors.country}
@@ -90,7 +90,7 @@ const BillingAddress = ({
                   type="text"
                   placeholder="First Name"
                   name="firstName"
-                  value={formData.firstName}
+                  value={formData.billingAddress.firstName}
                   onChange={handleChange}
                   ref={refs.firstName}
                   isInvalid={!!errors.firstName}
@@ -104,7 +104,7 @@ const BillingAddress = ({
                   type="text"
                   placeholder="Last Name"
                   name="lastName"
-                  value={formData.lastName}
+                  value={formData.billingAddress.lastName}
                   onChange={handleChange}
                   ref={refs.lastName}
                   isInvalid={!!errors.lastName}
@@ -120,7 +120,7 @@ const BillingAddress = ({
                 type="text"
                 placeholder="Address"
                 name="address"
-                value={formData.address}
+                value={formData.billingAddress.address}
                 onChange={handleChange}
                 ref={refs.address}
                 isInvalid={!!errors.address}
@@ -135,7 +135,7 @@ const BillingAddress = ({
                 type="text"
                 placeholder="Apartment, suite, etc. (optional)"
                 name="apartment"
-                value={formData.apartment}
+                value={formData.billingAddress.apartment}
                 onChange={handleChange}
               />
             </Form.Group>
@@ -146,7 +146,7 @@ const BillingAddress = ({
                   type="text"
                   placeholder="City"
                   name="city"
-                  value={formData.city}
+                  value={formData.billingAddress.city}
                   onChange={handleChange}
                   ref={refs.city}
                   isInvalid={!!errors.city}
@@ -158,7 +158,7 @@ const BillingAddress = ({
               <Col>
                 <Form.Select
                   name="state"
-                  value={formData.state}
+                  value={formData.billingAddress.state}
                   onChange={handleChange}
                   refs={refs.state}
                   isInvalid={!!errors.state}
@@ -180,7 +180,7 @@ const BillingAddress = ({
                   type="text"
                   placeholder="Postal Code (optional)"
                   name="postalCode"
-                  value={formData.postalCode}
+                  value={formData.billingAddress.postalCode}
                   onChange={handleChange}
                 />
               </Col>
@@ -191,7 +191,7 @@ const BillingAddress = ({
                 type="text"
                 placeholder="Phone"
                 name="phone"
-                value={formData.phone}
+                value={formData.billingAddress.phone}
                 onChange={handleChange}
                 ref={refs.phone}
                 isInvalid={!!errors.phone}
