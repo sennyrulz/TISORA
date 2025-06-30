@@ -8,17 +8,17 @@ const paymentSchema = new mongoose.Schema({
   },
   customer: {
     firstName: { 
-        type: String 
+      type: String 
     },
     lastName: { 
-        type: String 
+      type: String 
     },
     email: { 
-        type: String, 
-        required: true 
+      type: String, 
+      required: true 
     },
     phone: { 
-        type: String 
+      type: String 
     }
   },
   totalAmount: { 
@@ -53,16 +53,17 @@ const paymentSchema = new mongoose.Schema({
     phone: { type: String }
   },
 
-    user: { 
+  creator: { 
     type: mongoose.Schema.Types.ObjectId, 
     ref: "User", 
     required: true 
   },
-   admin: { 
+  creator: { 
     type: mongoose.Schema.Types.ObjectId, 
     ref: "Admin", 
-    required: true },
-    
+    required: true 
+  },
+
 }, { timestamps: true });
 
 const Payment = mongoose.model("Payment", paymentSchema);

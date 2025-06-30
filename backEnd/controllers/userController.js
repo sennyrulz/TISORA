@@ -24,8 +24,7 @@ export const loginUser = async (req, res) => {
     }
 //create a token
     const token = jwt.sign(
-      { id: user._id, admin:user.admin, email: user.email
-      },
+      { id: user._id, admin:user.admin, email: user.email },
       process.env.SECRETKEY || 'my-secret-key-goes-here',
       { expiresIn: '1h' }
     );
@@ -33,7 +32,8 @@ export const loginUser = async (req, res) => {
     // Set token in HTTP-only cookie with secure flags
     res.cookie("token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production', // true in production
+      secure: true,
+      //process.env.NODE_ENV === 'production',
       sameSite: 'strict', // Prevents CSRF attacks
       maxAge: 1000 * 60 * 60, // 1 hour
     });
@@ -44,29 +44,24 @@ export const loginUser = async (req, res) => {
       name: user.fullName,
       email: user.email
     });
-
-  } catch (error) {
-    console.error("Login error:", error);
-    return res.status(500).json({ 
-      message: "Internal server error",
-      error: error.message 
-    });
-  }
 };
 
 // Create/Register User
 export const createUser = async (req, res) => {
   const { email, password, ...others } = req.body;
 
+//verify Email and password exists
   if (!email || !password) {
     return res.status(400).json({ message: 'Email and password are required' });
   }
 
+//check if user exists in DB
   const existingUser = await userModel.findOne({ email });
   if (existingUser) {
-    return res.status(409).json({ message: "User already exists. Please sign up." });
-  }
+    return res.status(409).json({ message: "User already exists. Please login." });
+  };
 
+//create a hashed password
   const salt = bcrypt.genSaltSync(10);
   const hashedPassword = bcrypt.hashSync(password, salt);
   console.log(hashedPassword);
@@ -77,6 +72,7 @@ export const createUser = async (req, res) => {
     return res.status(401).json({ message: "Invalid password" });
   }
 
+//continue with registration
   try {
     const newUser = new userModel({
       email,
@@ -84,21 +80,22 @@ export const createUser = async (req, res) => {
       ...others,
     });
     const savedUser = await newUser.save();
-        return res.json(savedUser);    
-    } catch (error) {
-        console.log(error.message);
-        return res.send("something went wrong");
-    }
+      return res.json(savedUser);    
+  } catch (error) {
+      console.log(error.message);
+      return res.send("something went wrong");
+  }
 };
 
 // Get All Users
 export const getUser = async (req, res) => {
-  try {
-    const allUsers = await userModel.find();
+  const { _id } = req.user;
+    const allUsers = await userModel
+    .findById(_id)
+    .populate("payments")
+    .populate("orders")
+    .populate("paymentss")
     return res.json(allUsers);
-  } catch (error) {
-    return res.status(500).json({ message: "Failed to retrieve users" });
-  }
 };
 
 // Update User

@@ -31,7 +31,7 @@ const adminSchema = new mongoose.Schema({
   // token: { type: mongoose.Types.ObjectId, ref: "Token"},
   products: { type: mongoose.Types.ObjectId, ref: "Product" },
   orders: [{ type: mongoose.Schema.Types.ObjectId, ref: "Order"}],
-  items: [{ type: mongoose.Schema.Types.ObjectId, ref: "Payment"}],
+  payments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Payment"}],
 
   admin: {
     type: Boolean,

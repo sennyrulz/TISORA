@@ -1,28 +1,25 @@
 import jwt from "jsonwebtoken"
 import adminModel from '../models/adminModel.js';
-import Admin from '../models/adminModel.js';
+// import Admin from '../models/adminModel.js';
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken'
 
 
 export const loginAdmin = async (req, res) => {
   const { email, password } = req.body;
-  try {
-    console.log("Login attempt for email:", email);
-    
-    const user = await userModel.findOne({ email });
-    if (!user) {
-      console.log("User not found:", email);
+  //validate user
+    const admin = await adminModel.findOne({ email });
+    if (!admin) {
       return res.status(404).json({ message: "This account does not exist, please create one." });
-    }
+    };
 
-    const isValid = bcrypt.compareSync(password, user.password);
+  //compare password
+    const isValid = bcrypt.compareSync(password, admin.password);
     if (!isValid) {
       return res.send("Invalid credentials" );
     }
 //create a token
     const token = jwt.sign(
-      { userId: user._id, email: user.email },
+      { _id: admin._id, email: admin.email, admin:user.admin },
       process.env.SECRETKEY || 'my-secret-key-goes-here',
       { expiresIn: '1h' }
     );
@@ -30,38 +27,36 @@ export const loginAdmin = async (req, res) => {
     // Set token in HTTP-only cookie with secure flags
     res.cookie("token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production', // true in production
+      secure: true,
+      // process.env.NODE_ENV === 'production',
       sameSite: 'strict', // Prevents CSRF attacks
       maxAge: 1000 * 60 * 60, // 1 hour
     });
 
-    // Return user data without token
-    return res.json({
-      id: user._id,
-      name: user.fullName,
-      email: user.email
+      // Set token in HTTP-only cookie with secure flags
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: true,
+      //process.env.NODE_ENV === 'production',
+      sameSite: 'strict', // Prevents CSRF attacks
+      maxAge: 1000 * 60 * 60, // 1 hour
     });
 
-  } catch (error) {
-    console.error("Login error:", error);
-    return res.status(500).json({ 
-      message: "Internal server error",
-      error: error.message 
+  // Return user data without token
+    return res.json({
+      id: admin._id,
+      name: admin.fullName,
+      email: admin.email
     });
-  }
 };
 
 export const createAdmin = async (req, res) => {
-    const { email, password, ...others } = req.body;
-
-  //   if (!email || !password) {
-  //   return res.status(400).json({ message: 'Email and password are required' });
-  // }
+  const { email, password, ...others } = req.body;
 
 // Validate required fields
-    if(!fullName || !email || !phone || !address || !password ) {
-      return res.status(400).json({ message: 'All fields are required' });
-    }
+  if(!fullName || !email || !phone || !address || !password ) {
+    return res.status(400).json({ message: 'All fields are required' });
+  }
   
 //check if Admin exists in DB
   const existingAdmin = await adminModel.findOne({ email });
@@ -69,19 +64,18 @@ export const createAdmin = async (req, res) => {
     return res.status(409).json({ message: "Admin already exists. Please sign up." });
   }
 
+  //create a hashed password
+  const salt = bcrypt.genSaltSync(10);
+  const hashedPassword = await bcrypt.hash(password, salt);
+  console.log(hashedPassword);
 
-    //create a hashed password
-    const salt = bcrypt.genSaltSync(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-    console.log(hashedPassword);
+  // verify password
+  const validPassword = await bcrypt.compare(password, admin.password);
+  if (!validPassword) {
+    return res.status(401).json({ message: "Invalid password" });
+  }
 
-    // verify password
-    const validPassword = await bcrypt.compare(password, admin.password);
-    if (!validPassword) {
-      return res.status(401).json({ message: "Invalid password" });
-    }
-
-    //continue with registration
+  //continue with registration
     try {
       const newAdmin = new adminModel({   
         fullName,
@@ -101,13 +95,14 @@ export const createAdmin = async (req, res) => {
 
 //Get admin
   export const getAdmin = async (req, res) => {
-    try {
-      const allAdmin = await adminModel.find();
+    const { _id } = req.user;
+      const allAdmin = await adminModel
+      .findById(_id)
+      .populate("payments")
+      .populate("orders")
+      .populate("paymentss")
       return res.json(allAdmin);
-    } catch (error) {
-      return res.status(500).json({ message: "Failed to retrieve users" });
-    }
-  };
+};
 
 //Update admin
 export const updateAdmin = async (req, res) => {
@@ -119,19 +114,20 @@ export const updateAdmin = async (req, res) => {
       { new: true }
       );
       return res.json(updateAdmin);
-    } catch (error) {}
+    } catch (error) {
+        return res.status(500).json({ message: 'Something went wrong' });
+
+    }
 };
  
 // Delete Admin
   export const deleteAdmin = async (req, res) => {
-    const { id } = req.body;
-
-    if (!id) return res.status(400).json({ message: 'ID is required' });
-
-  Admin.findByIdAndDelete(id)
-    .then(deleted => {
-      if (!deleted) return res.status(404).json({ message: 'Admin not found' });
-      res.json({ message: 'Admin deleted successfully' });
-    })
-    .catch(err => res.status(500).json({ message: 'Error deleting Admin', error: err.message }));
-  };
+    const { _id } = req.body;
+    try {
+      const deletedAdmin = await adminModel.findByIdAndDelete
+        (_id);
+        return res.json(deletedAdmin);
+    } catch (error) {
+        return res.status(500).json({ message: 'Something went wrong' });
+    } 
+};
