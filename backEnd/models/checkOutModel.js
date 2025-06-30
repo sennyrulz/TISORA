@@ -47,6 +47,7 @@ const checkOutSchema = new mongoose.Schema({
       required: true 
     },
   },
+  
   shippingMethod: {
     type: String,
     enum: ['Standard Shipping', 'One-Day Shipping', 'Express Shipping'],
@@ -86,6 +87,9 @@ const checkOutSchema = new mongoose.Schema({
       phone: { type: String },
     },
   },
+  
+  user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  
   items: [
     {
       productId: mongoose.Schema.Types.ObjectId,

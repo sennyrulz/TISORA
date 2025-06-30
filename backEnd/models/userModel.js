@@ -33,8 +33,10 @@ const userSchema = new mongoose.Schema({
     // },
 
     // token: { type: mongoose.Types.ObjectId, ref: "Token"},
-    orders: [{ type: mongoose.Schema.Types.ObjectId, ref: "Order"}],
-    items: [{ type: mongoose.Schema.Types.Mixed, ref: "Payment"}],
+    orders: [{ type: mongoose.Schema.Types.ObjectId, ref: "Orders"}],
+    checkout: [{ type: mongoose.Schema.Types.ObjectId, ref: "Checkout"}],
+    payments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Payment"}],
+
 
     admin: { 
         type: Boolean, 

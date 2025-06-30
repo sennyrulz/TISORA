@@ -53,16 +53,16 @@ const paymentSchema = new mongoose.Schema({
     phone: { type: String }
   },
 
-  creator: { 
+  user: { 
     type: mongoose.Schema.Types.ObjectId, 
     ref: "User", 
     required: true 
   },
-  creator: { 
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: "Admin", 
-    required: true 
-  },
+  // admin: { 
+  //   type: mongoose.Schema.Types.ObjectId, 
+  //   ref: "Admin", 
+  //   // required: true 
+  // },
 
 }, { timestamps: true });
 

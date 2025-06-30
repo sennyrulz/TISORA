@@ -19,7 +19,7 @@ export const loginAdmin = async (req, res) => {
     }
 //create a token
     const token = jwt.sign(
-      { _id: admin._id, email: admin.email, admin:user.admin },
+      { _id: user_id, admin:user.admin },
       process.env.SECRETKEY || 'my-secret-key-goes-here',
       { expiresIn: '1h' }
     );

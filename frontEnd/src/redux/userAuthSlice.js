@@ -1,6 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 // Async thunk for signup
+
+
 export const signUp = createAsyncThunk(
   "user/signUp",
   async (userData, { rejectWithValue }) => {
@@ -31,6 +33,7 @@ export const login = createAsyncThunk(
   async (credentials, { rejectWithValue }) => {
     try {
       console.log("🚀 Sending login request with:", credentials);
+      
       const res = await fetch("http://localhost:5001/user/login", {
         method: "POST",
         credentials: "include",
@@ -39,13 +42,14 @@ export const login = createAsyncThunk(
       });
       
       const data = await res.json();
-      console.log("✅ Login successful, response:", data);
       
       if (!res.ok) {
+        console.error("❌ Login failed:", data.message);
         return rejectWithValue(data.message || "Login failed");
       }
+      console.log("✅ Login successful, response:", data); // Only log on actual success
+    return data;
       
-      return data;
     } catch (err) {
       console.error("🔥 Thunk login error:", err.message);
       return rejectWithValue(err.message || "Network error");

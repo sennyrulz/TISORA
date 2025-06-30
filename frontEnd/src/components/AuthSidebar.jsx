@@ -39,12 +39,13 @@ function AuthSidebar({ isOpen, onClose }) {
         const resultAction = await dispatch(login(formData)).unwrap();
         toast.success("Login successful");
         onClose();
+        await new Promise(resolve => setTimeout(resolve, 300)); // Wait 300ms
         navigate("/DashboardLanding");
       } else {
         const resultAction = await dispatch(signUp(formData)).unwrap();
         toast.success("Signup successful");
         onClose();
-        navigate("/");
+        navigate("/"); //come back and fix this so that User logs in again immediately after signin
       }
     } catch (error) {
       toast.error(error.message || "An error occurred");

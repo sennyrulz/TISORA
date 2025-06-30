@@ -13,7 +13,6 @@ export const loginUser = async (req, res) => {
   //validate user    
     const user = await userModel.findOne({ email });
     if (!user) {
-      console.log("User not found:", email);
       return res.status(404).json({ message: "This account does not exist, please sign up" });
     };
 
@@ -24,7 +23,7 @@ export const loginUser = async (req, res) => {
     }
 //create a token
     const token = jwt.sign(
-      { id: user._id, admin:user.admin, email: user.email },
+      { _id: user._id, admin:user.admin },
       process.env.SECRETKEY || 'my-secret-key-goes-here',
       { expiresIn: '1h' }
     );
@@ -32,13 +31,14 @@ export const loginUser = async (req, res) => {
     // Set token in HTTP-only cookie with secure flags
     res.cookie("token", token, {
       httpOnly: true,
-      secure: true,
-      //process.env.NODE_ENV === 'production',
-      sameSite: 'strict', // Prevents CSRF attacks
+      secure: false,
+      // secure: process.env.NODE_ENV === 'production', // only true in prod
+      sameSite: 'lax', // Prevents CSRF attacks
       maxAge: 1000 * 60 * 60, // 1 hour
     });
 
     // Return user data without token
+    console.log("✅ User found:", user._id);
     return res.json({
       id: user._id,
       name: user.fullName,
@@ -56,8 +56,8 @@ export const createUser = async (req, res) => {
   }
 
 //check if user exists in DB
-  const existingUser = await userModel.findOne({ email });
-  if (existingUser) {
+  const isUser = await userModel.findOne({ email });
+  if (isUser) {
     return res.status(409).json({ message: "User already exists. Please login." });
   };
 
@@ -66,11 +66,11 @@ export const createUser = async (req, res) => {
   const hashedPassword = bcrypt.hashSync(password, salt);
   console.log(hashedPassword);
 
-// verify password
-  const validPassword = await bcrypt.compare(password, admin.password);
-  if (!validPassword) {
-    return res.status(401).json({ message: "Invalid password" });
-  }
+// // verify password
+//   const validPassword = await bcrypt.compare(password, user.password);
+//   if (!validPassword) {
+//     return res.status(401).json({ message: "Invalid password" });
+//   } //use this for validateUSer
 
 //continue with registration
   try {
