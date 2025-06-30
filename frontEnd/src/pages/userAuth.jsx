@@ -6,7 +6,7 @@ import { toast, ToastContainer } from "react-toastify";
 import { Container, Row, Col } from "react-bootstrap";
 
 function UserAuthPage() {
-  const userState = useSelector((state) => state.user);
+const userState = useSelector((state) => state.user);
 const user = userState?.user;
 const isAuthenticated = userState?.isAuthenticated;
   // const user = userState?.user;

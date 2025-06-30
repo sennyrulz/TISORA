@@ -3,7 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css'
 import AdminAuth from "../../admin/pages/AdminAuth"
 import { BrowserRouter, Routes, Route, Navigate} from "react-router-dom";
-import Dashboard from '../pages/Dashboard'
+import Dashboard from '../pages/DashboardLanding'
 // import AdminLayout from '../layout/adminLayout';
 import Nav from '../components/Nav';
 import Footer from '../components/Footer';

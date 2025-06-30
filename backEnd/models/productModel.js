@@ -27,37 +27,12 @@ const productSchema = new mongoose.Schema (
         type: String, 
         required: true 
     },  
-    pictures: {
-      type: [
-        {
-          publicId: { 
-            type: String, 
-            required: true 
-            }
-        },
-      ], 
-      // validate: [
-      //   {
-      //     validator: function (pics) {
-      //       return pics.length <= 2; // Max 2 images
-      //     },
-      //     message: "A product can have a maximum of 2 images.",
-      //   },
-      //   {
-      //     validator: function (pics) {
-      //       return pics.every((pic) => pic.size <= 10 * 1024 * 1024); // Max 10MB
-      //     },
-      //     message: "Each picture must not exceed 10MB.",
-      //   },
-      // ],
-    },
-     admin:{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Admin",
-      default: false,
-      required: true
-    },
-  },{ timestamps: true }
+    pictures: [ 
+      { publicId: {  type: String, required: true  }}
+    ],
+  admin:{ type: mongoose.Schema.Types.ObjectId, ref: "Admin",required: true },
+  }, 
+  { timestamps: true }
 );
 
 

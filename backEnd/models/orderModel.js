@@ -2,16 +2,11 @@
 import mongoose from "mongoose";
 
 const orderSchema = new mongoose.Schema({
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User", // reference your user model
-    required: true,
-  },
-  products: [
+  orders: [
     {
-      product: {
+      order: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Product",
+        ref: "Orders",
         required: true,
       },
       quantity: {
@@ -30,6 +25,7 @@ const orderSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
 });
 
 export default mongoose.model("Order", orderSchema);

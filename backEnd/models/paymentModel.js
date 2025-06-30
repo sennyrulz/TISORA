@@ -1,11 +1,6 @@
 import mongoose from "mongoose";
 
 const paymentSchema = new mongoose.Schema({
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    required: false  // Changed from true to false
-  },
   reference: { 
     type: String, 
     required: true, 
@@ -26,21 +21,6 @@ const paymentSchema = new mongoose.Schema({
         type: String 
     }
   },
-  items: [
-    {
-      productId: {
-        type: mongoose.Schema.Types.Mixed,  // This allows both ObjectId and String
-        ref: 'Product',
-        required: true
-      },
-      productName: {
-        type: String,
-        required: true
-      },
-      quantity: Number,
-      price: Number
-    }
-  ],
   totalAmount: { 
     type: Number, 
     required: true 
@@ -60,8 +40,33 @@ const paymentSchema = new mongoose.Schema({
   specialInstructions: {
     type: String,
     default: ""
-  }
-}, { timestamps: true });
+  },
+   items: [
+    {
+      productId: {
+        type: mongoose.Schema.Types.Mixed,  // This allows both ObjectId and String
+        ref: 'Product',
+        required: true
+      },
+      productName: {
+        type: String,
+        required: true
+      },
+      quantity: Number,
+      price: Number
+    }
+  ],
+  user: { 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: "User", 
+    required: true 
+  },
+   admin: { 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: "Admin", 
+    required: true },
+  },
+{ timestamps: true });
 
 const Payment = mongoose.model("Payment", paymentSchema);
 export default Payment;

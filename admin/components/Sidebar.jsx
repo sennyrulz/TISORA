@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import { BsCart3, BsGrid1X2Fill, BsFillGearFill, BsFillBellFill
 } from 'react-icons/bs';
-import { handleWebhook } from '../../backEnd/controllers/orderController';
+// import { handleWebhook } from '../../backEnd/controllers/orderController';
 
 const Sidebar = () => {
   const navigate = useNavigate();

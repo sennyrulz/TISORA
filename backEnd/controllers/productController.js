@@ -66,7 +66,7 @@ export const createProducts = async (req, res) => {
 export const getProducts = async (req, res) => {
      const {userId} = req.query
     try {
-        const products = await productModel.find({creator:userId});
+        const products = await productModel.find({admin:userId});
         return res.json(products);
     } catch (error) {
         console.error("Error fetching products:", error);
@@ -84,11 +84,11 @@ export const updateProducts = async(req, res) => {
             return res.send("product does not exist")
         }
         //check if the owner
-        if(userId != product.creator){
+        if(userId != product.admin){
             res.send("products does not belong to you. You cannot update this products")
         }
 
-        if (_id != post.creator && !admin) {
+        if (_id != post.admin && !admin) {
             return res.send("Unable to delete. You are not the owner");
         } 
 

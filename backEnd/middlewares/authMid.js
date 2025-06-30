@@ -4,24 +4,22 @@ import jwt from "jsonwebtoken";
 
 export const authenticateToken = (req, res, next) => {
   // First try to get token from cookie
-  const token = req.cookies.token;
+  const token = req.cookies?.token;
 
+// If no token in cookie, try Authorization header
   if (!token) {
-    // If no token in cookie, try Authorization header
     const authHeader = req.headers['authorization'];
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
       return res.status(401).json({ message: "Unauthorized: Token missing or malformed" });
     }
     token = authHeader.split(" ")[1];
   }
-
   jwt.verify(token, process.env.SECRETKEY || 'my-secret-key-goes-here', (err, user) => {
-    if (err) return res.status(403).json({ message: "Forbidden: Invalid token" });
+    if (err) {
+      return res.status(403).json({ message: "Forbidden: Invalid token" })
+    }
 
-   req.user = {
-  _id: user.id,
-    admin: user.admin || false
-   };
+   req.user = {_id: user.id, admin: user.admin || false};
+  })
     next();
-  });
 };

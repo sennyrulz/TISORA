@@ -26,9 +26,19 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
-    creator: {
+
+    // kyc: {
+    //     type: [String],
+    //     ref: "Kyc"
+    // },
+
+    // token: { type: mongoose.Types.ObjectId, ref: "Token"},
+    orders: [{ type: mongoose.Schema.Types.ObjectId, ref: "Order"}],
+    items: [{ type: mongoose.Schema.Types.Mixed, ref: "Payment"}],
+
+    admin: { 
         type: Boolean, 
-        default: false
+        default: false 
     },
 },  { timestamps: true }
 );

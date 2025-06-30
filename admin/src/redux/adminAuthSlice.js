@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk  } from "@reduxjs/toolkit";
 
 // Async thunk for signup
-export const adminSignUp = createAsyncThunk(
+export const signUp = createAsyncThunk(
   "admin/signUp",
   async (adminData, { rejectWithValue }) => {
     try {
@@ -24,7 +24,7 @@ export const adminSignUp = createAsyncThunk(
 );
 
 // Async thunk for login
-export const adminLogin = createAsyncThunk(
+export const login = createAsyncThunk(
   "admin/login",
   async (credentials, { rejectWithValue }) => {
     try {
@@ -62,7 +62,7 @@ const adminAuthSlice = createSlice({
   },
 reducers: {
     logout: (state) => {
-      state.user = null;
+      state.admin = null;
       state.isAuthenticated = false;
       state.error = null;
     },
@@ -75,7 +75,7 @@ reducers: {
       })
       .addCase(signUp.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload;
+        state.admin = action.payload;
         state.isAuthenticated = true;
       })
       .addCase(signUp.rejected, (state, action) => {
@@ -88,7 +88,7 @@ reducers: {
       })
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload;
+        state.admin = action.payload;
         state.isAuthenticated = true;
       })
       .addCase(login.rejected, (state, action) => {
@@ -98,5 +98,5 @@ reducers: {
   },
 });
 
-export const { adminLogout } = adminAuthSlice.actions;
+export const { logout } = adminAuthSlice.actions;
 export default adminAuthSlice.reducer;

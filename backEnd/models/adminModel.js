@@ -1,40 +1,44 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 
-const adminSchema = new mongoose.Schema(
-  {   
-    fullName: {
+const adminSchema = new mongoose.Schema({   
+  fullName: {
     type: String,
     required: true,
-    },
+  },
 
-    email: {
+  email: {
     type: String,
     required: true,
     unique: true,
-    },
+  },
 
-    phone: {
+  phone: {
     type: String,
     required: true,
-
-    },
-    address: {
+  },
+    
+  address: {
     type: String,
     required: true,
-    },
+  },
 
-    password: {
+  password: {
     type: String,
     required: true,
-    },
+  },
 
-    admin: {
+  // token: { type: mongoose.Types.ObjectId, ref: "Token"},
+  products: { type: mongoose.Types.ObjectId, ref: "Product" },
+  orders: [{ type: mongoose.Schema.Types.ObjectId, ref: "Order"}],
+  items: [{ type: mongoose.Schema.Types.ObjectId, ref: "Payment"}],
+
+  admin: {
     type: Boolean,
     default: true
-    },
-    
-  },  { timestamps: true }
+  },
+},  
+  { timestamps: true }
 );
 
 // Hash password before save

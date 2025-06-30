@@ -2,29 +2,30 @@ import jwt from "jsonwebtoken"
 import userModel from '../models/userModel.js';
 import bcrypt from 'bcrypt';
 // import Token from '../models/token.js';
-import sendEmail from '../utils/sendEmail.js';
-import crypto from 'crypto';
+// import sendEmail from '../utils/sendEmail.js';
+// import crypto from 'crypto';
 
 
 // Login User
 export const loginUser = async (req, res) => {
   const { email, password } = req.body;
-  try {
-    console.log("Login attempt for email:", email);
-    
+
+  //validate user    
     const user = await userModel.findOne({ email });
     if (!user) {
       console.log("User not found:", email);
-      return res.status(404).json({ message: "This account does not exist, please create one." });
-    }
+      return res.status(404).json({ message: "This account does not exist, please sign up" });
+    };
 
+  //compare password
     const isValid = bcrypt.compareSync(password, user.password);
     if (!isValid) {
-      return res.send("Invalid credentials" );
+      return res.send("Invalid credentials!!" );
     }
 //create a token
     const token = jwt.sign(
-      { userId: user._id, email: user.email },
+      { id: user._id, admin:user.admin, email: user.email
+      },
       process.env.SECRETKEY || 'my-secret-key-goes-here',
       { expiresIn: '1h' }
     );
@@ -63,12 +64,18 @@ export const createUser = async (req, res) => {
 
   const existingUser = await userModel.findOne({ email });
   if (existingUser) {
-    return res.status(409).json({ message: "User already exists. Please log in." });
+    return res.status(409).json({ message: "User already exists. Please sign up." });
   }
 
   const salt = bcrypt.genSaltSync(10);
   const hashedPassword = bcrypt.hashSync(password, salt);
   console.log(hashedPassword);
+
+// verify password
+  const validPassword = await bcrypt.compare(password, admin.password);
+  if (!validPassword) {
+    return res.status(401).json({ message: "Invalid password" });
+  }
 
   try {
     const newUser = new userModel({
@@ -103,8 +110,10 @@ export const updateUser = async (req, res) => {
       { ...others },
       { new: true }
       );
-      return res.json(updateUser);
-    } catch (error) {}
+      return res.json(updatedUser);
+    } catch (error) {
+      return res.status(500).json({ message: 'Something went wrong' });
+    }
 };
 
 // Delete User
@@ -127,7 +136,7 @@ export const verifyUser = async (req, res) => {
       return res.status(400).json({ message: "Invalid link" });
     }
 
-    const token = await Token.findOne({
+    const token = await token.findOne({
       userId: user._id,
       token: req.params.token,
     });
