@@ -14,6 +14,8 @@ import checkoutRoute from "./routes/checkoutRoute.js"
 import cors from "cors";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser"
+import serverless from 'serverless-http';
+
 
 dotenv.config();
 const app = express();
@@ -103,9 +105,14 @@ app.use((req, res) => {
   });
 });
 
-const PORT = process.env.PORT || 5001;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+let server = null;
 
-export default app; 
+if (process.env.NODE_ENV !== "production") {
+  const PORT = process.env.PORT || 5001;
+  server = app.listen(PORT, () => {
+    console.log(`Server running locally on port ${PORT}`);
+  });
+}
+
+
+export const handler = serverless(app);
