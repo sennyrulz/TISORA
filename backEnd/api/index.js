@@ -1,15 +1,15 @@
 import express from "express";
 import bodyParser from "body-parser";
 // import connectDB from "./connection/database.js";
-import userRoute from "./routes/userRoute.js";
-import adminRoute from "./routes/adminRoute.js";
+import userRoute from "../routes/userRoute.js";
+import adminRoute from "../routes/adminRoute.js";
 import mongoose from "mongoose";
 import fileUpload from 'express-fileupload';
-import paymentRoute from './routes/paymentRoute.js';
-import adminPaymentRoutes from './routes/adminPaymentRoutes.js'
-import productRoute from './routes/productRoute.js';
-import orderRoute from "./routes/orderRoute.js"
-import checkoutRoute from "./routes/checkoutRoute.js"
+import paymentRoute from '../routes/paymentRoute.js';
+import adminPaymentRoutes from '../routes/adminPaymentRoutes.js'
+import productRoute from '../routes/productRoute.js';
+import orderRoute from "../routes/orderRoute.js"
+import checkoutRoute from "../routes/checkoutRoute.js"
 // import emailVerifyRoute from './routes/emailVerifyRoute.js'
 import cors from "cors";
 import dotenv from "dotenv";
