@@ -229,13 +229,14 @@ const Checkout = () => {
             amount: calculateTotal() * 100,
             currency: "NGN",
             metadata: {
-              customer: {
+              customer: JSON.stringify({
+                user: userState.user?._id,
                 firstName: formData.firstName,
                 lastName: formData.lastName,
                 phone: formData.phone,
                 email: formData.email
-              },
-              order: {
+              }),
+              order: JSON.stringify({
                 items: cartItems.map(item => ({
                   id: item.id,
                   productName: item.productName,
@@ -252,14 +253,14 @@ const Checkout = () => {
                 },
                 billing,
                 specialInstructions: specialInstructions
-              }
+              })
             }
           };
 
-          const response = await initializePayment(paymentData, token);
+          const response = await initializePayment(paymentData);
           if (response.status === true) {
           window.location.href = response.data.authorization_url;
-    }
+          }
           if (!response.success) {
             throw new Error(response.message || 'Payment initialization failed');
           }

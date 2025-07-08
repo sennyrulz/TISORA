@@ -1,7 +1,10 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { setUser } from "./redux/userAuthSlice";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Link } from 'react-router-dom'
-import { useNavigate } from "react-router-dom";
 import Nav from "./components/Nav";
 import NewIn from "./pages/NewIn";
 import Shop from "./pages/Shop";
@@ -36,6 +39,27 @@ const publicId = fallbackPublicId;
 const mainImage = cld.image(publicId);
 
 function App() {
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+  const fetchUser = async () => {
+    try {
+      const res = await fetch("http://localhost:5001/user/current-user", {
+        credentials: "include",
+      });
+      if (res.ok) {
+        const data = await res.json();
+        dispatch(setUser(data));
+      }
+    } catch (err) {
+      console.log("Not authenticated");
+    }
+  };
+
+  fetchUser();
+}, []);
+
   const navigate = useNavigate();
   const featuredProducts = productsData.slice(0, 5);
   const [cart, setCart] = useState([]);
@@ -107,12 +131,10 @@ function App() {
           <Route path="/:id/verify/:token" element={<EmailVerify/>} />
           <Route path="/order-success" element={<OrderSuccess />} />
           <Route path="/Orders" element={<Orders />} />
-
-            
+ 
+        {/* Protected User Dashboard */}
           <Route path="/DashboardLanding" element={<DashboardLanding/>} />
           <Route path="/OrdersLanding" element={<OrdersLanding/>} />
-
-
         </Routes>
         <NewsLetterBox />
         <Footer />
@@ -141,9 +163,7 @@ function App() {
               onClick={() => {
                 if (selectedProduct) {
                   addToCart(selectedProduct);
-                }
-              }}>
-              Add to Cart
+                }}}> Add to Cart
             </Button>
           </Modal.Footer>
         </Modal>

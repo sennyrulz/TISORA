@@ -1,7 +1,11 @@
 import crypto from 'crypto';
 import Payment from '../models/paymentModel.js';
+import Order from "../models/orderModel.js";
+
 
 export const verifyPaymentWebhook = async (req, res) => {
+  console.log("WEBHOOK RECEIVED DATA:", JSON.stringify(data.metadata, null, 2));
+
   const secret = process.env.PAYSTACK_SECRET_KEY;
 
   const hash = crypto
@@ -16,7 +20,7 @@ export const verifyPaymentWebhook = async (req, res) => {
   const event = req.body;
   if (event.event === 'charge.success') {
     const data = event.data;
-    const userId = data.metadata?.iserId; //added this 
+    const userId = data.metadata?.user; //added this 
 
     if (!userId) {
       console.error('❌ userId missing in metadata');
@@ -31,25 +35,42 @@ export const verifyPaymentWebhook = async (req, res) => {
           payment.paidAt = data.paid_at ? new Date(data.paid_at) : new Date(),
         await payment.save();
         } else {
-        // Create new payment
-        payment = new Payment({          
-          reference: data.reference,
-          user: userId, // ✅ Required
-          customer: {
-          firstName: data.customer.first_name,
-          lastName: data.customer.last_name,
-          email: data.customer.email,
-          phone: data.customer.phone,
-        },
-        totalAmount: data.amount / 100,
-        paymentMethod: 'paystack',
-        status: 'success',
-        paidAt: new Date(data.paid_at),
-        specialInstructions: data.metadata?.order?.specialInstructions || "",
-        billingAddress: data.metadata?.order?.billing || {},
-      });
+   // Parse metadata (only if frontend is sending stringified JSON)
+  const parsedOrder = JSON.parse(data.metadata?.order || '{}');
+  const parsedCustomer = JSON.parse(data.metadata?.customer || '{}');
+
+    // Create new payment
+    payment = new Payment({ 
+      user: parsedCustomer.user,  // ✅ Required         
+      reference: data.reference,
+      customer: {
+        firstName: data.customer.first_name,
+        lastName: data.customer.last_name,
+        email: data.customer.email,
+        phone: data.customer.phone,
+      },
+      totalAmount: data.amount / 100,
+      paymentMethod: 'paystack',
+      status: 'success',
+      paidAt: new Date(data.paid_at),
+      specialInstructions: parsedOrder.specialInstructions || "",
+      billingAddress: parsedOrder.billing || {},
+      items: parsedOrder.items || []
+    });
       await payment.save();
     }
+
+    const createdOrder = await Order.create({
+      user: parsedCustomer.user,
+      items: parsedOrder.items.map(i => ({
+        product: i.id || i.productId,
+        productName: i.productName,
+        quantity: i.quantity,
+        price: i.price,
+      })),
+      totalAmount: data.amount / 100,
+      paymentStatus: 'paid',
+    });
     return res.sendStatus(200);
   } catch (err) {
     console.error('❌ Error in webhook handler:', err);

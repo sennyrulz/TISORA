@@ -54,9 +54,9 @@ adminSchema.pre("save", async function (next) {
 });
 
 // Method to compare password
-adminSchema.methods.comparePassword = async function (candidatePassword) {
-  return await bcrypt.compare(candidatePassword, this.password);
-};
+// adminSchema.methods.comparePassword = async function (candidatePassword) {
+//   return await bcrypt.compare(candidatePassword, this.password);
+// };
 
 const adminModel = mongoose.model("Admin", adminSchema);
 

@@ -1,41 +1,34 @@
 import mongoose from "mongoose";
 
+  const imageSchema = new mongoose.Schema({ 
+    publicId: String, 
+    size: Number,
+  });
+
 const productSchema = new mongoose.Schema (
   {
     productName: { 
-        type: String, 
-        required: true 
+      type: String, 
+      required: true 
     },
     desc: { 
-        type: String, 
-        required: true 
-    },
-    features: { 
-          type: String, 
-          required: true 
-      },
-    material: { 
-        type: String, 
-        required: true 
-    },
-    sizes: { 
-        type: String,
-        enum: ['M', 'L', 'XL', 'XXL', 'XXXL'],
-        required: true 
+      type: String, 
+      required: true 
     },
     price: { 
-        type: String, 
-        required: true 
-    },  
-    pictures: [ 
-      { publicId: {  type: String, required: true  }}
-    ],
-  admin:{ type: mongoose.Schema.Types.ObjectId, ref: "Admin",required: true },
-  }, 
-  { timestamps: true }
-);
-
+      type: Number, 
+      required: true 
+    },
+    material: { 
+      type: String, 
+      required: true 
+    },
+    features: [String],
+    sizes: String,
+    Img1: [imageSchema],
+    Img2: [imageSchema],
+    user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  });
 
 const productModel = mongoose.model("Product", productSchema);
-
 export default productModel;

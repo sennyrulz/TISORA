@@ -79,8 +79,41 @@
   width: 100vw;
   height: 100vh;
   background-color: #faf7f7;
-
 }
+
+@media (max-width: 768px) {
+  .container-Brand-Topic {
+    padding: 1rem !important;
+    margin-top: 2rem !important;
+    margin-bottom: 20rem;
+  }
+
+  .container-Brand-Topic .d-flex {
+    flex-direction: column !important;
+    align-items: center;
+    padding: 1rem !important;
+    margin: 0 !important;
+  }
+
+  .brandImg {
+    height: auto !important;
+    max-width: 100% !important;
+    margin-bottom: 1.5rem;
+  }
+
+  .container-Brand-Topic p {
+    margin: 0 !important;
+    padding: 0 1rem !important;
+    text-align: justify !important;
+  }
+
+  .container-Brand-Topic h3 {
+    padding: 1rem !important;
+    font-size: 1.5rem;
+    text-align: center;
+  }
+}
+
 
 /* .Brand-Topic {
   width: 100vw;

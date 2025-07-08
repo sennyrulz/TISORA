@@ -1,44 +1,66 @@
-import React, { useState } from 'react'
+import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from 'react-router-dom';
-import { signUp, login, logout } from "../src/redux/adminAuthSlice"
-import { toast, ToastContainer } from "react-toastify";
-import { Container, Row, Col } from "react-bootstrap";
+import { logout } from "../src/redux/adminAuthSlice"
+import { setAdmin } from "../src/redux/adminAuthSlice"; 
+
 
 function Dashboard () {
-  const navigate = useState();
-  const admin = useSelector((state) => state.admin);
-  const isAuthenticated = useSelector((state) => state.admin.isAuthenticated);
+  const navigate = useNavigate();  
   const dispatch = useDispatch();
 
+  const { admin, isAuthenticated } = useSelector((state) => state.admin);
+  const [loading, setLoading] = useState(false);
+
+
   // Redirect to login if no longer authenticated
-  useNavigate(() => {
-    if (!isAuthenticated) {
-      navigate('/admin/login');
+useEffect(() => {
+  const checkAuth = async () => {
+    try {
+      const res = await fetch("http://localhost:5001/admin/verify", {
+        credentials: "include",
+      });
+      if (!res.ok) throw new Error("Not logged in");
+
+      const data = await res.json();
+      dispatch(setAdmin(data)); // ✅ Restore admin session
+    } catch (err) {
+      dispatch(logout());
+      navigate('/');
     }
+  };
+
+  checkAuth();
   }, [isAuthenticated, navigate]);
+ 
+   const handleLogout = () => {
+     dispatch(logout());
+     navigate('/'); // ✅ Navigate after logout
+   };
 
   return (
     <div>
       <h1 className="mb-3 pt-md-5 pb-md-3 fw-normal" style={{ fontSize: "3rem" }}>
-        admin Dashboard
+        Admin Dashboard
       </h1>
 
       {isAuthenticated && admin ? (
-        <>
-          <p>ID: {admin.id || admin._id}</p>
-          <p>Welcome, {admin.fullName || admin.name}!</p>
-          <p>Email: {admin.email}</p>
-          <div className="d-flex flex-column flex-md-row justify-content-center gap-3 mt-4">
-            <button style = {{ 
-              backgroundColor: '#91443f',
-              color: 'white' }}
-              className="btn"
-              onClick={() => dispatch(logout()) 
-              }>Logout
-            </button>
-          </div>
-        </>
+            <>
+              <p>{admin?.id}</p>
+              <p>Welcome, {admin?.name}!</p>
+              <p>{admin?.email}</p>
+              <div className="d-flex flex-column flex-md-row justify-content-center gap-3 mt-4">
+                <button
+                  style={{ backgroundColor: '#91443f' }}
+                  className="btn"
+                  onClick={() => {
+                    dispatch(logout());
+                    navigate("/");
+                  }}>
+                  Logout
+                </button>
+              </div>
+            </>
       ) : (
         <p>You are not logged in.</p>
       )}

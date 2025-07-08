@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from 'react-router-dom';
 import { logout } from "../redux/userAuthSlice";
@@ -31,7 +31,7 @@ function Dashboard() {
 
       {isAuthenticated && user ? (
         <>
-          <p>ID: {user.id || user._id}</p>
+          <p>ID: {user.id || user._id }</p>
           <p>Welcome, {user.fullName || user.name}!</p>
           <p>Email: {user.email}</p>
           <div className="d-flex flex-column flex-md-row justify-content-center gap-3 mt-4">

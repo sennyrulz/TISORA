@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk  } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 // Async thunk for signup
 export const signUp = createAsyncThunk(
@@ -6,67 +6,83 @@ export const signUp = createAsyncThunk(
   async (adminData, { rejectWithValue }) => {
     try {
       const res = await fetch("http://localhost:5001/admin/signup", {
-        method: "POST",
-        credentials: "include",
+           method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(adminData),
+        credentials: "include",
       });
-      if (!res.ok) {
-       const errorData = await res.json();
-        return rejectWithValue(errorData.message || "SignUp failed");
+    const data = await res.json();
+          
+    if (!res.ok) {
+      return rejectWithValue(data.message || "Signup failed");
+    }  
+      return data;
+    } catch (err) {
+      return rejectWithValue(err.message || "Network error");
+    }
+  }
+);
+// Async thunk for login
+export const login = createAsyncThunk(
+  "admin/login",
+  async (adminData, { rejectWithValue }) => {
+    try {
+      const res = await fetch("http://localhost:5001/admin/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(adminData),
+        credentials: "include",
+      });
+
+
+      const text = await res.text(); // read as text first
+      let data;
+
+      try {
+        data = JSON.parse(text); // try to parse as JSON
+      } catch (e) {
+        return rejectWithValue(text); // fallback to plain text error
       }
 
-    return data;
+      if (!res.ok) {
+        return rejectWithValue(data.message || data || "Login failed");
+      }
+
+      return data;
     } catch (err) {
       return rejectWithValue(err.message || "Network error");
     }
   }
 );
 
-// Async thunk for login
-export const login = createAsyncThunk(
-  "admin/login",
-  async (credentials, { rejectWithValue }) => {
-    try {
-       console.log("🚀 Sending login request with:", credentials);
-      const res = await fetch("http://localhost:5001/admin/login", {
-        method: "POST",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(credentials),
-      });
-        console.log("🌐 Response status:", res.status);
+const storedAdmin = localStorage.getItem("admin");
 
-     if (!res.ok) {
-        const errorData = await res.json(); 
-        return rejectWithValue(errorData.message || "Login failed");
-      }
-      const data = await res.json();
-      console.log("✅ Login successful, response:", data);
-      return data;
+const initialState = {
+  admin: storedAdmin ? JSON.parse(storedAdmin) : null,
+  isAuthenticated: !!storedAdmin,
+  loading: false,
+  error: null,
+};
 
-    } catch (err) {
-      console.error("🔥 Thunk login error:", err.message);
-      return rejectWithValue(err.message);
-    }
-  }
-);
-
-const adminAuthSlice = createSlice({
+const adminSlice = createSlice({
   name: "admin",
-  initialState: {
-    admin: null, 
-    isAuthenticated: false, 
-    loading: false,
-    error: null,
-  },
-reducers: {
+  initialState,
+   reducers: {
     logout: (state) => {
       state.admin = null;
       state.isAuthenticated = false;
       state.error = null;
+      localStorage.removeItem("admin");
+       localStorage.removeItem("token");
     },
+    setAdmin: (state, action) => {
+    state.admin = action.payload;
+    state.isAuthenticated = true;
+    
+    localStorage.setItem("admin", JSON.stringify(action.payload)); // ✅ Persist to localStorage
+    }
   },
+
   extraReducers: (builder) => {
     builder
       .addCase(signUp.pending, (state) => {
@@ -90,6 +106,7 @@ reducers: {
         state.loading = false;
         state.admin = action.payload;
         state.isAuthenticated = true;
+        localStorage.setItem("admin", JSON.stringify(action.payload));
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
@@ -98,5 +115,5 @@ reducers: {
   },
 });
 
-export const { logout } = adminAuthSlice.actions;
-export default adminAuthSlice.reducer;
+export const { logout, setAdmin } = adminSlice.actions;
+export default adminSlice.reducer;

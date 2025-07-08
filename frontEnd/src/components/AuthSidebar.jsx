@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { signUp, login, logout } from "../redux/userAuthSlice";
 import { toast, ToastContainer } from "react-toastify";
-import { Container } from "react-bootstrap";
 import { X } from 'lucide-react';
 
 function AuthSidebar({ isOpen, onClose }) {
@@ -30,29 +29,55 @@ function AuthSidebar({ isOpen, onClose }) {
     }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    
-    try {
-      if (isLogin) {
-        const resultAction = await dispatch(login(formData)).unwrap();
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setLoading(true);
+
+  try {
+    if (isLogin) {
+      // LOGIN FLOW
+      const loginData = {
+        email: formData.email,
+        password: formData.password,
+      };
+
+      const resultAction = await dispatch(login(loginData));
+
+      if (login.fulfilled.match(resultAction)) {
         toast.success("Login successful");
         onClose();
-        await new Promise(resolve => setTimeout(resolve, 300)); // Wait 300ms
+        await new Promise((resolve) => setTimeout(resolve, 300));
         navigate("/DashboardLanding");
       } else {
-        const resultAction = await dispatch(signUp(formData)).unwrap();
-        toast.success("Signup successful");
-        onClose();
-        navigate("/"); //come back and fix this so that User logs in again immediately after signin
+        toast.error(resultAction.payload || "Invalid credentials");
       }
-    } catch (error) {
-      toast.error(error.message || "An error occurred");
-    } finally {
-      setLoading(false);
+    } else {
+      // SIGNUP FLOW
+      const resultAction = await dispatch(signUp(formData));
+
+      if (signUp.fulfilled.match(resultAction)) {
+        toast.success("Signup successful");
+        setFormData({
+          fullName: "",
+          email: "",
+          phone: "",
+          address: "",
+          password: ""
+        });
+
+        dispatch(logout()); // if needed to clear any auto-login
+        setIsLogin(true);   // switch to login mode
+      } else {
+        toast.error(resultAction.payload || "Signup failed");
+      }
     }
-  };
+  } catch (err) {
+    toast.error("Something went wrong");
+    console.error(err);
+  } finally {
+    setLoading(false);
+  }
+};
 
   if (!isOpen) return null;
 
@@ -71,9 +96,9 @@ function AuthSidebar({ isOpen, onClose }) {
 
           {isAuthenticated ? (
             <>
-              <p>{user.id}</p>
+              <p>{user?.id}</p>
               <p>Welcome, {user.name}!</p>
-              <p>{user.email}</p> 
+              <p>{user?.email}</p> 
               <div className="d-flex flex-column flex-md-row justify-content-center gap-3 mt-4">
                 <button style={{
                   backgroundColor: '#91443f'}} 
@@ -178,12 +203,7 @@ function AuthSidebar({ isOpen, onClose }) {
           </p>
         </div>
       </div>
-      <ToastContainer
-        position="top-right"
-        autoClose={2000}
-        hideProgressBar={true}
-        closeOnClick
-      />
+      <ToastContainer position="top-right" autoClose={2000} hideProgressBar={true} closeOnClick />
     </>
   );
 }

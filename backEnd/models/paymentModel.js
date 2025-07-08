@@ -52,17 +52,16 @@ const paymentSchema = new mongoose.Schema({
     postalCode: { type: String },
     phone: { type: String }
   },
+  items: [
+  {
+    productName: String,
+    quantity: Number,
+    price: Number,
+  }
+],
 
-  user: { 
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: "User", 
-    required: true 
-  },
-  // admin: { 
-  //   type: mongoose.Schema.Types.ObjectId, 
-  //   ref: "Admin", 
-  //   // required: true 
-  // },
+order: { type: mongoose.Schema.Types.ObjectId, ref: 'Order' },
+user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
 
 }, { timestamps: true });
 

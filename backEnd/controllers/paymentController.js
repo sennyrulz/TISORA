@@ -1,15 +1,18 @@
 import axios from 'axios';
 import Payment from '../models/paymentModel.js';
 import crypto from 'crypto';
+import userModel from '../models/userModel.js';
+import Order from "../models/orderModel.js"
 
 export const verifyTransaction = async (req, res) => {
+  const userId = req.user?.id;
   try {
     const { reference } = req.params;
     console.log('Verifying payment with reference:', reference);
 
     const response = await axios.get(`https://api.paystack.co/transaction/verify/${reference}`, {
       headers: {
-        Authorization: `Bearer ${process.env.PAYSTACK_SECRETKEY}`,
+        Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
       },
     });
 
@@ -48,7 +51,7 @@ export const verifyTransaction = async (req, res) => {
 
 export const verifyWebhook = async (req, res) => {
   const hash = crypto
-    .createHmac('sha512', process.env.PAYSTACK_SECRETKEY)
+    .createHmac('sha512', process.env.PAYSTACK_SECRET_KEY)
     .update(JSON.stringify(req.body))
     .digest('hex');
 
@@ -61,53 +64,65 @@ export const verifyWebhook = async (req, res) => {
   if (event.event === 'charge.success') {
     const data = event.data;
     const reference = data.reference;
-    const userId = data.metadata?.userId;
+    const id = data.metadata?.id;
 
     try {
       const existing = await Payment.findOne({ reference });
       if (existing) return res.status(200).json({ message: 'Already processed' });
 
-      const newPayment = new Payment({
-        reference,
-        status: data.status,
-        amount: data.amount / 100,
-        currency: data.currency,
-        paidAt: data.paid_at,
-        customer: {
-          firstName: data.customer.first_name,
-          lastName: data.customer.last_name,
-          email: data.customer.email,
-          phone: data.customer.phone,
-        },
-        items: data.metadata?.items || [],
-        metadata: data.metadata?.customer || {},
-        user: userId,
-      });
+    const parsedOrder = JSON.parse(data.metadata.order || '{}');
+    const parsedCustomer = JSON.parse(data.metadata.customer || '{}');
 
-      await newPayment.save();
-      return res.status(200).json({ message: 'Payment verified and saved' });
+    const newPayment = new Payment({
+      user: parsedCustomer.user, // ✅ comes from your own frontend metadata
+      reference: data.reference,
+      amount: data.amount / 100,
+      currency: data.currency,
+      status: "pending",
+      paidAt: null,
+      customer: {
+        firstName: data.customer?.first_name || "",
+        lastName: data.customer?.last_name || "",
+        email: data.customer?.email || "",  // ✅ required!
+        phone: data.customer?.phone || "",
+      },
+      items: parsedOrder.items || [],
+      billingAddress: parsedOrder.billing || {},
+      specialInstructions: parsedOrder.specialInstructions || "",
+    });
+      const savedPayment = await newPayment.save();
+      await userModel.findByIdAndUpdate(
+        id, 
+        { $push: { payments: savedPayment.id }},
+        { new: true }
+      );
+      
+        return res.status(200).json({ message: 'Payment verified and saved' });
     } catch (err) {
       console.error('Error saving payment:', err);
       return res.status(500).json({ message: 'Payment verification failed' });
     }
   }
-
   res.status(200).json({ message: 'Webhook received' });
 };
 
 export const initializePayment = async (req, res) => {
-  console.log('Initiating payment with data:', req.body);
-  console.log("Loaded PAYSTACK_SECRETKEY:", process.env.PAYSTACK_SECRETKEY);
+  console.log('✅ Starting payment with data:', req.body);
 
   try {
-    const userId = req.user?._id;
+    const userId = req.user?.id; // Set by your `authenticateToken` middleware
     const { email, amount, currency, metadata } = req.body;
 
     if (!email || !amount) {
       return res.status(400).json({ success: false, message: 'Email and amount are required' });
     }
 
-    const response = await axios.post(
+    // Parse metadata
+    const parsedCustomer = JSON.parse(metadata.customer || '{}');
+    const parsedOrder = JSON.parse(metadata.order || '{}');
+
+    // 🔗 Call Paystack to initialize payment
+    const paystackResponse = await axios.post(
       'https://api.paystack.co/transaction/initialize',
       {
         email,
@@ -120,61 +135,103 @@ export const initializePayment = async (req, res) => {
       },
       {
         headers: {
-          Authorization: `Bearer ${process.env.PAYSTACK_SECRETKEY}`,
+          Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
           'Content-Type': 'application/json',
         },
+        timeout: 10000,
       }
     );
 
-    if (!response.data.status) {
-      throw new Error(response.data.message || 'Payment initialization failed');
-    }
+    const { reference, authorization_url } = paystackResponse.data.data;
 
-    const { reference, authorization_url } = response.data.data;
-
-    await Payment.create({
+    // 💾 Save to DB
+    const savedOrder = await Order.create({
       user: userId,
-      customer: metadata.customer,
-      items:
-        metadata.order?.items?.map((item) => ({
-          productId: item._id || item.id,
-          productName: item.productName,
-          quantity: item.quantity,
-          price: item.price,
-        })) || [],
+      items: parsedOrder.items,
+      totalAmount: amount / 100,
+      reference,
+      billingAddress: parsedOrder.billing || {},
+      status: 'pending',
+    });
+
+  //link order to user
+    await userModel.findByIdAndUpdate(userId, {
+      $push: { orders: savedOrder._id }
+    });
+
+  //Save payment
+    const savedPayment = await Payment.create({
+      user: userId,
+        order: savedOrder._id,
+        customer: {
+        firstName: parsedCustomer.firstName,
+        lastName: parsedCustomer.lastName,
+        email: parsedCustomer.email,
+        phone: parsedCustomer.phone,
+      },
+      items: parsedOrder.items?.map((item) => ({
+        productId: item._id || item.id,
+        productName: item.productName,
+        quantity: item.quantity,
+        price: item.price,
+      })) || [],
       totalAmount: amount / 100,
       paymentMethod: 'paystack',
       reference,
       status: 'pending',
-      specialInstructions: metadata.order?.specialInstructions || '',
-      billingAddress: metadata.order?.billing || {},
+      specialInstructions: parsedOrder.specialInstructions || '',
+      billingAddress: parsedOrder.billing || {},
     });
 
+  //Link payment to user
+    await userModel.findByIdAndUpdate(userId,
+      { $push: { payments: savedPayment._id }},
+      { new: true }
+    );
+
+    // 🎯 Return URL to frontend
     return res.status(200).json({
       success: true,
       message: 'Payment initialized successfully',
-      data: { reference, authorization_url },
+      data: {
+        reference,
+        authorization_url,
+      },
     });
+
   } catch (error) {
-    console.error('Payment initialization error:', error);
-    return res.status(500).json({ success: false, message: error.message || 'Payment initialization failed' });
+    console.error('❌ Payment initialization error:', error);
+    return res.status(500).json({
+      success: false,
+      message: error.response?.data?.message || error.message || 'Server error',
+    });
   }
 };
 
 export const getAllPayments = async (req, res) => {
   try {
-    const userId = req.user?._id;
-    const payments = await Payment.find({ user: userId }).populate('user');
-    res.status(200).json({ success: true, data: payments });
+    if (!req.user || !req.user._id) {
+      return res.status(401).json({ success: false, message: "User not authenticated" });
+    }
+    
+    const userId = req.user._id;
+    const allPayments = await Payment.find({user: req.user.id }).sort({ createdAt: -1 });
+
+    return res.status(200).json({ success: true, data: allPayments });
   } catch (error) {
-    console.error('Error fetching payments:', error);
-    res.status(500).json({ success: false, message: 'Error fetching payments' });
+    console.error("Error fetching payments:", error);
+    return res.status(500).json({ 
+      success: false, 
+      message: 'Server error', 
+      error: error.message 
+    });
   }
 };
 
+
 export const paystackWebhook = async (req, res) => {
   const hash = crypto
-    .createHmac('sha512', process.env.PAYSTACK_SECRETKEY)
+    .createHmac('sha512', process.env.PAYSTACK_SECRET_KEY)
     .update(JSON.stringify(req.body))
     .digest('hex');
 

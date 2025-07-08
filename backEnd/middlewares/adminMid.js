@@ -17,7 +17,7 @@ export const authenticateAdmin = async (req, res, next) => {
       return res.status(403).json({ message: "Access denied: Admins only" });
     }
 
-    req.user = { _id: user._id || user.id, admin: true };
+    req.admin = { _id: user._id || user.id };
     next(); // ✅ Only called if token is valid and user is admin
   });
 };

@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { FaReceipt, FaShoppingBag, FaEnvelope, FaCalendarAlt, FaHome, FaFilter, FaCalendar, FaSearch, FaBoxOpen } from 'react-icons/fa';
+import { useState, useEffect } from 'react';
+import { useSelector } from "react-redux";
+import { FaHome } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
@@ -8,12 +9,12 @@ const Orders = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  
-  // Pagination state
+
+  const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+
   const [currentPage, setCurrentPage] = useState(1);
   const ordersPerPage = 5;
-  
-  // Filter state
+
   const [statusFilter, setStatusFilter] = useState('all');
   const [dateFilter, setDateFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -23,11 +24,19 @@ const Orders = () => {
   }, []);
 
   const fetchOrders = async () => {
+    if (!isAuthenticated) {
+      setError('Please log in to view orders');
+      setLoading(false);
+      return;
+    }
+
     try {
-      const response = await axios.get('http://localhost:5001/api/payments/all', {
+      const response = await axios.get ('http://localhost:5001/api/payments/all', {
         withCredentials: true
       });
+
       const data = response.data;
+
       if (data.success) {
         setOrders(data.data);
       } else {
@@ -41,76 +50,54 @@ const Orders = () => {
     }
   };
 
-  // Helper function to check if order is within date range
   const isWithinDateRange = (orderDate, filter) => {
     const date = new Date(orderDate);
     const now = new Date();
-
-    // Set time to start of day for accurate comparison
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     const orderDay = new Date(date.getFullYear(), date.getMonth(), date.getDate());
 
-    let isInRange = false;
     switch (filter) {
       case 'today':
-        isInRange = orderDay.toDateString() === today.toDateString();
-        break;
+        return orderDay.toDateString() === today.toDateString();
       case 'week':
-        // Last 7 days including today
         const sevenDaysAgo = new Date(today);
-        sevenDaysAgo.setDate(today.getDate() - 6); // 6 days ago + today = 7 days
-        isInRange = orderDay >= sevenDaysAgo && orderDay <= today;
-        break;
+        sevenDaysAgo.setDate(today.getDate() - 6);
+        return orderDay >= sevenDaysAgo && orderDay <= today;
       case 'month':
-        // Last 30 days including today
         const thirtyDaysAgo = new Date(today);
-        thirtyDaysAgo.setDate(today.getDate() - 29); // 29 days ago + today = 30 days
-        isInRange = orderDay >= thirtyDaysAgo && orderDay <= today;
-        break;
+        thirtyDaysAgo.setDate(today.getDate() - 29);
+        return orderDay >= thirtyDaysAgo && orderDay <= today;
       default:
-        isInRange = true;
+        return true;
     }
-    return isInRange;
   };
 
-  // Add this function after isWithinDateRange
   const matchesSearch = (order) => {
     if (!searchQuery) return true;
     const query = searchQuery.toLowerCase();
-    
-    // Search in reference
     if (order.reference?.toLowerCase().includes(query)) return true;
-    
-    // Search in customer name
     if (order.customer?.firstName?.toLowerCase().includes(query)) return true;
     if (order.customer?.lastName?.toLowerCase().includes(query)) return true;
-    
-    // Search in product names
-    if (order.items?.some(item => 
-      item.productName?.toLowerCase().includes(query)
-    )) return true;
-    
+    if (order.items?.some(item => item.productName?.productName?.toLowerCase().includes(query))) return true;
+    <option value="processing">Processing</option>
     return false;
   };
 
-  // Update the filteredOrders logic
   const filteredOrders = orders.filter(order => {
-    const matchesStatus = statusFilter === 'all' || order.status === statusFilter;
-    const matchesDate = dateFilter === 'all' || isWithinDateRange(order.createdAt, dateFilter);
-    const matchesSearchQuery = matchesSearch(order);
-    return matchesStatus && matchesDate && matchesSearchQuery;
+    return (
+      (statusFilter === 'all' || order.status === statusFilter) &&
+      (dateFilter === 'all' || isWithinDateRange(order.createdAt, dateFilter)) &&
+      matchesSearch(order)
+    );
   });
 
-  // Get current orders for pagination
   const indexOfLastOrder = currentPage * ordersPerPage;
   const indexOfFirstOrder = indexOfLastOrder - ordersPerPage;
   const currentOrders = filteredOrders.slice(indexOfFirstOrder, indexOfLastOrder);
   const totalPages = Math.ceil(filteredOrders.length / ordersPerPage);
 
-  // Change page
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-  // Add this function to handle status badge classes
   const getStatusBadgeClass = (status) => {
     switch (status.toLowerCase()) {
       case 'success':
@@ -159,22 +146,19 @@ const Orders = () => {
     <div className="container mt-5 py-5">
       <div className="row">
         <div className="col-12">
-          {/* Header Section */}
+          {/* Header */}
           <div className="d-flex justify-content-between align-items-center mb-4">
-            <div>
-              <h2 className="h3 mb-1" style={{ color: '#91443f' }}>My Orders</h2>
-            </div>
+            <h2 className="h3 mb-1" style={{ color: '#91443f' }}>My Orders</h2>
             <Link to="/" className="btn" style={{ backgroundColor: '#91443f', color: 'white' }}>
               <FaHome className="me-2" />
               Back to Home
             </Link>
           </div>
 
-          {/* Filters Section */}
+          {/* Filters */}
           <div className="card shadow-sm mb-4">
             <div className="card-body">
               <div className="row g-3">
-                {/* Status Filter */}
                 <div className="col-md-4">
                   <label className="form-label small text-muted mb-1">Status</label>
                   <select
@@ -188,8 +172,6 @@ const Orders = () => {
                     <option value="failed">Failed</option>
                   </select>
                 </div>
-
-                {/* Date Filter */}
                 <div className="col-md-4">
                   <label className="form-label small text-muted mb-1">Date Range</label>
                   <select
@@ -203,8 +185,6 @@ const Orders = () => {
                     <option value="month">Last Month</option>
                   </select>
                 </div>
-
-                {/* Search Filter */}
                 <div className="col-md-4">
                   <label className="form-label small text-muted mb-1">Search</label>
                   <input
@@ -225,7 +205,7 @@ const Orders = () => {
               {filteredOrders.length === 0 ? (
                 <div className="text-center py-5">
                   <p className="text-muted mb-0">
-                    {searchQuery 
+                    {searchQuery
                       ? "No orders found matching your search"
                       : "No orders found"}
                   </p>
@@ -236,7 +216,7 @@ const Orders = () => {
                     {currentOrders.map((order) => (
                       <div key={order._id} className="border-bottom p-4">
                         <div className="row">
-                          {/* Left Column - Labels */}
+                          {/* Left Labels */}
                           <div className="col-3">
                             <div className="d-flex flex-column gap-3">
                               <p className="text-muted small mb-0">Customer</p>
@@ -247,17 +227,25 @@ const Orders = () => {
                             </div>
                           </div>
 
-                          {/* Middle Column - Values */}
+                          {/* Right Values */}
                           <div className="col-6">
                             <div className="d-flex flex-column gap-3 text-dark">
-                              <p className="mb-0 fw-medium">{order.customer?.firstName ? `${order.customer.firstName} ${order.customer.lastName || ''}` : 'N/A'}</p>
-                              <div className="mb-0">
-                                {order.items?.map((item, index) => (
-                                  <div key={index} className="d-flex justify-content-center align-items-center">
-                                    <span className="fw-medium me-2">{item.productName}</span>
-                                    <span className="text-muted small">x{item.quantity}</span>
-                                  </div>
-                                )) || <p className="mb-0 fw-medium">N/A</p>}
+                              <p className="mb-0 fw-medium">
+                                {order.customer?.firstName
+                                  ? `${order.customer.firstName} ${order.customer.lastName || ''}`
+                                  : 'N/A'}
+                              </p>
+                              <div>
+                                {order.items && order.items.length > 0 ? (
+                                  order.items.map((item, index) => (
+                                    <div key={`${item.productId}-${index}`} className="d-flex justify-content-start align-items-center">
+                                      <span className="fw-medium me-2">{item.productName || 'Unnamed Item'}</span>
+                                      <span className="text-muted small">x{item.quantity}</span>
+                                    </div>
+                                  ))
+                                ) : (
+                                  <p className="mb-0 fw-medium">N/A</p>
+                                )}
                               </div>
                               <p className="mb-0 fw-medium">₦{(order.totalAmount || 0).toLocaleString()}</p>
                               <p className="mb-0 fw-medium">{order.reference || 'N/A'}</p>
@@ -265,8 +253,8 @@ const Orders = () => {
                             </div>
                           </div>
 
-                          {/* Right Column - Status */}
-                          <div className="col-3 text-end text-success">
+                          {/* Status Badge */}
+                          <div className="col-3 text-end">
                             <span className={`badge ${getStatusBadgeClass(order.status)}`}>
                               {order.status}
                             </span>
@@ -281,36 +269,17 @@ const Orders = () => {
                     <nav className="mt-4">
                       <ul className="pagination justify-content-center">
                         <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-                          <button 
-                            className="page-link" 
-                            onClick={() => paginate(currentPage - 1)}
-                            style={{ color: '#91443f' }}
-                          >
-                            Previous
-                          </button>
+                          <button className="page-link" onClick={() => paginate(currentPage - 1)}>Previous</button>
                         </li>
                         {[...Array(totalPages).keys()].map(number => (
                           <li key={number + 1} className={`page-item ${currentPage === number + 1 ? 'active' : ''}`}>
-                            <button 
-                              className="page-link" 
-                              onClick={() => paginate(number + 1)}
-                              style={{ 
-                                color: currentPage === number + 1 ? 'white' : '#91443f',
-                                backgroundColor: currentPage === number + 1 ? '#91443f' : 'white'
-                              }}
-                            >
+                            <button className="page-link" onClick={() => paginate(number + 1)}>
                               {number + 1}
                             </button>
                           </li>
                         ))}
                         <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
-                          <button 
-                            className="page-link" 
-                            onClick={() => paginate(currentPage + 1)}
-                            style={{ color: '#91443f' }}
-                          >
-                            Next
-                          </button>
+                          <button className="page-link" onClick={() => paginate(currentPage + 1)}>Next</button>
                         </li>
                       </ul>
                     </nav>
@@ -325,4 +294,4 @@ const Orders = () => {
   );
 };
 
-export default Orders; 
+export default Orders;

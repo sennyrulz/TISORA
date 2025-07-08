@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from "react";  // useEffect from react
+import { useEffect, useState } from "react";  // useEffect from react
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { signUp, login, logout } from "../store/adminAuthSlice.js";
+import { signUp, login, logout } from "../src/redux/adminAuthSlice"
 import { toast, ToastContainer } from "react-toastify";
 import { Container, Row, Col } from "react-bootstrap";
-import axios from 'axios';
-
 
 function AdminAuth() {
 const adminState = useSelector((state) => state.admin);
@@ -31,7 +29,7 @@ const isAuthenticated = adminState?.isAuthenticated;
   // Redirect if already logged in
   useEffect(() => {
     if (isAuthenticated) {
-      navigate("/DashboardLanding");
+      navigate("/adminDashboardLanding");
     }
   }, [isAuthenticated, navigate]);
 
@@ -53,8 +51,10 @@ const isAuthenticated = adminState?.isAuthenticated;
 
   const resultAction = await dispatch(login(loginData));
     if (login.fulfilled.match(resultAction)) {
-    toast.success("login successful");
-    navigate("/DashboardLanding");
+      toast.success("login successful");
+    
+      await new Promise(resolve => setTimeout(resolve, 300)); // small delay
+      navigate("/adminDashboardLanding");
    } else {
     toast.error(resultAction.payload || "Admin does not exist! Sign up");
     }
@@ -62,6 +62,7 @@ const isAuthenticated = adminState?.isAuthenticated;
     const resultAction = await dispatch(signUp(formData));
     if (signUp.fulfilled.match(resultAction)) {
     toast.success("Signup successful");
+
     // Reset form and navigate to login
     setFormData({
       fullName: "",
@@ -70,13 +71,14 @@ const isAuthenticated = adminState?.isAuthenticated;
       address: "",
       password: ""
     });
-    // navigate("/AdminAuth");
+
+    dispatch(logout());   
+      setIsLogin(true);      
     } else {
-      toast.error(resultAction.payload || "Signup failed");
-    }
-  }
+      toast.error(resultAction.payload || "Admin already exists, please sign in");
+  }}
   } catch (error) {
-    toast.error(resultAction.payload || "Signup failed");
+    toast.error(resultAction.payload || "Admin already exists, please sign in");
   } finally {
     setLoading(false);
   }

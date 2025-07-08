@@ -1,8 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 // Async thunk for signup
-
-
 export const signUp = createAsyncThunk(
   "user/signUp",
   async (userData, { rejectWithValue }) => {
@@ -30,47 +28,61 @@ export const signUp = createAsyncThunk(
 // Async thunk for login
 export const login = createAsyncThunk(
   "user/login",
-  async (credentials, { rejectWithValue }) => {
+  async (userData, { rejectWithValue }) => {
     try {
-      console.log("🚀 Sending login request with:", credentials);
-      
       const res = await fetch("http://localhost:5001/user/login", {
         method: "POST",
-        credentials: "include",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(credentials),
+        body: JSON.stringify(userData),
+        credentials: "include",
       });
-      
-      const data = await res.json();
-      
-      if (!res.ok) {
-        console.error("❌ Login failed:", data.message);
-        return rejectWithValue(data.message || "Login failed");
+
+      const text = await res.text(); // read as text first
+      let data;
+
+      try {
+        data = JSON.parse(text); // try to parse as JSON
+      } catch (e) {
+        return rejectWithValue(text); // fallback to plain text error
       }
-      console.log("✅ Login successful, response:", data); // Only log on actual success
-    return data;
-      
+
+      if (!res.ok) {
+        return rejectWithValue(data.message || data || "Login failed");
+      }
+
+      return data;
     } catch (err) {
-      console.error("🔥 Thunk login error:", err.message);
       return rejectWithValue(err.message || "Network error");
     }
   }
 );
 
+const storedUser = localStorage.getItem("user");
+
+const initialState = {
+  user: storedUser ? JSON.parse(storedUser) : null,
+  isAuthenticated: !!storedUser,
+  loading: false,
+  error: null,
+};
+
 const userSlice = createSlice({
   name: "user",
-  initialState: {
-    user: null,
-    isAuthenticated: false,
-    loading: false,
-    error: null,
-  },
+  initialState,
   reducers: {
     logout: (state) => {
       state.user = null;
       state.isAuthenticated = false;
       state.error = null;
+      localStorage.removeItem("user");
+       localStorage.removeItem("token");
     },
+    setUser: (state, action) => {
+    state.user = action.payload;
+    state.isAuthenticated = true;
+    
+    localStorage.setItem("user", JSON.stringify(action.payload)); // ✅ Persist to localStorage
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -80,8 +92,9 @@ const userSlice = createSlice({
       })
       .addCase(signUp.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload;
-        state.isAuthenticated = true;
+        state.error = null;
+        state.user = null;
+        state.isAuthenticated = false;
       })
       .addCase(signUp.rejected, (state, action) => {
         state.loading = false;
@@ -95,6 +108,7 @@ const userSlice = createSlice({
         state.loading = false;
         state.user = action.payload;
         state.isAuthenticated = true;
+        localStorage.setItem("user", JSON.stringify(action.payload));
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
@@ -103,5 +117,5 @@ const userSlice = createSlice({
   },
 });
 
-export const { logout } = userSlice.actions;
+export const { logout, setUser } = userSlice.actions;
 export default userSlice.reducer;

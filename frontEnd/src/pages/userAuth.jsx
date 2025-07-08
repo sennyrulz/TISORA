@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { signUp, login, logout } from "../redux/userAuthSlice";
@@ -38,43 +38,49 @@ const isAuthenticated = userState?.isAuthenticated;
   setFormData((prev) => ({ ...prev, [name]: value }));
 };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setLoading(true);
 
-    try {
-      if (isLogin) {
-        const loginData = {
+  try {
+    if (isLogin) {
+      const loginData = {
         email: formData.email,
         password: formData.password,
       };
 
-  const resultAction = await dispatch(login(loginData));
-    if (login.fulfilled.match(resultAction)) {
-    toast.success("login successful");
-    navigate("/DashboardLanding");
-   } else {
-    toast.error(resultAction.payload || "User does not exist! Sign up");
-    }
-  } else {
-    const resultAction = await dispatch(signUp(formData));
-    if (signUp.fulfilled.match(resultAction)) {
-    toast.success("Signup successful");
-    // Reset form and navigate to login
-    setFormData({
-      fullName: "",
-      email: "",
-      phone: "",
-      address: "",
-      password: ""
-    });
-    // navigate("/userAuth");
+      const resultAction = await dispatch(login(loginData));
+      if (login.fulfilled.match(resultAction)) {
+        toast.success("Login successful");
+
+        await new Promise(resolve => setTimeout(resolve, 300)); // small delay
+        navigate("/DashboardLanding");
+      } else {
+        toast.error(resultAction.payload || "User does not exist! Sign up");
+      }
     } else {
-      toast.error(resultAction.payload || "Signup failed");
+      const resultAction = await dispatch(signUp(formData));
+      if (signUp.fulfilled.match(resultAction)) {
+        toast.success("Signup successful");
+
+        // Clear form
+        setFormData({
+          fullName: "",
+          email: "",
+          phone: "",
+          address: "",
+          password: ""
+        });
+
+        dispatch(logout());    // ensure they're logged out
+        setIsLogin(true);      // show login form
+      } else {
+        toast.error(resultAction.payload || "Signup failed");
+      }
     }
-  }
-  } catch (error) {
-    toast.error(resultAction.payload || "Signup failed");
+  } catch (err) {
+    toast.error("Something went wrong");
+    console.error(err);
   } finally {
     setLoading(false);
   }

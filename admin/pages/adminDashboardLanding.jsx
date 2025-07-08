@@ -5,7 +5,7 @@ import { Container, Row, Col } from "react-bootstrap";
 import Sidebar from "../components/Sidebar.jsx"
 import Dashboard from "../components/Dashboard.jsx"
 
-function DashboardLanding() {
+function adminDashboardLanding() {
   return (
     <div>
       <Container style={{ marginTop: "150px", marginBottom: "100px", paddingTop: "20px" }}>
@@ -20,4 +20,4 @@ function DashboardLanding() {
   );
 }
 
-export default DashboardLanding;
+export default adminDashboardLanding;

@@ -5,56 +5,52 @@ import bcrypt from 'bcrypt';
 // import sendEmail from '../utils/sendEmail.js';
 // import crypto from 'crypto';
 
-
 // Login User
 export const loginUser = async (req, res) => {
   const { email, password } = req.body;
+// Validate user
+  const user = await userModel.findOne({ email });
+  if (!user) {
+    return res.status(404).json({ message: "This account does not exist, please sign up" });
+  };
+// Compare password
+  const isValid = await bcrypt.compare(password, user.password);
+  if (!isValid) {
+    return res.status(401).json({ message: "Invalid email or password" });
+  }
+// Create a token
+  const token = jwt.sign(
+    { id:user.id, admin:user.admin },
+    process.env.SECRETKEY,
+    { expiresIn: '1h' }
+  );
 
-  //validate user    
-    const user = await userModel.findOne({ email });
-    if (!user) {
-      return res.status(404).json({ message: "This account does not exist, please sign up" });
-    };
+  // Set token in HTTP-only cookie
+  res.cookie("token", token, {
+    httpOnly: true,
+    //  secure: true, 
+    secure: process.env.NODE_ENV === "production",    
+    sameSite: 'lax',
+    maxAge: 24 * 60 * 60  *1000, // 1 Day
+  });
 
-  //compare password
-    const isValid = bcrypt.compareSync(password, user.password);
-    if (!isValid) {
-      return res.send("Invalid credentials!!" );
-    }
-//create a token
-    const token = jwt.sign(
-      { _id: user._id, admin:user.admin },
-      process.env.SECRETKEY || 'my-secret-key-goes-here',
-      { expiresIn: '1h' }
-    );
-
-    // Set token in HTTP-only cookie with secure flags
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: false,
-      // secure: process.env.NODE_ENV === 'production', // only true in prod
-      sameSite: 'lax', // Prevents CSRF attacks
-      maxAge: 1000 * 60 * 60, // 1 hour
-    });
-
-    // Return user data without token
-    console.log("✅ User found:", user._id);
-    return res.json({
-      id: user._id,
-      name: user.fullName,
-      email: user.email
-    });
+  // Return user data
+  console.log("✅ User found:", user.id);
+  return res.json({
+    id: user.id,
+    name: user.fullName,
+    email: user.email
+  });
 };
 
 // Create/Register User
 export const createUser = async (req, res) => {
-  const { email, password, ...others } = req.body;
+  const { fullName, phone, address, email, password} = req.body;
 
 //verify Email and password exists
-  if (!email || !password) {
+  if (!fullName, !phone, !address, !email || !password) {
     return res.status(400).json({ message: 'Email and password are required' });
   }
-
 //check if user exists in DB
   const isUser = await userModel.findOne({ email });
   if (isUser) {
@@ -62,22 +58,18 @@ export const createUser = async (req, res) => {
   };
 
 //create a hashed password
-  const salt = bcrypt.genSaltSync(10);
-  const hashedPassword = bcrypt.hashSync(password, salt);
-  console.log(hashedPassword);
-
-// // verify password
-//   const validPassword = await bcrypt.compare(password, user.password);
-//   if (!validPassword) {
-//     return res.status(401).json({ message: "Invalid password" });
-//   } //use this for validateUSer
+  // const salt = bcrypt.genSaltSync(10);
+  // const hashedPassword = bcrypt.hashSync(password, salt);
+  // console.log(hashedPassword);
 
 //continue with registration
   try {
     const newUser = new userModel({
+      fullName,
       email,
-      password: hashedPassword,
-      ...others,
+      phone,
+      address,
+      password,
     });
     const savedUser = await newUser.save();
       return res.json(savedUser);    
@@ -87,23 +79,39 @@ export const createUser = async (req, res) => {
   }
 };
 
-// Get All Users
+// Get Users
 export const getUser = async (req, res) => {
-  const { _id } = req.user;
-    const allUsers = await userModel
-    .findById(_id)
-    .populate("payments")
-    .populate("orders")
-    .populate("paymentss")
-    return res.json(allUsers);
+  const { id } = req.user;
+  try {
+    const user = await userModel
+      .findById(id)
+      .populate({
+        path: "orders",
+        populate: {
+          path: "items.product", 
+          model: "Product",
+        },
+      })
+      .populate("payments")
+      .populate("checkout");
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    return res.json(user);
+  } catch (error) {
+    console.error("❌ getUser error:", error.message);
+    return res.status(500).json({ message: "Something went wrong" });
+  }
 };
 
 // Update User
 export const updateUser = async (req, res) => {
-  const { _id, ...others } = req.body;
+  const { id, ...others } = req.body;
   try {
     const updatedUser = await userModel.findByIdAndUpdate(
-      _id, 
+      id, 
       { ...others },
       { new: true }
       );
@@ -115,39 +123,67 @@ export const updateUser = async (req, res) => {
 
 // Delete User
 export const deleteUser = async (req, res) => {
-  const { _id } = req.query;
+  const { id } = req.query;
   try {
     const deletedUser = await userModel.findByIdAndDelete
-    (_id);
-    return res.json(deletedUser);
-  } catch (error) {
-    return res.status(500).json({ message: "Deletion failed" });
-  }
+      (id);
+      return res.json(deletedUser);
+    } catch (error) {
+      return res.status(500).json({ message: "Deletion failed" });
+    }
 };
 
 // Verify User
 export const verifyUser = async (req, res) => {
   try {
-    const user = await userModel.findById(req.params._id);
-    if (!user) {
-      return res.status(400).json({ message: "Invalid link" });
-    }
-
-    const token = await token.findOne({
-      userId: user._id,
-      token: req.params.token,
-    });
-
+    const token = req.cookies.token;
     if (!token) {
-      return res.status(400).json({ message: "Invalid or expired token" });
+      return res.status(400).json({ message: "No token provided" });
     }
 
-    await userModel.findByIdAndUpdate(user._id, { verified: true });
-    await token.deleteOne();
+    const decoded = jwt.verify(token, process.env.SECRETKEY);
+    if (!decoded.user) {
+      return res.status(403).json({ message: "Unauthorized access" });
+    }
 
-    return res.status(200).json({ message: "Email verified successfully" });
-  } catch (error) {
-    console.error("Verification error:", error);
-    return res.status(500).json({ message: 'Something went wrong' });
+    const user = await userModel.findById(decoded.id).select("fullName email");
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json({
+      id: user.id,
+      name: user.fullName,
+      email: user.email,
+      user: true,
+    });
+  } catch (err) {
+    console.error("❌ verifyUser error:", err.message);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const getCurrentUser = async (req, res) => {
+  console.log("🍪 Token from cookie:", req.cookies.token);
+  const token = req.cookies.token;
+  if (!token) {
+    return res.status(401).json({ message: "Not authenticated" });
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.SECRETKEY);
+    const user = await userModel.findById(decoded.id || decoded._id).select("-password");
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    return res.json({
+      id: user.id,
+      name: user.fullName,
+      email: user.email,
+    });
+  } catch (err) {
+    console.error("Token verification failed:", err.message);
+    return res.status(401).json({ message: "Invalid token" });
   }
 };

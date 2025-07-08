@@ -23,9 +23,9 @@ const uploadToCloudinary = (buffer) => {
 // Create a new product
 export const createProducts = async (req, res) => {
   const { productName, desc, features, materials, sizes, price } = req.body;
-  const {_id} = req.user;
+  const {id} = req.user;
 
-   if (_id == product.admin && admin) {
+   if (id == product.admin && admin) {
     return res.send("post created successfully");
     } 
 
@@ -43,7 +43,7 @@ export const createProducts = async (req, res) => {
     );
 
     const newProduct = new productModel({
-      // user: _id,
+      user: id,
       productName,
       desc,
       features,
@@ -54,75 +54,79 @@ export const createProducts = async (req, res) => {
     });
 
     const savedProduct = await newProduct.save();
-    return res.status(201).json(savedProduct);
-
+    // return res.status(201).json(savedProduct);
+    await userModel.findByIdAndUpdate (
+    id, 
+    { $push: { products: savedProduct.id }}, 
+    { new: true }
+  );
+return res.send("post created successfuly!!!");
   } catch (error) {
-    console.error(error);
+    console.log(error.message);
     return res.status(500).json({ message: error.message });
   }
 };
 
 // Get all products
 export const getProducts = async (req, res) => {
-     const {userId} = req.query
+     const {adminId} = req.query
     try {
-        const products = await productModel.find({admin:userId});
-        return res.json(products);
+      const products = await productModel.find({admin:adminId});
+      return res.json(products);
     } catch (error) {
-        console.error("Error fetching products:", error);
-        return res.send( 'Something went wrong' );
+      console.error("Error fetching products:", error);
+      return res.send( 'Something went wrong' );
     }
 };
 
 // Update an existing product
 export const updateProducts = async(req, res) => {
-    const { productId, userId } = req.body;
-    const body = req.body;
+  const { productId, userId } = req.body;
+  const body = req.body;
 
-    const product = await productModel.findById(productId);
-        if(!product){
-            return res.send("product does not exist")
-        }
-        //check if the owner
-        if(userId != product.admin){
-            res.send("products does not belong to you. You cannot update this products")
-        }
+  const product = await productModel.findById(productId);
+    if(!product){
+      return res.send("product does not exist")
+    }
+    //check if the owner
+    if(userId != product.admin){
+      res.send("products does not belong to you. You cannot update this products")
+    }
 
-        if (_id != post.admin && !admin) {
-            return res.send("Unable to delete. You are not the owner");
-        } 
+    if (_id != post.admin && !admin) {
+      return res.send("Unable to delete. You are not the owner");
+    } 
 
-        try {
-            await productModel.findByIdAndUpdate(productId, {...updates}, {new: true});
-            
-            res.send("product updated successfully")
-        } catch (error) {
-            return res.send("something went wrong")
-        }
+    try {
+      await productModel.findByIdAndUpdate(productId, {...body}, {new: true});  
+      res.send("product updated successfully")
+    } catch (error) {
+      return res.send("something went wrong")
+    }
 };
 
 // Delete a product
 export const deleteProducts = async (req, res) => {
-    const { productId } = req.query;
-    const { _id, admin } = req.user;
+    const {productId} = req.query;
+    const {id, admin} = req.user;
 
  //check for product existence
     const product = await productModel.findById(productId);
-        if(!product){
-            return res.send("product does not exist")
-        }
-        console.log(admin);
-        console.log(product.admin);
-        //check if its the admin deleting product
-        if (_id != product.admin && !admin) {
-            return res.send("Unable to delete this product. you are not the owner");
-        }
+      if(!product){
+        return res.send("product does not exist")
+      }
+      console.log(admin);
+      console.log(product.admin);
+  //check if its the admin deleting product
+    if (id != product.admin && !admin) {
+      return res.send("Unable to delete this product. you are not the owner");
+    }
 
    try {
-            await productModel.findByIdAndDelete(productId)
-            return res.send("product deleted successfully!!!")
-            
-        } catch (error) {
-            return res.send(error.message)
-        }
-    };
+      await productModel.findByIdAndDelete(productId)
+      return res.send("product deleted successfully!!!") 
+           
+    } catch (error) {
+      return res.send(error.message)
+    }
+  };

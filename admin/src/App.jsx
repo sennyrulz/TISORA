@@ -3,7 +3,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css'
 import AdminAuth from "../../admin/pages/AdminAuth"
 import { BrowserRouter, Routes, Route, Navigate} from "react-router-dom";
-import Dashboard from '../pages/DashboardLanding'
+import AdminDashboardLanding from "../pages/adminDashboardLanding";
+import OrdersLanding from '../../frontEnd/src/pages/ordersLanding';
 // import AdminLayout from '../layout/adminLayout';
 import Nav from '../components/Nav';
 import Footer from '../components/Footer';
@@ -19,12 +20,9 @@ function App() {
         <Routes>
           {/* Admin Login Route */}
             <Route path="/" element={<AdminAuth />} />
-
-          {/* Protected Dashboard Route */}
-            <Route
-            path="/dashboard" 
-            element={isAuthenticated ? <Dashboard /> : <Navigate to="/" replace />
-          }/>
+          {/* Protected Admin Dashboard Route */}
+          <Route path="/adminDashboardLanding" element={<AdminDashboardLanding/>} />
+          <Route path="/OrdersLanding" element={<OrdersLanding/>} />
         </Routes>
     </div>
      <Footer />

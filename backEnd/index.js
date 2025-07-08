@@ -8,6 +8,8 @@ import fileUpload from 'express-fileupload';
 import paymentRoute from './routes/paymentRoute.js';
 import adminPaymentRoutes from './routes/adminPaymentRoutes.js'
 import productRoute from './routes/productRoute.js';
+import orderRoute from "./routes/orderRoute.js"
+import checkoutRoute from "./routes/checkoutRoute.js"
 // import emailVerifyRoute from './routes/emailVerifyRoute.js'
 import cors from "cors";
 import dotenv from "dotenv";
@@ -57,8 +59,10 @@ mongoose
 
 // Routes endpoints
 app.use(userRoute);
-app.use(adminRoute);
+app.use("/admin", adminRoute);
 app.use(productRoute);
+app.use(checkoutRoute);
+app.use('/api/orders', orderRoute);
 app.use('/api/payments', paymentRoute);
 app.use(adminPaymentRoutes);
 
@@ -103,3 +107,5 @@ const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+
+export default app; 
