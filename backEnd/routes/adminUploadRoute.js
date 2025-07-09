@@ -7,7 +7,7 @@ import { authenticateToken } from '../middlewares/authMid.js'
 const router = express.Router();
 
 // POST /admin/products
-router.post("/products", authenticateToken, upload.array("images", 2), async (req, res) => {
+router.post("/admin-uploads", authenticateToken, upload.array("images", 2), async (req, res) => {
   try {
     const { productName, desc, features, material, sizes, price } = req.body;
 
@@ -44,13 +44,13 @@ router.post("/products", authenticateToken, upload.array("images", 2), async (re
 });
 
 // GET /admin/products
-router.get("/products", authenticateToken, async (req, res) => {
+router.get("/all", authenticateToken, async (req, res) => {
   const products = await Product.find({ admin: req.user._id });
   res.json(products);
 });
 
 // DELETE /admin/products/:id
-router.delete("/products/:id", authenticateToken, async (req, res) => {
+router.delete("/:id", authenticateToken, async (req, res) => {
   const product = await Product.findById(req.params.id);
   if (!product) return res.status(404).json({ message: "Not found" });
 

@@ -12,7 +12,7 @@ const getAuthToken = () => {
 
 export const initializePayment = async (paymentData) => {
     try {
-        const response = await fetch(`${API_BASE_URL}/api/payments/initialize`, {
+        const response = await fetch(`${API_BASE_URL}/payments/initialize`, {
             method: 'POST',
             credentials: 'include',
             headers: {

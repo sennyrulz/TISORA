@@ -5,8 +5,8 @@ import { loginAdmin, getAdmin, createAdmin, verifyAdmin, getCurrentAdmin, update
 const route = express.Router();
 
 //public url for admin
-route.post("/admin/signUp", createAdmin);
-route.post("/admin/login", loginAdmin);
+route.post("/signUp", createAdmin);
+route.post("/alogin", loginAdmin);
 route.get("/admin/current-admin", authenticateAdmin, getCurrentAdmin)
 
 // Protected routes
