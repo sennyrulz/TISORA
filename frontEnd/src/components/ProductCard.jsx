@@ -4,7 +4,6 @@ import { AdvancedImage } from '@cloudinary/react';
 import { Cloudinary } from '@cloudinary/url-gen';
 import bootstrap from "bootstrap/dist/js/bootstrap.bundle.min.js";
 import { addToCart } from "../redux/cartSlice";
-import productModel from "../../../backEnd/models//productModel"
 import { productsData } from "./Product";
 import QuickCart from "./QuickCart";
 

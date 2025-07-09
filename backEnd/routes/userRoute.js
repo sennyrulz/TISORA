@@ -5,9 +5,9 @@ import { loginUser, getUser, createUser, updateUser, deleteUser, verifyUser, get
 const route = express.Router();
 
 // Public routes for User
-route.post("/user/signup", createUser); 
-route.post("/user/login",  loginUser);
-route.get("/user/current-user", authenticateToken, getCurrentUser)
+route.post("/signup", createUser); 
+route.post("/login",  loginUser);
+route.get("/current-user", authenticateToken, getCurrentUser)
 
 
 // Protected routes

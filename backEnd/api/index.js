@@ -60,13 +60,12 @@ mongoose
   .catch(err => console.error('MongoDB connection error:', err));
 
 // Routes endpoints
-app.use(userRoute);
-app.use(adminRoute);
-app.use(productRoute);
-app.use(checkoutRoute);
+app.use('/api/user', userRoute);
+app.use('/api/admin', adminRoute);
+app.use('/api/products', productRoute);
+app.use('/api/checkout', checkoutRoute);
 app.use('/api/orders', orderRoute);
 app.use('/api/payments', paymentRoute);
-app.use(adminPaymentRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
@@ -104,15 +103,6 @@ app.use((req, res) => {
     message: 'Route not found'
   });
 });
-
-let server = null;
-
-if (process.env.NODE_ENV !== "production") {
-  const PORT = process.env.PORT || 5001;
-  server = app.listen(PORT, () => {
-    console.log(`Server running locally on port ${PORT}`);
-  });
-}
 
 
 export const handler = serverless(app);
