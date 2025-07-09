@@ -4,9 +4,9 @@
   "description": "Backend for Tisora e-Commerce",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js",
-    "nodemon": "nodemon index.js"
+    "dev": "vite",
+    "start": "node api/index.js",
+    "build": "vite build"
   },
   "keywords": [],
   "author": "Fabletoon Limited (Oluwaseun Oloto / Blessing)",

@@ -6,16 +6,16 @@ import { authenticateToken } from "../middlewares/authMid.js"
 const route = express.Router();
 
 // GET all products
-route.get("/admin/products/get-all-products", authenticateToken, getProducts);
+route.get("/products/get-all-products", authenticateToken, getProducts);
 
 // CREATE new product
-route.post("/admin/products", upload.array("images", 2), authenticateToken, createProducts);
+route.post("/products", upload.array("images", 2), authenticateToken, createProducts);
 
 // UPDATE a product
-route.put("/admin/products", authenticateToken, updateProducts);
+route.put("/products", authenticateToken, updateProducts);
 
 // DELETE a product
-route.delete("/admin/products", authenticateToken, deleteProducts);
+route.delete("/products", authenticateToken, deleteProducts);
 
 //admin product upload route
 

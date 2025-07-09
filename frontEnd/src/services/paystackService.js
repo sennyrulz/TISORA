@@ -21,6 +21,12 @@ export const initializePayment = async (paymentData) => {
             body: JSON.stringify(paymentData),
         });
 
+       if (!response.ok) {
+            // Try to read response body (text), fallback to status message
+            const errorText = await response.text();
+            throw new Error(`Request failed with status ${response.status}: ${errorText}`);
+        }     
+
         const data = await response.json();
         return data;
     } catch (error) {

@@ -45,9 +45,8 @@ function App() {
   useEffect(() => {
   const fetchUser = async () => {
     try {
-      const res = await fetch("http://localhost:5001/user/current-user", {
-        credentials: "include",
-      });
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/user/current-user`, 
+        { credentials: "include"});
       if (res.ok) {
         const data = await res.json();
         dispatch(setUser(data));
@@ -111,7 +110,10 @@ function App() {
                     {productsData.slice(1, 7).map((product) => (
                       <div key={product.id} 
                         style={{ flex: "0 0 auto", scrollSnapAlign: "start"}}>
-                          <ProductCard {...product} onAddToCart={(product) => {
+                          <ProductCard 
+                            {...product} 
+                            onAddToCart={(product) => {
+                              setSelectedProduct(product);
                             setShowModal(true);}}/>
                       </div>
                     ))}
