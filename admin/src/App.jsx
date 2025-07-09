@@ -35,8 +35,7 @@ function App() {
   const isAuthenticated = !!localStorage.getItem("adminToken"); 
   
   return (
-    <BrowserRouter>
-
+    <>
       <Nav />
         <div className='grid-container'>
           <Routes>
@@ -54,7 +53,7 @@ function App() {
           </Routes>
         </div>
       <Footer />
-    </BrowserRouter>
+    </>
   
 )}
  
