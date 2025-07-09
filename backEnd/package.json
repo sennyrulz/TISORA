@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "start": "node api/index.js",
-    "build": "vite build"
+    "build": "vite build",
+    "seed": "node seedProducts.js"
   },
   "keywords": [],
   "author": "Fabletoon Limited (Oluwaseun Oloto / Blessing)",
@@ -20,11 +21,11 @@
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
-    "dotenv": "^16.5.0",
+    "dotenv": "^16.6.1",
     "express": "^5.1.0",
     "express-fileupload": "^1.5.1",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.15.0",
+    "mongoose": "^8.16.2",
     "multer": "^2.0.0",
     "nodemailer": "^7.0.3",
     "nodemon": "^3.1.10",

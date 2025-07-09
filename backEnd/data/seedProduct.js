@@ -1,9 +1,12 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 import mongoose from "mongoose";
 import productModel from "../models/productModel.js"; // go up one level
 import { productsData } from "./Product.js"; // same folder
 
 // Connect to MongoDB
-mongoose.connect("mongodb://localhost:27017/Tisora", {
+mongoose.connect(process.env.MONGODBURL, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 }).then(async () => {
