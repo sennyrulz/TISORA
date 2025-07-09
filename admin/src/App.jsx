@@ -18,7 +18,7 @@ function App() {
     useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/admin/current-user`, 
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/admin/current-user`, 
           { credentials: "include"});
         if (res.ok) {
           const data = await res.json();
@@ -35,19 +35,26 @@ function App() {
   const isAuthenticated = !!localStorage.getItem("adminToken"); 
   
   return (
-    <>
-    <Nav />
-    <div className='grid-container'>
-        <Routes>
-          {/* Admin Login Route */}
-            <Route path="/" element={<AdminAuth />} />
-          {/* Protected Admin Dashboard Route */}
-          <Route path="/adminDashboardLanding" element={<AdminDashboardLanding/>} />
-          <Route path="/OrdersLanding" element={<OrdersLanding/>} />
-        </Routes>
-    </div>
-     <Footer />
-     </>
+    <BrowserRouter>
+
+      <Nav />
+        <div className='grid-container'>
+          <Routes>
+            {/* Admin Login Route */}
+              <Route path="/" element={<AdminAuth />} />
+              {/* Protected Admin Dashboard Route */}
+              <Route 
+              path="/adminDashboardLanding" 
+              element={isAuthenticated ? <AdminDashboardLanding /> : <Navigate to="/" />}
+              />
+              <Route 
+              path="/OrdersLanding" 
+                element={isAuthenticated ? <OrdersLanding /> : <Navigate to="/" />}
+            />
+          </Routes>
+        </div>
+      <Footer />
+    </BrowserRouter>
   
 )}
  

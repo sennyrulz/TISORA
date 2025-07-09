@@ -11,10 +11,18 @@
       "config": {
         "distDir": "frontend/dist"
       }
+    },
+    {
+      "src": "admin/vite.config.js",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "admin/dist"
+      }
     }
   ],
   "routes": [
     { "src": "/api/(.*)", "dest": "backend/api/index.js" },
+    { "src": "/admin/(.*)", "dest": "/admin/dist/index.html" },
     { "src": "/(.*)", "dest": "/frontend/index.html" }
   ]
 }

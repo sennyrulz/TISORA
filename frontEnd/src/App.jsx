@@ -45,7 +45,7 @@ function App() {
   useEffect(() => {
   const fetchUser = async () => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/user/current-user`, 
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/user/current-user`, 
         { credentials: "include"});
       if (res.ok) {
         const data = await res.json();
