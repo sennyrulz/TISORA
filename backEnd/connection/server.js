@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import multer from 'multer';
 import { v2 as cloudinary } from 'cloudinary';
+import serverless from 'serverless-http'; // 👈 required for Vercel
 
 dotenv.config();
 
@@ -38,7 +39,4 @@ app.post('/upload', upload.single('image'), async (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server running on ${PORT}`);
-});
+export const handler = serverless(app);
