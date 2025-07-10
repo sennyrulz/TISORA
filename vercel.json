@@ -8,12 +8,12 @@
     {
       "src": "frontEnd/",
       "use": "@vercel/static-build",
-      "config": { "distDir": "dist" }
+      "config": {"distDir": "dist"}
     },
     {
       "src": "tisoraAdmin/",
       "use": "@vercel/static-build",
-      "config": { "distDir": "dist" }
+      "config": {"distDir": "dist"}
     }
   ],
   "routes": [
