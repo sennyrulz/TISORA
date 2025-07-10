@@ -11,14 +11,14 @@
       "config": { "distDir": "frontend/dist" }
     },
     {
-      "src": "tisoraAdmin/vite.config.js",
+      "src": "TisoraAdmin/vite.config.js",
       "use": "@vercel/static-build",
       "config": { "distDir": "admin/dist" }
     }
   ],
   "routes": [
     { "src": "/api/(.*)", "dest": "backend/api/server/index.js" },
-    { "src": "/admin(/.*)?", "dest": "/tisoraAdmin/index.html" },
+    { "src": "/admin(/.*)?", "dest": "/TisoraAdmin/index.html" },
     { "src": "/(.*)", "dest": "/frontend/index.html" }
   ]
 }
