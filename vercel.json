@@ -2,23 +2,23 @@
   "version": 2,
   "builds": [
     {
-      "src": "backend/api/server/index.js",
+      "src": "backEnd/api/server/index.js",
       "use": "@vercel/node"
     },
     {
-      "src": "frontend/vite.config.js",
+      "src": "frontEnd/vite.config.js",
       "use": "@vercel/static-build",
       "config": { "distDir": "frontend/dist" }
     },
     {
-      "src": "TisoraAdmin/vite.config.js",
+      "src": "tisoraAdmin/vite.config.js",
       "use": "@vercel/static-build",
       "config": { "distDir": "admin/dist" }
     }
   ],
   "routes": [
-    { "src": "/api/(.*)", "dest": "backend/api/server/index.js" },
-    { "src": "/admin(/.*)?", "dest": "/TisoraAdmin/index.html" },
-    { "src": "/(.*)", "dest": "/frontend/index.html" }
+    { "src": "/api/(.*)", "dest": "backEnd/api/server/index.js" },
+    { "src": "/admin(/.*)?", "dest": "/tisoraAdmin/index.html" },
+    { "src": "/(.*)", "dest": "/frontEnd/index.html" }
   ]
 }
