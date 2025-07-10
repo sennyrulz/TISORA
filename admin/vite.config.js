@@ -3,8 +3,11 @@ import react from '@vitejs/plugin-react'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: '/admin/',
+    base: '/admin/',
   plugins: [react()],
+  build: {
+    outDir: 'dist'
+  },
   server: {
     proxy: {
       '/api': 'http://localhost:5001',
