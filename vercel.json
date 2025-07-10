@@ -6,14 +6,14 @@
       "use": "@vercel/node"
     },
     {
-      "src": "frontEnd/vite.config.js",
+      "src": "frontEnd/",
       "use": "@vercel/static-build",
-      "config": { "distDir": "frontend/dist" }
+      "config": { "distDir": "dist" }
     },
     {
-      "src": "tisoraAdmin/vite.config.js",
+      "src": "tisoraAdmin/",
       "use": "@vercel/static-build",
-      "config": { "distDir": "admin/dist" }
+      "config": { "distDir": "dist" }
     }
   ],
   "routes": [
