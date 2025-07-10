@@ -22,7 +22,7 @@ const app = express();
 
 // // Enable CORS after definition
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:5174', 'https://tisoraa.vercel.app'],
+  origin: ['http://localhost:5173', 'http://localhost:5174', 'https://tisora.vercel.app'],
   credentials: true,
 }));
 
