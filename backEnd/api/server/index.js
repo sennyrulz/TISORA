@@ -21,7 +21,7 @@ const app = express();
 
 // // Enable CORS after definition
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:5174', 'https://tisora.vercel.app, https://www.tisora.vercel.app'],
+  origin: ['http://localhost:5173', 'http://localhost:5174', 'https://tisora.vercel.app', 'https://www.tisora.vercel.app'],
   credentials: true,
 }));
 
@@ -54,7 +54,6 @@ app.use((req, res, next) => {
 // Create Connection
 mongoose
   .connect(process.env.MONGODBURL,)
-  // || "mongodb://localhost:27017/Tisora")
   .then(() => console.log('MongoDB Connected'))
   .catch(err => console.error('MongoDB connection error:', err));
 

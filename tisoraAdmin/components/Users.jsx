@@ -4,10 +4,10 @@ import { useEffect, useState } from 'react';
 
 function User() {
   const [users, setUsers] = useState([]);
-  const token = localStorage.getItem("token");
+  const token = JSON.parse(localStorage.getItem("admin"))?.token;
 
   useEffect(() => {
-    axios.get("/api/users", {
+    axios.get("/api/user/all", {
       headers: { Authorization: `Bearer ${token}` }
     })
     .then(res => setUsers(res.data))
@@ -17,9 +17,13 @@ function User() {
   return (
     <div>
       <h2>User List</h2>
-      {users.map(user => (
-        <div key={user._id}>{user.fullName}</div>
-      ))}
+        {users.length === 0 ? (
+          <p>No users found.</p>
+        ) : (
+          users.map(user => (
+          <div key={user._id}>{user.fullName}</div>
+        ))
+      )}
     </div>
   );
 }

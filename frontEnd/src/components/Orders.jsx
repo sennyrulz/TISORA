@@ -31,7 +31,7 @@ const Orders = () => {
     }
 
     try {
-      const response = await axios.get ('http://localhost:5001/api/payments/all', {
+      const response = await axios.get (`${import.meta.env.VITE_BACKEND_URL}/payments/all`, {
         withCredentials: true
       });
 

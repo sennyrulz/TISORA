@@ -11,7 +11,7 @@ const emailVerify = () => {
     useEffect(() => {
         const verifyEmailUrl = async () => {
             try {
-                const url = `http://localhost:5001/user/${param.id}/verify/${param.token}`
+                const url = `${import.meta.env.VITE_BACKEND_URL}/api/user/${param.id}/verify/${param.token}`
                 const {data} = await axios.get(url);
                 console.log(data);
                 setValidUrl(true)

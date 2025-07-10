@@ -44,13 +44,13 @@ return (
                 <h1>300</h1>
             </div>
 
-            <div className='card'>
+            {/* <div className='card'>
                 <div className='card-inner'>
                     <h3>SETTINGS</h3>
                      <BsFillGearFill className='card-icon'/>
                 </div>
                 <h1>300</h1>
-            </div>
+            </div> */}
         </div>
     </main>
   )

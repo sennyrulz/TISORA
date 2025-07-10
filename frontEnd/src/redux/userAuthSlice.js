@@ -5,7 +5,7 @@ export const signUp = createAsyncThunk(
   "user/signUp",
   async (userData, { rejectWithValue }) => {
     try {
-      const res = await fetch("http://localhost:5001/user/signup", {
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/admin/signup`, {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
@@ -30,7 +30,7 @@ export const login = createAsyncThunk(
   "user/login",
   async (userData, { rejectWithValue }) => {
     try {
-      const res = await fetch("http://localhost:5001/user/login", {
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/admin/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(userData),

@@ -43,9 +43,10 @@ function App() {
   const dispatch = useDispatch();
 
   useEffect(() => {
+  console.log("Cart updated:", cart);
   const fetchUser = async () => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/user/current-user`, 
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/user/current-user`, 
         { credentials: "include"});
       if (res.ok) {
         const data = await res.json();
@@ -54,10 +55,10 @@ function App() {
     } catch (err) {
       console.log("Not authenticated");
     }
-  };
+  }; 
 
   fetchUser();
-}, []);
+}, [cart]);
 
   const navigate = useNavigate();
   const featuredProducts = productsData.slice(0, 5);
@@ -65,23 +66,21 @@ function App() {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [showModal, setShowModal] = useState(false);
 
-  const addToCart = (product) => {
-    if (!product) return;
-    setCart((prevCart) => {
-      const existingProduct = prevCart.find(item => item.id === product.id);
-      if (existingProduct) {
-        // If product exists, update quantity
-        return prevCart.map(item => 
-          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
-        );
-      } else {
-        // If product doesn't exist, add it with quantity 1
-        return [...prevCart, { ...product, quantity: 1 }];
-      }
-    });
-    console.log("Cart updated:", cart);
-    setShowModal(false);
-  };
+const addToCart = (product) => {
+  if (!product) return;
+  setCart((prevCart) => {
+    const existingProduct = prevCart.find(item => item.id === product.id);
+    if (existingProduct) {
+      return prevCart.map(item =>
+        item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+      );
+    } else {
+      return [...prevCart, { ...product, quantity: 1 }];
+    }
+  });
+  setShowModal(false);
+};
+
 
   return (
     <>

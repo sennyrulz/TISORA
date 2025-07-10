@@ -41,6 +41,7 @@ export const loginAdmin = async (req, res) => {
       name: admin.fullName,
       email: admin.email,
       admin: true,
+      token,
     });
   } catch (error) {
     console.error("❌ Admin login error:", error.message);

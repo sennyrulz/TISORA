@@ -79,6 +79,17 @@ export const createUser = async (req, res) => {
   }
 };
 
+export const getAllUser = async (req, res) => {
+  try {
+    const getAllUsers = await userModel.find()
+      .populate("payments", "orders, items");
+      return res.json(getAllUsers)
+
+  } catch (error) {
+    return res.send ("error")
+  }
+}
+
 // Get Users
 export const getUser = async (req, res) => {
   const { id } = req.user;
