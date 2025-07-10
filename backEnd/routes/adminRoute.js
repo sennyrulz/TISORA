@@ -6,8 +6,8 @@ const route = express.Router();
 
 //public url for admin
 route.post("/signUp", createAdmin);
-route.post("/alogin", loginAdmin);
-route.get("/admin/current-admin", authenticateAdmin, getCurrentAdmin)
+route.post("/login", loginAdmin);
+route.get("/current-admin", authenticateAdmin, getCurrentAdmin)
 
 // Protected routes
 route.get("/verify", authenticateAdmin, verifyAdmin)

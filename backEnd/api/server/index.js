@@ -1,15 +1,14 @@
 import express from "express";
 import bodyParser from "body-parser";
 // import connectDB from "./connection/database.js";
-import userRoute from "./routes/userRoute.js";
-import adminRoute from "./routes/adminRoute.js";
+import userRoute from "../../routes/userRoute.js"
+import adminRoute from "../../routes/adminRoute.js";
 import mongoose from "mongoose";
 import fileUpload from 'express-fileupload';
-import paymentRoute from './routes/paymentRoute.js';
-import adminPaymentRoutes from './routes/adminPaymentRoutes.js'
-import productRoute from './routes/productRoute.js';
-import orderRoute from "./routes/orderRoute.js"
-import checkoutRoute from "./routes/checkoutRoute.js"
+import paymentRoute from '../../routes/paymentRoute.js';
+import productRoute from '../../routes/productRoute.js';
+import orderRoute from "../../routes/orderRoute.js"
+import checkoutRoute from "../../routes/checkoutRoute.js"
 // import emailVerifyRoute from './routes/emailVerifyRoute.js'
 import cors from "cors";
 import dotenv from "dotenv";
@@ -22,7 +21,7 @@ const app = express();
 
 // // Enable CORS after definition
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:5174', 'https://tisoraa.com', 'https://www.tisoraa.com'],
+  origin: ['http://localhost:5173', 'http://localhost:5174', 'https://tisora.vercel.app, https://www.tisora.vercel.app'],
   credentials: true,
 }));
 
@@ -60,13 +59,12 @@ mongoose
   .catch(err => console.error('MongoDB connection error:', err));
 
 // Routes endpoints
-app.use(userRoute);
-app.use(adminRoute);
-app.use(productRoute);
-app.use(checkoutRoute);
+app.use('/api/user', userRoute);
+app.use('/api/admin', adminRoute);
+app.use('/api/products', productRoute);
+app.use('/api/checkout', checkoutRoute);
 app.use('/api/orders', orderRoute);
 app.use('/api/payments', paymentRoute);
-app.use(adminPaymentRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
@@ -105,14 +103,5 @@ app.use((req, res) => {
   });
 });
 
-let server = null;
 
-if (process.env.NODE_ENV !== "production") {
-  const PORT = process.env.PORT || 5001;
-  server = app.listen(PORT, () => {
-    console.log(`Server running locally on port ${PORT}`);
-  });
-}
-
-
-export const handler = serverless(app);
+export default serverless(app);

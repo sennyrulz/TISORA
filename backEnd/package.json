@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "vite",
-    "start": "node api/index.js",
+    "start": "node api/server/index.js",
     "build": "vite build",
     "seed": "node seedProducts.js"
   },

@@ -12,7 +12,7 @@ route.get("/all", authenticateToken, getProducts);
 route.post("/uploads", upload.array("images", 2), authenticateToken, createProducts);
 
 // UPDATE a product
-route.put("/edit", authenticateToken, updateProducts);
+route.put("/update", authenticateToken, updateProducts);
 
 // DELETE a product
 route.delete("/", authenticateToken, deleteProducts);

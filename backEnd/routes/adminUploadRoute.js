@@ -44,7 +44,7 @@ router.post("/admin-uploads", authenticateToken, upload.array("images", 2), asyn
 });
 
 // GET /admin/products
-router.get("/all", authenticateToken, async (req, res) => {
+router.get("/getAll", authenticateToken, async (req, res) => {
   const products = await Product.find({ admin: req.user._id });
   res.json(products);
 });
