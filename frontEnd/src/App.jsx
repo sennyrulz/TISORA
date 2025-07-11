@@ -21,7 +21,7 @@ import Footer from "./components/Footer";
 import { productsData } from "./components/Product";
 import ProductCard from "./components/ProductCard";
 import "./App.css";
-import NewsLetterBox from "./Components/NewsLetterBox";
+import NewsLetterBox from "./components/NewsLetterBox";
 import { Modal, Button, Container } from "react-bootstrap";
 import Checkout from "./components/Checkout";
 import { Cloudinary } from "@cloudinary/url-gen";
