@@ -39,8 +39,8 @@ const publicId = fallbackPublicId;
 const mainImage = cld.image(publicId);
 
 function App() {
-
   const dispatch = useDispatch();
+  const [cart, setCart] = useState([]);
 
   useEffect(() => {
   console.log("Cart updated:", cart);
@@ -62,7 +62,6 @@ function App() {
 
   const navigate = useNavigate();
   const featuredProducts = productsData.slice(0, 5);
-  const [cart, setCart] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [showModal, setShowModal] = useState(false);
 
