@@ -1,14 +1,14 @@
-import { useState } from 'react'
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-// import { setUser } from '../redux/adminAuthSlice'; // or wherever it's located
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css'
+
 import AdminAuth from "../pages/AdminAuth"
 import OrdersLanding from '../pages/ordersLanding';
-import { BrowserRouter, Routes, Route, Navigate} from "react-router-dom";
 import AdminDashboardLanding from "../pages/adminDashboardLanding";
 // import AdminLayout from '../layout/adminLayout';
+
+import { BrowserRouter, Routes, Route, Navigate} from "react-router-dom";
 import Nav from '../components/Nav';
 import Footer from '../components/Footer';
 
