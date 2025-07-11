@@ -16,7 +16,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import Logo from "./pages/Logo";
 import HeroBanner from "./components/HeroBanner";
-import BrandTopic from "./components/brandTopic";
+import BrandTopic from "./components/BrandTopic";
 import Footer from "./components/Footer";
 import { productsData } from "./components/Product";
 import ProductCard from "./components/ProductCard";
