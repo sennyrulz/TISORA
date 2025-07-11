@@ -25,13 +25,17 @@ app.use(
   cors({
   origin: [
     'http://localhost:5173', 
-    'http://localhost:5174', 
-    'https://tisora-api.onrender.com/api',
+    'http://localhost:5174',
+    "https://tisora-frontend.onrender.com",
+    'https://tisora-admin.onrender.com', 
     // 'https://tisora.vercel.app', 
     // 'https://www.tisora.vercel.app'
   ],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   credentials: true,
 }));
+// app.options("*", cors());
+
 
 // Middleware
 app.use(express.json());
