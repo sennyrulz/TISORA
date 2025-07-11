@@ -1,38 +1,58 @@
 import express from "express";
 import bodyParser from "body-parser";
+import mongoose from "mongoose";
+import fileUpload from 'express-fileupload';
+import cors from "cors";
+import dotenv from "dotenv";
+import cookieParser from "cookie-parser"
+// import serverless from 'serverless-http';
+
 // import connectDB from "./connection/database.js";
 import userRoute from "../../routes/userRoute.js"
 import adminRoute from "../../routes/adminRoute.js";
-import mongoose from "mongoose";
-import fileUpload from 'express-fileupload';
 import paymentRoute from '../../routes/paymentRoute.js';
 import productRoute from '../../routes/productRoute.js';
 import orderRoute from "../../routes/orderRoute.js"
 import checkoutRoute from "../../routes/checkoutRoute.js"
 // import emailVerifyRoute from './routes/emailVerifyRoute.js'
-import cors from "cors";
-import dotenv from "dotenv";
-import cookieParser from "cookie-parser"
-import serverless from 'serverless-http';
 
 
 dotenv.config();
 const app = express();
 
 // // Enable CORS after definition
-app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:5174', 'https://tisora.vercel.app', 'https://www.tisora.vercel.app'],
+app.use(
+  cors({
+  origin: [
+    'http://localhost:5173', 
+    'http://localhost:5174', 
+    'https://tisora-api.onrender.com/api',
+    // 'https://tisora.vercel.app', 
+    // 'https://www.tisora.vercel.app'
+  ],
   credentials: true,
 }));
 
 // Middleware
 app.use(express.json());
 app.use(cookieParser());
-
-//other middleware
 app.use(fileUpload({ useTempFiles: true }));
 app.use('/api/payments/webhook', express.raw({ type: 'application/json' })); // raw for webhook
 app.use(express.urlencoded({ extended: true }));
+
+// Create Connection
+mongoose
+  .connect(process.env.MONGODBURL,)
+  .then(() => console.log('MongoDB Connected'))
+  .catch(err => console.error('MongoDB connection error:', err));
+
+// Routes endpoints
+app.use('/api/user', userRoute);
+app.use('/api/admin', adminRoute);
+app.use('/api/products', productRoute);
+app.use('/api/checkout', checkoutRoute);
+app.use('/api/orders', orderRoute);
+app.use('/api/payments', paymentRoute);
 
 // Debug middleware to log requests
 app.use((req, res, next) => {
@@ -50,20 +70,6 @@ app.use((req, res, next) => {
   }
   next();
 });
-
-// Create Connection
-mongoose
-  .connect(process.env.MONGODBURL,)
-  .then(() => console.log('MongoDB Connected'))
-  .catch(err => console.error('MongoDB connection error:', err));
-
-// Routes endpoints
-app.use('/api/user', userRoute);
-app.use('/api/admin', adminRoute);
-app.use('/api/products', productRoute);
-app.use('/api/checkout', checkoutRoute);
-app.use('/api/orders', orderRoute);
-app.use('/api/payments', paymentRoute);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
@@ -103,4 +109,10 @@ app.use((req, res) => {
 });
 
 
-export const handler = serverless(app);
+// Start server
+const PORT = process.env.PORT || 5001;
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
+});
+
+// export const handler = serverless(app);
