@@ -8,10 +8,13 @@ import { productsData } from "./Product";
 import QuickCart from "./QuickCart";
 
 
+function ProductCard({id, Img1, Img2, productName, desc, price, material, features, sizes, onAddToCart }) {
+  const cld = new Cloudinary({ 
+    cloud: { 
+      cloudName: 'dr1ay8vmn' 
+    }
+  });
 
-
-function ProductCard({id, Img1, Img2, productName, desc, features, material, sizes, price, onAddToCart }) {
-  const cld = new Cloudinary({ cloud: { cloudName: 'dr1ay8vmn' }});
   const fallbackPublicId = "IMG_4113_2_hgg2ta";
   const publicId1 = Img1?.[0]?.publicId || fallbackPublicId;
   const publicId2 = Img2?.[0]?.publicId || fallbackPublicId;
@@ -26,13 +29,10 @@ function ProductCard({id, Img1, Img2, productName, desc, features, material, siz
   const modalId = `productModal-${id}`;
   const dispatch = useDispatch();
 
-
-
   useEffect(() => {
     const handleModalClose = () => setSelectedProduct(null);
     const modalElement = modalRef.current;
     modalElement?.addEventListener("hidden.bs.modal", handleModalClose);
-
 
   return () => {
       modalElement?.removeEventListener("hidden.bs.modal", handleModalClose);

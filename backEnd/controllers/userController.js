@@ -8,53 +8,62 @@ import bcrypt from 'bcrypt';
 // Login User
 export const loginUser = async (req, res) => {
   const { email, password } = req.body;
+
 // Validate user
   const user = await userModel.findOne({ email });
   if (!user) {
-    return res.status(404).json({ message: "This account does not exist, please sign up" });
+    return res.status(404).json({ 
+      success:false, 
+      message: "This account does not exist, please sign up" 
+    });
   };
+
 // Compare password
-  const isValid = await bcrypt.compare(password, user.password);
+  const isValid = bcrypt.compareSync(password, user.password);
   if (!isValid) {
-    return res.status(401).json({ message: "Invalid email or password" });
+    return res.status(400).json({ 
+      success: false, 
+      message: "Invalid email or password" 
+    });
   }
+
 // Create a token
   const token = jwt.sign(
-    { id:user.id, admin:user.admin },
+    { id:user._id, admin:user.admin },
     process.env.SECRETKEY,
-    { expiresIn: '1h' }
-  );
+    { expiresIn: '7d' });
 
   // Set token in HTTP-only cookie
   res.cookie("token", token, {
-    httpOnly: true,
-    //  secure: true, 
-    secure: process.env.NODE_ENV === "production",    
-    sameSite: 'lax',
-    maxAge: 24 * 60 * 60  *1000, // 1 Day
+    httpOnly: true,   
+    maxAge: 7 * 24 * 60 * 60  *1000, //  7 Days
+    secure: process.env.NODE_ENV === "production", 
+    sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax"
   });
 
-  // Return user data
-  console.log("✅ User found:", user.id);
-  return res.json({
-    id: user.id,
+  return res.status(200).json({
+    success: true,
+    message: "Login successful",
+    user: {
+    id: user._id,
     name: user.fullName,
     email: user.email
+    }
   });
 };
 
 // Create/Register User
 export const createUser = async (req, res) => {
-  const { fullName, phone, address, email, password} = req.body;
+  const { fullName, email, phone, address, password} = req.body;
 
 //verify Email and password exists
-  if (!fullName, !phone, !address, !email || !password) {
-    return res.status(400).json({ message: 'Email and password are required' });
+  if (!fullName || !email || !phone || !address || !password) {
+    return res.status(400).json({ message: 'All fields are required' });
   }
 //check if user exists in DB
-  const isUser = await userModel.findOne({ email });
+  const isUser = await userModel.findOne({email});
   if (isUser) {
-    return res.status(409).json({ message: "User already exists. Please login." });
+    return res.status(400).json({ message: "User already exists. Please login." });
   };
 
 //create a hashed password
@@ -62,7 +71,7 @@ export const createUser = async (req, res) => {
   // const hashedPassword = bcrypt.hashSync(password, salt);
   // console.log(hashedPassword);
 
-//continue with registration
+//create a new user
   try {
     const newUser = new userModel({
       fullName,
@@ -71,8 +80,11 @@ export const createUser = async (req, res) => {
       address,
       password,
     });
+
+//Save to DB
     const savedUser = await newUser.save();
-      return res.json(savedUser);    
+      return res.json(savedUser);  
+
   } catch (error) {
       console.log(error.message);
       return res.send("something went wrong");
@@ -83,7 +95,11 @@ export const getAllUser = async (req, res) => {
   try {
     const getAllUsers = await userModel.find()
       .populate("payments", "orders, items");
-      return res.json(getAllUsers)
+
+      return res.status(200).json({
+        success: true,
+        users: getAllUsers
+      });
 
   } catch (error) {
     return res.send ("error")
@@ -92,41 +108,43 @@ export const getAllUser = async (req, res) => {
 
 // Get Users
 export const getUser = async (req, res) => {
-  const { id } = req.user;
-  try {
-    const user = await userModel
-      .findById(id)
-      .populate({
-        path: "orders",
-        populate: {
-          path: "items.product", 
-          model: "Product",
-        },
-      })
-      .populate("payments")
-      .populate("checkout");
+  const { _id } = req.user;
+  const user = await userModel
+    .findById(_id)
+    .populate({
+      path: "orders",
+      populate: {
+      path: "items.product", 
+      model: "Product",
+    },
+  })
+    .populate("payments")
+    .populate("checkout");
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    return res.json(user);
-  } catch (error) {
-    console.error("❌ getUser error:", error.message);
-    return res.status(500).json({ message: "Something went wrong" });
-  }
+  return res.json(user);
 };
 
 // Update User
 export const updateUser = async (req, res) => {
-  const { id, ...others } = req.body;
   try {
+    const { fullName, email, phone, address, password } = req.body;
+
     const updatedUser = await userModel.findByIdAndUpdate(
-      id, 
-      { ...others },
+      req.params.id,
+      { fullName, email, phone, address, password },
       { new: true }
-      );
-      return res.json(updatedUser);
+      )
+      .select("-password");
+      
+      if (!updatedUser) {
+        return res.status(404).json({success: false, message: "User not found" });
+      }
+
+      res.status(200).json({success: true, message: "User updated successfully", user });
     } catch (error) {
       return res.status(500).json({ message: 'Something went wrong' });
     }
@@ -134,14 +152,17 @@ export const updateUser = async (req, res) => {
 
 // Delete User
 export const deleteUser = async (req, res) => {
-  const { id } = req.query;
+  const {_id } = req.query;
   try {
-    const deletedUser = await userModel.findByIdAndDelete
-      (id);
-      return res.json(deletedUser);
-    } catch (error) {
-      return res.status(500).json({ message: "Deletion failed" });
+    const deletedUser = await userModel.findByIdAndDelete(_id);
+    if (!deletedUser) {
+      return res.status(404).json({ message: "User not found" });
     }
+
+      res.status(200).json({ success: true, message: "User deleted successfully" });
+  } catch (error) {
+    return res.status(500).json({ message: "Deletion failed" });
+  }
 };
 
 // Verify User

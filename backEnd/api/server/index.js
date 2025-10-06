@@ -41,14 +41,16 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 app.use(fileUpload({ useTempFiles: true }));
-app.use('/api/payments/webhook', express.raw({ type: 'application/json' })); // raw for webhook
+app.use('/api/payments/webhook', 
+
+express.raw({ type: 'application/json' })); 
 app.use(express.urlencoded({ extended: true }));
 
 // Create Connection
 mongoose
-  .connect(process.env.MONGODBURL,)
+  .connect(process.env.MONGODBURL)
   .then(() => console.log('MongoDB Connected'))
-  .catch(err => console.error('MongoDB connection error:', err));
+  .catch(() => console.log("❌ MongoDB connection error:"));
 
 // Routes endpoints
 app.use('/api/user', userRoute);

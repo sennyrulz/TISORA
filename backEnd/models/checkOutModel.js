@@ -5,6 +5,7 @@ const checkOutSchema = new mongoose.Schema({
     email: { type: String, required: true },
     subscribe: { type: Boolean, default: false },
   },
+
   delivery: {
     country: { type: String, required: true },
     firstName: { type: String, required: true },
@@ -16,16 +17,19 @@ const checkOutSchema = new mongoose.Schema({
     postalCode: { type: String },
     phone: { type: String, required: true },
   },
+
   shippingMethod: {
     type: String,
     enum: ['Standard Shipping', 'One-Day Shipping', 'Express Shipping'],
     required: true,
   },
+
   shippingCost: { type: Number, required: true },
   payment: {
     method: { type: String, default: 'Paystack' },
     status: { type: String, enum: ['Pending', 'Paid', 'Failed'], default: 'Pending' },
   },
+
   billingAddress: {
     sameAsShipping: { type: Boolean, default: true },
     country: { type: String },
@@ -38,6 +42,7 @@ const checkOutSchema = new mongoose.Schema({
     postalCode: { type: String },
     phone: { type: String },
   },
+
   products: [
     {
       productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
@@ -47,6 +52,7 @@ const checkOutSchema = new mongoose.Schema({
       price: Number,
     }
   ],
+  
   discountCode: String,
   subtotal: { type: Number, required: true },
   total: { type: Number, required: true },

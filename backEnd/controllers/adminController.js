@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken"
 import adminModel from '../models/adminModel.js';
 import bcrypt from 'bcrypt';
 
+
 export const loginAdmin = async (req, res) => {
   const { email, password } = req.body;
 
@@ -189,3 +190,5 @@ export const getCurrentAdmin = async (req, res) => {
     return res.status(401).json({ message: "Invalid token" });
   }
 };
+
+

@@ -31,6 +31,8 @@ import EmailVerify from "./pages/emailVerify"
 import OrdersLanding from "./pages/ordersLanding";
 import OrderSuccess from "./pages/OrderSuccess"
 import Orders from "./components/Orders";
+import Season1 from "../src/pages/Season1.jsx"
+import Season2 from "../src/pages/Season2.jsx"
 
 
 const cld = new Cloudinary({ cloud: { cloudName: 'dr1ay8vmn' }});
@@ -131,6 +133,8 @@ const addToCart = (product) => {
           <Route path="/:id/verify/:token" element={<EmailVerify/>} />
           <Route path="/order-success" element={<OrderSuccess />} />
           <Route path="/Orders" element={<Orders />} />
+          <Route path="/Season1" element={<Season1 />} />
+          <Route path="/Season2" element={<Season2 />} />
  
         {/* Protected User Dashboard */}
           <Route path="/DashboardLanding" element={<DashboardLanding/>} />

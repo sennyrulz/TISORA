@@ -7,6 +7,9 @@ import mongoose from "mongoose";
 
 const productSchema = new mongoose.Schema (
   {
+    Img1: [imageSchema],
+    Img2: [imageSchema],
+
     productName: { 
       type: String, 
       required: true 
@@ -24,9 +27,14 @@ const productSchema = new mongoose.Schema (
       required: true 
     },
     features: [String],
+
     sizes: String,
-    Img1: [imageSchema],
-    Img2: [imageSchema],
+    
+    // category: { 
+    //   type: String, 
+    //   required: true 
+    // },
+
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   });
 

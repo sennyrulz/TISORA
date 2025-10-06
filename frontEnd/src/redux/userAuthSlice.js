@@ -1,8 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 // Async thunk for signup
-export const signUp = createAsyncThunk(
-  "user/signUp",
+export const signUp = createAsyncThunk("user/signUp",
   async (userData, { rejectWithValue }) => {
     try {
       const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/admin/signup`, {

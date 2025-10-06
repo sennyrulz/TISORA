@@ -1,7 +1,7 @@
 import React from 'react';
 import CollectionCards from '../components/collectionCards';
 import { useNavigate } from "react-router-dom";
-import { Row } from 'react-bootstrap'; // Assuming you're using React-Bootstrap
+import { Row } from 'react-bootstrap';
 
 const collections = [
   {
@@ -11,14 +11,21 @@ const collections = [
   },
   {
     id: "2",
-    title: "Season 2 (Coming Soon)",
-    image: "depositphotos_734849084-stock-illustration-shirt-discount-line-icon-vector_pppp92"
+    title: "Season 2",
+    image: "1P5A9543_qk66xe"
   },
-  // Add more collections as needed
 ];
 
 const NewIn = () => {
   const navigate = useNavigate();
+
+  const handleClick = (collection) => {
+    if (collection.title === "Season 1") {
+      navigate(`/season1?collection=${collection.title}`);
+    } else if (collection.title === "Season 2") {
+      navigate(`/season2?collection=${collection.title}`);
+    }
+  };
 
   return (
     <>
@@ -28,8 +35,7 @@ const NewIn = () => {
           <div
             key={collection.id}
             style={{ flex: "0 0 auto", scrollSnapAlign: "start", cursor: "pointer" }}
-            onClick={() => navigate(`/shop?collection=${collection.title}`)
-            }>
+            onClick={() => handleClick(collection)}>
             <CollectionCards {...collection} />
           </div>
         ))}

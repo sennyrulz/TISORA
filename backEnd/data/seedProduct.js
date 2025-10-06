@@ -1,6 +1,8 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
+console.log("MONGODBURL from .env:", process.env.MONGODBURL); // 👈 Debug log
+
 import mongoose from "mongoose";
 import productModel from "../models/productModel.js"; // go up one level
 import { productsData } from "./Product.js"; // same folder

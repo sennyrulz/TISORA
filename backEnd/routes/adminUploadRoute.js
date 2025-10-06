@@ -2,12 +2,16 @@ import express from express;
 import upload from '../middleware/multer.js';
 import cloudinary from "../utils/cloudinary.js";
 import Product from "../models/productModel.js";
-import { authenticateToken } from '../middlewares/authMid.js'
+import { authenticateAdmin } from '../middlewares/adminMid.js'
+import multer from 'multer';
 
-const router = express.Router();
+const route = express.Route();
+const upload = multer({dest: "uploads/"})
 
-// POST /admin/products
-router.post("/admin-uploads", authenticateToken, upload.array("images", 2), async (req, res) => {
+// POST /admin/productupload
+route.post("/productUploads", authenticateAdmin, upload.array("images", 2), 
+  
+async (req, res) => {
   try {
     const { productName, desc, features, material, sizes, price } = req.body;
 
@@ -44,15 +48,52 @@ router.post("/admin-uploads", authenticateToken, upload.array("images", 2), asyn
 });
 
 // GET /admin/products
-router.get("/getAll", authenticateToken, async (req, res) => {
-  const products = await Product.find({ admin: req.user._id });
-  res.json(products);
+route.get("/allProducts", authenticateAdmin, async (req, res) => {
+  const { id } = req.body;
+  const allProducts = await Product
+  .find({ admin: id })
+  .populate("orders")
+  .populate("checkout")
+  .populate("orders")
+  .populate("payments")
+  return res.json(allProducts);
 });
 
+// UPDATE /admin/products
+route.put("/updateProducts", authenticateAdmin, async (req, res) => {
+  const adminId = req.admin._id;
+  const { productId } = req.params;
+  const body = req.body;
+    try{
+      const product = await Product.findById(productId);
+      if(!product) {
+      return res.status(404).json({ message: "Product does not exist" });
+    }
+
+      if(adminId != product.admintoString()) {
+      return res.status(403).json({ message: "You are not authorized to update this product" });
+    }
+
+  const updatedProduct = await Product.findByIdAndUpdate
+    (productId, 
+      body, { new: true });
+
+    return res.status(200).json({
+      message: "Product updated successfully",
+      updatedProduct,
+    });
+  } catch (error) {
+      console.error("Update error:", error);
+      return res.status(500).json({ message: "Server error", error });
+    }
+  });
+
 // DELETE /admin/products/:id
-router.delete("/:id", authenticateToken, async (req, res) => {
+route.delete("/:id", authenticateAdmin, 
+  async (req, res) => {
   const product = await Product.findById(req.params.id);
-  if (!product) return res.status(404).json({ message: "Not found" });
+  if (!product) 
+    return res.status(404).json({ message: "Not found" });
 
   for (const img of product.pictures) {
     await cloudinary.uploader.destroy(img.publicId);
@@ -62,4 +103,4 @@ router.delete("/:id", authenticateToken, async (req, res) => {
   res.json({ message: "Deleted" });
 });
 
-export default router;
+export default route;
