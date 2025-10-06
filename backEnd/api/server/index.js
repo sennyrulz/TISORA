@@ -21,20 +21,28 @@ dotenv.config();
 const app = express();
 
 // // Enable CORS after definition
-app.use(
-  cors({
-  origin: [
-    'http://localhost:5173', 
-    'http://localhost:5174',
-    "https://tisora-frontend.onrender.com",
-    'https://tisora-admin.onrender.com', 
-    // 'https://tisora.vercel.app', 
-    // 'https://www.tisora.vercel.app'
-  ],
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+
+const allowedOrigins = [
+  'http://localhost:5173', 
+  'http://localhost:5174',
+  "https://www.tisoraa.com",
+  "https://tisoraa.com",
+  "https://tisora-frontend.onrender.com",
+  'https://tisora-admin.onrender.com', 
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      console.warn('❌ CORS blocked request from origin:', origin);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
 }));
-// app.options("*", cors());
 
 
 // Middleware
@@ -66,16 +74,6 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use((req, res, next) => {
-  if (req.method === 'OPTIONS') {
-    res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-    res.header('Access-Control-Allow-Headers', req.headers['access-control-request-headers'] || 'Content-Type, Authorization');
-    res.header('Access-Control-Allow-Credentials', 'true');
-    return res.sendStatus(204); // No content
-  }
-  next();
-});
 
 // Error handling middleware
 app.use((err, req, res, next) => {
