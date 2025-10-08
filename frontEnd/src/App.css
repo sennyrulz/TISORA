@@ -202,6 +202,13 @@ heroBanner1 {
     padding:10px;
     border-radius:5px;
   }
+
+  .cardScroll {
+    overflow-x: scroll;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    padding-bottom: 10px;
+  }
 }
 
 /* Tablets (481px - 1023px) */
@@ -211,10 +218,13 @@ heroBanner1 {
     overflow: hidden;
   }
 
-  .hero-container .heroBanner1 {
-    width: 85%;
-    height: 60%;
-     overflow: hidden;
+  .heroBanner1 {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    object-position: left;
+    display: block;
+    overflow: hidden;
   }
 }
 
@@ -224,10 +234,13 @@ heroBanner1 {
     height: 85vh;
     overflow: hidden;
   }
-  .hero-container .heroBanner1 {
-    width: 80%;
-    height: 55%;
-     overflow: hidden;
+  .heroBanner1 {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    object-position: left;
+    display: block;
+    overflow: hidden;
   }
 
   .brandImg {
