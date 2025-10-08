@@ -93,11 +93,10 @@ const addToCart = (product) => {
                 <Logo />
                 <HeroBanner />
                 
-                 <p className="text-end mb-3" onClick={() => navigate("/shop")} 
+                 {/* <p className="text-end mb-3" onClick={() => navigate("/shop")} 
                       style={{cursor:'pointer'}}>
                         View All
-                    {/* <Link to="/shop">View all</Link> */}
-                  </p>
+                  </p> */}
                   <div className="px-4" style={{ margin: "-60px 0 0 0" }}>
                     <h2 className="text-start px-4 mb-4">Featured Products</h2>
                   </div>

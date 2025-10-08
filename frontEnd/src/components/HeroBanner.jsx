@@ -23,7 +23,7 @@ const navigate = useNavigate();
         cultures of Africa.
     </h1>
 
-    <button 
+    {/* <button 
     className='bannerBtn'
     style={{
       marginLeft: 500, 
@@ -40,7 +40,7 @@ const navigate = useNavigate();
         navigate("/shop");
       }}>
       Explore
-    </button>
+    </button> */}
 
   </div>
      <span className='social-icons'>
