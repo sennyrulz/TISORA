@@ -14,7 +14,7 @@ const navigate = useNavigate();
   <div style={{marginTop:-800, marginLeft:200}}>
     <h1 className='bannerText d-none d-md-block' 
       style={{ marginLeft: 500, marginBottom: 650, fontSize: 50, zIndex:1 }}> 
-      Rooted in the vibrant diverse<br/>cultures of Africa.
+      Our brand is rooted<br />in the vibrant diverse <br/>cultures of Africa.
     </h1>
   </div>
     <span className='social-icons'>
