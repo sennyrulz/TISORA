@@ -1,7 +1,13 @@
 import dotenv from 'dotenv';
-dotenv.config();
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-console.log("MONGODBURL from .env:", process.env.MONGODBURL); // 👈 Debug log
+// Fix for __dirname in ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Load .env from root folder (two levels up from current file)
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
 import mongoose from "mongoose";
 import productModel from "../models/productModel.js"; // go up one level

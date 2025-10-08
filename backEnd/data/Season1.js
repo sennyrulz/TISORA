@@ -15,7 +15,7 @@ export const productsData = [
       }],
 
     productName: "Maverick Batik Pant",
-    desc: "Made with Adire Batik with a line of Pink like aso oke.",
+    desc: "Made with Ghana batik and Aso-oke at the side.",
     features: [
       "100% Adire crepe, Midi length with full gathers.",
       "Adjustable tie-back detail with peekaboo cutout.",
@@ -24,7 +24,7 @@ export const productsData = [
 
     material: "100% Cotton Ghana Batik",
     sizes: "(M-XXL)",
-    price: 25000,
+    price: 90000,
   
   },
 
@@ -44,7 +44,7 @@ export const productsData = [
       }],
 
     productName: "Cleo dress",
-    desc: "100% hand-dyed Adire Crepe short midi flaired dress",
+    desc: "Akande linen shirt (they wrote elan mistakenly) Made with linen with Aso-oke Breast pocket and Aso-oke at the back",
     features: [
       "Midi length with a flared hem.",
       "Unique asymmetrical neckline.",
@@ -53,7 +53,7 @@ export const productsData = [
 
     material: "100% Adire cotton",
     sizes: "(M-XXL)",
-    price: 35000,
+    price: 85000,
   },
 
   { 
@@ -71,7 +71,7 @@ export const productsData = [
       }],
 
     productName: "Lyra Set",
-    desc: "Relaxed fit shirt with front buttons and piping available in blue, orange, wine.",
+    desc: "Made with Ghana batik. Relaxed fit shirt with front buttons and piping.",
     features: [
       "Go classic with the shirt and matching shorts",
       "Keep it chill with the shirt and long trousers.",
@@ -85,8 +85,8 @@ export const productsData = [
     ],
 
     material: "100% Cotton Ghana Batik",
-    sizes: "(M-XXL)",
-    price: 45000,
+    sizes: "(8-22)",
+    price: 70000,
   
   },
 
@@ -106,7 +106,7 @@ export const productsData = [
       }],
 
     productName: "Iris Dress",
-    desc: "Fit-and-flare silhouette, dainty straps, and a statement open cutout and tie detail.",
+    desc: "Made with crepe adire. Fit-and-flare silhouette, dainty straps, and a statement open cutout and tie detail.",
     features: [
       "100% Adire crepe, midi length with full gathers.",
       "Padded bust(No bra needed).",
@@ -115,8 +115,8 @@ export const productsData = [
     ],
 
     material: "100% Cotton Ghana Batik",
-    sizes: "(M-XXL)",
-    price: 20000,
+    sizes: "(8-22)",
+    price: 50000,
     
   },
 
@@ -134,7 +134,7 @@ export const productsData = [
       }],
 
     productName: "Maia Set",
-    desc: "100% Adire cotton 2 piece set long-sleeve bishop colar shirt and trousers",
+    desc: "100% soft brocade Adire 2 piece set long-sleeve bishop colar shirt and trousers",
     features: [
       "Adjustable side drawstring shirt.",
       "Relaxed fit trousers with side pockets.",
@@ -143,7 +143,7 @@ export const productsData = [
 
     material: "100% Adire cotton",
     sizes: "(M-XXL)",
-    price: 35000,
+    price: 65000,
   },
 
   { 
@@ -159,7 +159,7 @@ export const productsData = [
       }],
     
     productName: "Elan Linen shirt",
-    desc: "Available in biewge, black, white and orange.",
+    desc: "Made with linen pleated side. Available in biege, black, white and orange.",
     features: [
       "Adjustable sleeve: full length or 3/4 with tab.",
       "Fine pleated detailing",
@@ -168,11 +168,11 @@ export const productsData = [
 
     material: "100% linen",
     sizes: "(M-XXL)",
-    price: 25000,
+    price: 85000,
   },
 
   { 
-   id: "ADE-007",
+   id: "ADEOYE-007",
     Img1: [{
         "publicId": "image00011_gwdlce",
         "size": 1000
@@ -182,7 +182,7 @@ export const productsData = [
         "size": 1000
       }],
 
-    productName: "Ade pants",
+    productName: "Adeoye pants",
     desc: "Slim-straight fit made with Adire Batik with a line of Pink like aso oke.",
     features: [
       "Slim-straight fit.",
@@ -191,43 +191,14 @@ export const productsData = [
       "Clean waistband lined with aso oke."
     ],
 
-    material: "100% Ghana Batik, hand-crafted",
+    material: "100% hand-woven Aso-oke and Adire cotton",
     sizes: "(M-XXL)",
-    price: 40000,
+    price: 75000,
   
   },
 
   {
-   id: "ELAN-008",
-    Img1: [{
-        "publicId": "image00025_omlkze",
-        "size": 1000
-      }],
-    Img2: [{
-        "publicId": "image00022_wk3slu",
-        "size": 1000
-      }],
-
-    productName: "Elan Linen shirt",
-    desc: "Crafted from premium white linen, Designed with a soft collar, hidden button placket.",
-    features: [
-      "Hidden front button placket.",
-      "Soft collar with neat tailoring.",
-      "Lightweight, relaxed fit.", 
-      "Available in biege, black, white and orange",
-      "Adjustable sleeve: full length or 3/4 with tab",
-      "Fine pleated detailing",
-      "Mandarin collar"
-    ],
-
-    material: "100% Linen",
-    sizes: "(M-XXL)",
-    price: 30000,
-  
-  },
-
-  {
-   id: "IKEMBA-009",
+   id: "IKEMBA-008",
     Img1: [{
         "publicId": "image00004_bwhasv",
         "size": 1000
@@ -237,7 +208,7 @@ export const productsData = [
         "size": 1000
       }],
 
-    productName: "Ikemba Adire Linen Pant",
+    productName: "Ikemba (Ayokunle) Adire Linen Pant",
     desc: "Hand dyed 100% batik linen pant.",
     features: [
       "Available in Blue and Green.",
@@ -250,7 +221,31 @@ export const productsData = [
 
     material: "100% linen Adire (hand-dyed)",
     sizes: "(M-XXL)",
-    price: 30000,
+    price: 90000,
+  
+  },
+  {
+   id: "Ariyike-008",
+    Img1: [{
+        "publicId": "image00004_bwhasv",
+        "size": 1000
+      }],
+    Img2: [{
+        "publicId": "image00004_bwhasv",
+        "size": 1000
+      }],
+
+    productName: "Ariyike Boubou",
+    desc: "A Long length dress called boubou made with Ghana Batik with aso oke embroidery and pockets on both sides.",
+    features: [
+      "100% cotton Adire",
+      "Fring Aso-Oke.",
+      "Embroidery and pockets on both sides.", 
+    ],
+
+    material: "100% cotton Adire (hand-dyed)",
+    sizes: "(M-XXL)",
+    price: 75000,
   
   },
 ]
