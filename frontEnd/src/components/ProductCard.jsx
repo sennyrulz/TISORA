@@ -187,8 +187,15 @@ const translated = enumValues.map(size => ({
 
                   <h5 className="text-start">Price:</h5>
                   <p className="text-start">
-                    {currency === 'NGN' ? '₦' : 'C$'}{selectedProduct.price[currency].toLocaleString()}
+                    {new Intl.NumberFormat('en-NG', {
+                      style: 'currency',
+                      currency: currency,
+                      minimumFractionDigits: 0
+                    }).format(selectedProduct.price[currency])}
                   </p>
+                  {/* <p className="text-start">
+                    {currency === 'NGN' ? '₦' : 'C$'}{selectedProduct.price[currency].toLocaleString()}
+                  </p> */}
                 </>
               )}
             </div>
