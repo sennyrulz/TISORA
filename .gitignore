@@ -27,7 +27,4 @@ Thumbs.db
 .vscode/
 .idea/
 
-# Optional: MacOS system files
-*.swp
-*.swo
 
