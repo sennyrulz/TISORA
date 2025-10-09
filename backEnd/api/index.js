@@ -76,11 +76,16 @@ app.use((req, res, next) => {
 
 
 // Error handling middleware
+app.use((req, res, next) => {
+console.log(`${req.method} ${req.url}`);
+  next();
+});
+
+// Error handling middleware
 app.use((err, req, res, next) => {
   console.error('Error:', err);
   console.error('Stack:', err.stack);
-  
-  // Handle Mongoose validation errors
+
   if (err.name === 'ValidationError') {
     return res.status(400).json({
       success: false,
@@ -88,7 +93,6 @@ app.use((err, req, res, next) => {
     });
   }
 
-  // Handle Mongoose cast errors (like invalid ObjectId)
   if (err.name === 'CastError') {
     return res.status(400).json({
       success: false,
@@ -96,7 +100,6 @@ app.use((err, req, res, next) => {
     });
   }
 
-  // Default error
   res.status(500).json({
     success: false,
     message: err.message || 'Something went wrong!'
@@ -112,11 +115,5 @@ app.use((req, res) => {
   });
 });
 
-
-// Start server
-const PORT = process.env.PORT || 5001;
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
-});
-
-// export const handler = serverless(app);
+// Export handler for Vercel
+export default app;

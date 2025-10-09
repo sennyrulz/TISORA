@@ -112,7 +112,20 @@ const translated = enumValues.map(size => ({
           <span>
             <h5 className="mt-4 text-size-md">{productName}</h5>
             {/* <p className="fw-medium text-center">{desc || 'No description'}</p> */}
-            <p className="fw-bold text-black">Price: ₦{price ? price.toLocaleString() : '0'}</p>
+            <p className="fw-bold text-black"> 
+              Price: {currency === 'NGN' ? '₦' : 'C$'}
+              {price?.[currency]?.toLocaleString() || '0'}
+
+
+            {/* { price?.[currency]
+              ? new Intl.NumberFormat('en-NG', {
+                  style: 'currency',
+                  currency: currency,
+                  minimumFractionDigits: 0
+                }).format(price[currency])
+              : 'Price not available'
+            } */}
+            </p>
           </span>
           
           <button className="w-90 text-white p-2 px-5 border hover:bg-red-800 hover:text-white transition-all duration-300"
@@ -186,16 +199,19 @@ const translated = enumValues.map(size => ({
 
 
                   <h5 className="text-start">Price:</h5>
-                  <p className="text-start">
-                    {new Intl.NumberFormat('en-NG', {
-                      style: 'currency',
-                      currency: currency,
-                      minimumFractionDigits: 0
-                    }).format(selectedProduct.price[currency])}
-                  </p>
-                  {/* <p className="text-start">
-                    {currency === 'NGN' ? '₦' : 'C$'}{selectedProduct.price[currency].toLocaleString()}
-                  </p> */}
+                    <p className="text-start">
+                    {currency === 'NGN' ? '₦' : 'C$'}
+                    {selectedProduct.price[currency].toLocaleString()}
+                    </p>
+                    
+
+                  {/* <p className="text-start"> */}
+                    {/* {new Intl.NumberFormat('en-NG', { */}
+                      {/* style: 'currency', */}
+                      {/* currency: currency, */}
+                      {/* minimumFractionDigits: 0 */}
+                    {/* }).format(selectedProduct.price[currency])} */}
+                  {/* </p> */}
                 </>
               )}
             </div>
