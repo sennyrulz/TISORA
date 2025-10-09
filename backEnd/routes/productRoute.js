@@ -12,7 +12,7 @@ function getClientIP(req) {
 
 //Get producct with geoIP-based pricing
 router.get('/product/:id', async (req, res) => {
-  const ip = req.ip || getClientIP(req);
+  const ip = req.ip;
   console.log('Client IP:', ip);
 
   let currency = 'NGN'; // Default currency
