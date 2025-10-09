@@ -2,7 +2,7 @@ import React from 'react'
 
 const BrandTopic = () => {
   return (
-    <div className='container-Brand-Topic mt-5 pt-5 mx-5 col-lg-12'>
+    <div className='container-Brand-Topic mt-5 pt-5 col-lg-12'>
       <h3 className='text-start p-5 font-black'>BRAND TOPIC</h3>
         <div className='bg-white d-flex flex-row px-5' >
           <img className='brandImg' style={{height: "500px"}} 

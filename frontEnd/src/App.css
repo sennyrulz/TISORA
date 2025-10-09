@@ -209,6 +209,11 @@ heroBanner1 {
     scrollbar-width: none;
     padding-bottom: 10px;
   }
+
+  .shopRow {
+    margin-left: 2 !important;
+    margin-right: 0 !important;
+  }
 }
 
 /* Tablets (481px - 1023px) */

@@ -19,7 +19,7 @@ router.get('/product/:id', async (req, res) => {
 
   try {
     const geo = await axios.get(`https://ipapi.co/${ip}/json/`);
-    const countryCode = response.data.country_code;
+    const countryCode = geo.data.country_code;
 
     if (countryCode === 'CA') {
       currency = 'CAD';
@@ -49,12 +49,12 @@ router.get('/product/:id', async (req, res) => {
     }
 
     res.json({
-      id: productModel._id,
-      name: productModel.name,
+      id: product._id,
+      name: product.name,
       price,
       currency,
     });
-    
+
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Server error" });

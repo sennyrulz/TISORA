@@ -83,26 +83,25 @@ const addToCart = (product) => {
 };
 
 
-  return (
-    <>
-      <Nav />
-        <Routes>
-          <Route path="/"
-            element={
-              <>
-                <Logo />
-                <HeroBanner />
-                  
-                 {/* Featured Products Section */}
-                  <div className="px-4" style={{ margin: "-60px 0 0 0" }}>
-                    <h2 className="text-start px-4 mb-4">Featured Products</h2>
-                  </div>
+return (
+  <>
+    <Nav />
+      <Routes>
+        <Route path="/"
+          element={
+            <>
+              <Logo />
+              <HeroBanner />
 
-                <Container>
-                  {/* Product Scroll */}
+                {/* Featured Products Section */}
+                <div className="px-4" style={{ margin: "-60px 0 0 0" }}>
+                  <h2 className="text-start px-4 mb-4">Featured Products</h2>
+                </div>
+
+              <Container>
+                {/* Product Scroll */}
                   <div className="cardScroll d-flex px-10 gap-5 mb-5 overflow-auto" 
-                    style={{ whiteSpace: "nowrap" }}>
-                      
+                    style={{ whiteSpace: "nowrap" }}>   
                     {productsData.slice(1, 7).map((product) => (
                       <div key={product.id} 
                         style={{ flex: "0 0 auto", scrollSnapAlign: "start"}}>
@@ -114,60 +113,59 @@ const addToCart = (product) => {
                       </div>
                     ))}
                   </div> 
-                </Container>
-
-                <BrandTopic />
-              </>
-            }/>
-          <Route path="/newIn" element={<NewIn />} />
-          <Route path="/shop" element={<Shop />} />
-          <Route path="/discover" element={<Discover />} />
-          <Route path="/search" element={<Search />} />
-          <Route path="/userAuth" element={<UserAuth />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/checkout" element={<Checkout />} />
-          <Route path="/:id/verify/:token" element={<EmailVerify/>} />
-          <Route path="/order-success" element={<OrderSuccess />} />
-          <Route path="/Orders" element={<Orders />} />
-          <Route path="/Season1" element={<Season1 />} />
-          <Route path="/Season2" element={<Season2 />} />
+              </Container>
+              <BrandTopic />
+            </>
+        }/>
+        <Route path="/newIn" element={<NewIn />} />
+        <Route path="/shop" element={<Shop />} />
+        <Route path="/discover" element={<Discover />} />
+        <Route path="/search" element={<Search />} />
+        <Route path="/userAuth" element={<UserAuth />} />
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/checkout" element={<Checkout />} />
+        <Route path="/:id/verify/:token" element={<EmailVerify/>} />
+        <Route path="/order-success" element={<OrderSuccess />} />
+        <Route path="/Orders" element={<Orders />} />
+        <Route path="/Season1" element={<Season1 />} />
+        <Route path="/Season2" element={<Season2 />} />
  
         {/* Protected User Dashboard */}
-          <Route path="/DashboardLanding" element={<DashboardLanding/>} />
-          <Route path="/OrdersLanding" element={<OrdersLanding/>} />
-        </Routes>
-        <NewsLetterBox />
-        <Footer />
+        <Route path="/DashboardLanding" element={<DashboardLanding/>} />
+        <Route path="/OrdersLanding" element={<OrdersLanding/>} />
+      </Routes>
+      <NewsLetterBox />
+      <Footer />
 
-        {/* Modal */}
-        <Modal show={showModal} onHide={() => setShowModal(false)}>
-          <Modal.Header closeButton>
-            <Modal.Title>{selectedProduct?.name}</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            {selectedProduct && (
-              <>
-                <img
-                  src={selectedProduct.Img}
-                  alt={selectedProduct.name}
-                  className="w-100 mb-3"
-                  style={{ objectFit: "cover", maxHeight: "300px" }}
-                />
-                <p>Price: ₦{selectedProduct.price}</p>
-              </>
-            )}
-          </Modal.Body>
-          <Modal.Footer>
-            <Button
+      {/* Modal */}
+      <Modal show={showModal} onHide={() => setShowModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>{selectedProduct?.name}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {selectedProduct && (
+            <>
+              <img
+                src={selectedProduct.Img}
+                alt={selectedProduct.name}
+                className="w-100 mb-3"
+                style={{ objectFit: "cover", maxHeight: "300px" }}
+              />
+              <p>Price: ₦{selectedProduct.price} || CAD{selectedProduct.price}</p>
+            </>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
               variant="btn btn-success bg-black text-white p-2 px-5 border w-100 hover:bg-white hover:text-black transition-all duration-300"
               onClick={() => {
                 if (selectedProduct) {
-                  addToCart(selectedProduct);
-                }}}> Add to Cart
-            </Button>
-          </Modal.Footer>
-        </Modal>
-      </>
+                addToCart(selectedProduct);
+              }}}> Add to Cart
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </>
   
   );
 }
