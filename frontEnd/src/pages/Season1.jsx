@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Col, Container, Row, Form } from "react-bootstrap";
 import { productsData } from "../../../backEnd/data/Season1.js";
-import ProductCard from "../components/ProductCard";
+import ProductCard from "../components/ProductCard.jsx";
 import { useDispatch } from "react-redux";
-import { addToCart } from "../redux/cartSlice";
+import { addToCart } from "../redux/cartSlice.js";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 

@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { AdvancedImage } from '@cloudinary/react';
-import { Cloudinary } from '@cloudinary/url-gen';
-import bootstrap from "bootstrap/dist/js/bootstrap.bundle.min.js";
+import { Cloudinary } from '@cloudinary/url-gen/index';
+import bootstrap from "bootstrap/dist/js/bootstrap.bundle.min";
 import { addToCart } from "../redux/cartSlice";
 import { productsData } from "./Product";
 import QuickCart from "./QuickCart";

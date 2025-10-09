@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { AdvancedImage } from "@cloudinary/react";
-import { Cloudinary } from "@cloudinary/url-gen";
+import { Cloudinary } from "@cloudinary/url-gen/index";
 
 const CollectionCards = ({ title, id, image }) => {
   const navigate = useNavigate();

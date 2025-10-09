@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { NavLink, Link } from 'react-router-dom';
-import Button from 'react-bootstrap/Button';
+import Button from 'react-bootstrap/esm/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faUser, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import { Menu, X } from 'lucide-react';

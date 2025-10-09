@@ -1,38 +1,37 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { setUser } from "./redux/userAuthSlice";
+import { setUser } from "./redux/userAuthSlice.js";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Link } from 'react-router-dom'
-import Nav from "./components/Nav";
-import NewIn from "./pages/NewIn";
-import Shop from "./pages/Shop";
-import Discover from "./pages/Discover";
-import Search from "./components/Search";
-import User from "./pages/userAuth";
-import Cart from "./components/Cart";
+import Nav from "./components/Nav.jsx";
+import NewIn from "./pages/NewIn.jsx";
+import Shop from "./pages/Shop.jsx";
+import Discover from "./pages/Discover.jsx";
+import Search from "./components/Search.jsx";
+import User from "./pages/userAuth.jsx";
+import Cart from "./components/Cart.jsx";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
-import Logo from "./pages/Logo";
-import HeroBanner from "./components/HeroBanner";
-import BrandTopic from "./components/BrandTopic";
-import Footer from "./components/Footer";
-import { productsData } from "./components/Product";
-import ProductCard from "./components/ProductCard";
+import Logo from "./pages/Logo.jsx";
+import HeroBanner from "./components/HeroBanner.jsx";
+import BrandTopic from "./components/BrandTopic.jsx";
+import Footer from "./components/Footer.jsx";
+import { productsData } from "./components/Product.js";
+import ProductCard from "./components/ProductCard.jsx";
 import "./App.css";
-import NewsLetterBox from "./components/NewsLetterBox";
+import NewsLetterBox from "./components/NewsLetterBox.jsx";
 import { Modal, Button, Container } from "react-bootstrap";
-import Checkout from "./components/Checkout";
-import { Cloudinary } from "@cloudinary/url-gen";
-import UserAuth from "./pages/userAuth";
-import DashboardLanding from "./pages/DashboardLanding";
-import EmailVerify from "./pages/emailVerify"
-import OrdersLanding from "./pages/ordersLanding";
-import OrderSuccess from "./pages/OrderSuccess"
-import Orders from "./components/Orders";
-import Season1 from "../src/pages/Season1.jsx"
-import Season2 from "../src/pages/Season2.jsx"
+import Checkout from "./components/Checkout.jsx";
+import { Cloudinary } from "@cloudinary/url-gen/index";
+import UserAuth from "./pages/userAuth.jsx";
+import DashboardLanding from "./pages/DashboardLanding.jsx";
+import EmailVerify from "./pages/emailVerify.jsx"
+import OrdersLanding from "./pages/ordersLanding.jsx";
+import OrderSuccess from "./pages/OrderSuccess.jsx"
+import Orders from "./components/Orders.jsx";
+import Season1 from "./pages/Season1.jsx"
+import Season2 from "./pages/Season2.jsx"
 
 
 const cld = new Cloudinary({ cloud: { cloudName: 'dr1ay8vmn' }});
