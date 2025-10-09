@@ -8,12 +8,12 @@ import cookieParser from "cookie-parser"
 // import serverless from 'serverless-http';
 
 // import connectDB from "./connection/database.js";
-import userRoute from "../../routes/userRoute.js"
-import adminRoute from "../../routes/adminRoute.js";
-import paymentRoute from '../../routes/paymentRoute.js';
+import userRoute from "../routes/userRoute.js";
+import adminRoute from "../routes/adminRoute.js";
+import paymentRoute from '../routes/paymentRoute.js';
 // import productRoute from '../../routes/productRoute.js';
-import orderRoute from "../../routes/orderRoute.js"
-import checkoutRoute from "../../routes/checkoutRoute.js"
+import orderRoute from "../routes/orderRoute.js";
+import checkoutRoute from "../routes/checkoutRoute.js";
 // import emailVerifyRoute from './routes/emailVerifyRoute.js'
 
 
