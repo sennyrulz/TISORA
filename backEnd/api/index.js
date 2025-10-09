@@ -63,7 +63,7 @@ mongoose
 // Routes endpoints
 app.use('/api/user', userRoute);
 app.use('/api/admin', adminRoute);
-app.use('/api/products', productRoute);
+app.use('/api/product', productRoute);
 app.use('/api/checkout', checkoutRoute);
 app.use('/api/orders', orderRoute);
 app.use('/api/payments', paymentRoute);

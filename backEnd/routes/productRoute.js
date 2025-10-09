@@ -5,13 +5,13 @@ import axios from "axios";
 const router = express.Router();
 
 // Utility to get IP from request headers
-function getClientIP(req) {
-  const forwarded = req.headers['x-forwarded-for'];
-  return forwarded ? forwarded.split(',')[0] : req.connection.remoteAddress;
-}
+// function getClientIP(req) {
+//   const forwarded = req.headers['x-forwarded-for'];
+//   return forwarded ? forwarded.split(',')[0] : req.connection.remoteAddress;
+// }
 
 //Get producct with geoIP-based pricing
-router.get('/product/:id', async (req, res) => {
+router.get('/:id', async (req, res) => {
   const ip = req.ip;
   console.log('Client IP:', ip);
 
@@ -21,31 +21,23 @@ router.get('/product/:id', async (req, res) => {
     const geo = await axios.get(`https://ipapi.co/${ip}/json/`);
     const countryCode = geo.data.country_code;
 
-    if (countryCode === 'CA') {
-      currency = 'CAD';
-    } else if (countryCode === 'NG') {
-      currency = 'NGN';
-    }
-
-    //Add more country logic here as needed
-
+    if (countryCode === "CA") currency = "CAD";
+    else if (countryCode === "NG") currency = "NGN";
+    else console.log(`🌍 Defaulting to NGN for country: ${countryCode}`);
   } catch (error) {
-    console.error('GeoIP lookup failed:', error.message);
-    // Fallback to NGN
+    console.error("GeoIP lookup failed:", error.message);
   }
-
 
   try {
     const product = await productModel.findById(req.params.id);
-
-    if (!product) {
-      return res.status(404).json({ error: "Product not found" });
-    }
+    if (!product) { return res.status(404).json({ error: "Product not found" });
+}
 
     const price = product.price?.[currency];
-
     if (!price) {
-      return res.status(400).json({ error: `Price not set for currency: ${currency}` });
+      return res
+      .status(400)
+      .json({ error: `Price not set for currency: ${currency}` });
     }
 
     res.json({
