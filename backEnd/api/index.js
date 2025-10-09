@@ -68,6 +68,9 @@ app.use('/api/checkout', checkoutRoute);
 app.use('/api/orders', orderRoute);
 app.use('/api/payments', paymentRoute);
 
+//currency
+app.set('trust proxy', true);
+
 // Debug middleware to log requests
 app.use((req, res, next) => {
   console.log(`${req.method} ${req.url}`);
