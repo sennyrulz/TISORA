@@ -1,0 +1,13 @@
+services:
+  - type: static
+    name: frontend
+    staticPublishPath: frontEnd/dist
+    buildCommand: cd frontEnd && npm install && npm run build
+    branch: main  # change if needed
+
+  - type: web
+    name: backend
+    env: node
+    buildCommand: cd backEnd && npm install
+    startCommand: node backEnd/api/index.js
+    branch: main  # change if needed
