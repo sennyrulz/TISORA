@@ -21,7 +21,7 @@ export const productsData = [
     material: "100% linen Adire (hand-dyed)",
     sizes: "(M-XXL)",
     price: {
-      NGN: 90000,
+      NGN: 32000,
       CAD: 250
     }
   },
@@ -48,7 +48,7 @@ export const productsData = [
     material: "100% linen Adire (hand-dyed)",
     sizes: "(M-XXL)",
     price: {
-      NGN: 90000,
+      NGN: 75000,
       CAD: 250
     }
 },
@@ -74,7 +74,7 @@ export const productsData = [
     material: "Aso-oke (hand-woven)",
     sizes: "(M-XXL)",
     price: {
-      NGN: 90000,
+      NGN: 50000,
       CAD: 250
   }
 },
@@ -100,7 +100,7 @@ export const productsData = [
     material: "100% linen Adire (hand-dyed)",
     sizes: "(M-XXL)",
     price: {
-      NGN: 90000,
+      NGN: 65000,
       CAD: 250
   }
 },
@@ -125,7 +125,7 @@ id: "Adeoye-Aso-oke-Pant-014",
   material: "Aso oke (hand-woven)",
   sizes: "(M-XXL)",
   price: {
-    NGN: 90000,
+    NGN: 75000,
     CAD: 250
   }
 },
@@ -151,7 +151,7 @@ id: "Amiyah-dress-015",
   material: "Cotton (hand-dyed)",
   sizes: "(M-XXL)",
   price: {
-    NGN: 90000,
+    NGN: 70000,
     CAD: 250
   }
 },
@@ -177,7 +177,7 @@ id: "Lava-Flow-dress-016",
   material: "Mesh",
   sizes: "(M-XXL)",
   price: {
-    NGN: 90000,
+    NGN: 75000,
     CAD: 250
   }
 },
@@ -204,7 +204,7 @@ id: "Asake-skirt-set-017",
   material: "Adire (hand-dyed)",
   sizes: "(M-XXL)",
   price: {
-    NGN: 90000,
+    NGN: 75000,
     CAD: 250
   }
 },
@@ -230,7 +230,7 @@ id: "Scarlet-bloom-dress-018",
   material: "Brocade",
   sizes: "(M-XXL)",
   price: {
-    NGN: 90000,
+    NGN: 105000,
     CAD: 250
   }}
 ]

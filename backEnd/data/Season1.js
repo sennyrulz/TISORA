@@ -31,7 +31,7 @@ export const productsData = [
   },
 
   { 
-   id: "CELO-002",
+   id: "CLEO-002",
     Img1: [
       {
         "publicId": "image00032_kpqkuj",
@@ -56,7 +56,7 @@ export const productsData = [
     material: "100% Adire cotton",
     sizes: "(M-XXL)",
     price: {
-      NGN: 90000,
+      NGN: 50000,
       CAD: 250
     }
   },
@@ -92,7 +92,7 @@ export const productsData = [
     material: "100% Cotton Ghana Batik",
     sizes: "(8-22)",
     price: {
-      NGN: 90000,
+      NGN: 70000,
       CAD: 250
     }
   },
@@ -124,7 +124,7 @@ export const productsData = [
     material: "100% Cotton Ghana Batik",
     sizes: "(8-22)",
     price: {
-      NGN: 90000,
+      NGN: 50000,
       CAD: 250
     }
   },
@@ -153,7 +153,7 @@ export const productsData = [
     material: "100% Adire cotton",
     sizes: "(M-XXL)",
     price: {
-      NGN: 90000,
+      NGN: 65000,
       CAD: 250
     }
   },
@@ -181,7 +181,7 @@ export const productsData = [
     material: "100% linen",
     sizes: "(M-XXL)",
     price: {
-      NGN: 90000,
+      NGN: 85000,
       CAD: 250
     }
   },
@@ -209,7 +209,7 @@ export const productsData = [
     material: "100% hand-woven Aso-oke and Adire cotton",
     sizes: "(M-XXL)",
     price: {
-      NGN: 90000,
+      NGN: 75000,
       CAD: 250
     }
   },
@@ -265,7 +265,7 @@ export const productsData = [
     material: "100% cotton Adire (hand-dyed)",
     sizes: "(M-XXL)",
     price: {
-      NGN: 90000,
+      NGN: 75000,
       CAD: 250
     }
   }
