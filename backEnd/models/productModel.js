@@ -19,8 +19,11 @@ const productSchema = new mongoose.Schema (
       required: true 
     },
     price: { 
-      type: Number, 
-      required: true 
+      NGN: { 
+        type: Number, 
+        required: true 
+      },
+      CAD: { type: Number }
     },
     material: { 
       type: String, 

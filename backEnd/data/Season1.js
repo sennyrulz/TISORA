@@ -24,7 +24,8 @@ export const productsData = [
 
     material: "100% Cotton Ghana Batik",
     sizes: "(M-XXL)",
-    price: 90000,
+    NGN: 90000,
+    CAD: 250
   
   },
 
@@ -53,7 +54,8 @@ export const productsData = [
 
     material: "100% Adire cotton",
     sizes: "(M-XXL)",
-    price: 85000,
+    NGN: 85000,
+    CAD: 250
   },
 
   { 
@@ -86,7 +88,8 @@ export const productsData = [
 
     material: "100% Cotton Ghana Batik",
     sizes: "(8-22)",
-    price: 70000,
+    NGN: 70000,
+    CAD: 250
   
   },
 
@@ -116,7 +119,8 @@ export const productsData = [
 
     material: "100% Cotton Ghana Batik",
     sizes: "(8-22)",
-    price: 50000,
+    NGN: 50000,
+    CAD: 250
     
   },
 
@@ -143,7 +147,8 @@ export const productsData = [
 
     material: "100% Adire cotton",
     sizes: "(M-XXL)",
-    price: 65000,
+    NGN: 65000,
+    CAD: 250
   },
 
   { 
@@ -168,7 +173,8 @@ export const productsData = [
 
     material: "100% linen",
     sizes: "(M-XXL)",
-    price: 85000,
+    NGN: 85000,
+    CAD: 250
   },
 
   { 
@@ -193,7 +199,8 @@ export const productsData = [
 
     material: "100% hand-woven Aso-oke and Adire cotton",
     sizes: "(M-XXL)",
-    price: 75000,
+    NGN: 75000,
+    CAD: 250
   
   },
 
@@ -221,7 +228,8 @@ export const productsData = [
 
     material: "100% linen Adire (hand-dyed)",
     sizes: "(M-XXL)",
-    price: 90000,
+    NGN: 90000,
+    CAD: 250
   
   },
   {
@@ -245,7 +253,8 @@ export const productsData = [
 
     material: "100% cotton Adire (hand-dyed)",
     sizes: "(M-XXL)",
-    price: 75000,
+    NGN: 75000,
+    CAD: 250
   
   },
 ]
