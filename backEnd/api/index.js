@@ -11,7 +11,7 @@ import cookieParser from "cookie-parser"
 import userRoute from "../routes/userRoute.js";
 import adminRoute from "../routes/adminRoute.js";
 import paymentRoute from '../routes/paymentRoute.js';
-// import productRoute from '../../routes/productRoute.js';
+import productRoute from '../routes/productRoute.js';
 import orderRoute from "../routes/orderRoute.js";
 import checkoutRoute from "../routes/checkoutRoute.js";
 // import emailVerifyRoute from './routes/emailVerifyRoute.js'
@@ -63,7 +63,7 @@ mongoose
 // Routes endpoints
 app.use('/api/user', userRoute);
 app.use('/api/admin', adminRoute);
-// app.use('/api/products', productRoute);
+app.use('/api/products', productRoute);
 app.use('/api/checkout', checkoutRoute);
 app.use('/api/orders', orderRoute);
 app.use('/api/payments', paymentRoute);

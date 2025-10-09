@@ -225,7 +225,7 @@ export const productsData = [
         "size": 1000
       }],
 
-    productName: "Ikemba (Ayokunle) Adire Linen Pant",
+    productName: "Ikemba Adire Pant",
     desc: "Hand dyed 100% batik linen pant.",
     features: [
       "Available in Blue and Green.",
@@ -246,11 +246,11 @@ export const productsData = [
   {
    id: "Ariyike-008",
     Img1: [{
-        "publicId": "image00004_bwhasv",
+        "publicId": "image00045_iqh2a2",
         "size": 1000
       }],
     Img2: [{
-        "publicId": "image00004_bwhasv",
+        "publicId": "image00044_i5rxfy",
         "size": 1000
       }],
 
