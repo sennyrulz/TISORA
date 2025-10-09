@@ -94,6 +94,9 @@ const translated = enumValues.map(size => ({
   label: sizeLabels[size]
 }));
 
+const userLocale = navigator.language || 'en-NG';
+const currency = userLocale.includes('NG') ? 'NGN' : 'CAD';
+
   return (
     <>
       <div className="singleCard bg-white d-flex flex-column justify-content-between pb-4 mb-5 
