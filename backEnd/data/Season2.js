@@ -11,18 +11,18 @@ export const productsData = [
       }],
 
     productName: "Orire shirt",
-    desc: "The Orire Shirt is a stunning pink piece with playful white circles.",
+    desc: "The Orire Shirt made with Cotton Adire is a stunning pink piece with playful white circles.",
     features: [
       "Adire",
       "Tie-back detail",
       "Linen", 
     ],
 
-    material: "100% linen Adire (hand-dyed)",
+    material: "100% Cotton Adire (hand-dyed)",
     sizes: "(M-XXL)",
     price: {
       NGN: 32000,
-      CAD: 250
+      CAD: 70.17
     }
   },
 
@@ -38,18 +38,18 @@ export const productsData = [
     }],
 
     productName: "The Nyla set",
-    desc: "The Nyla set is vibrant, modern, and effortlessly wearable, an outfit that flows from tradition into today’s fashion scene.",
+    desc: "The Nyla set is made with Ghana batik & Ghana crack, It's an outfit that flows from tradition into today’s fashion scene.",
     features: [
       "Pink top",
       "yellow trousers",
       "Adire", 
     ],
 
-    material: "100% linen Adire (hand-dyed)",
-    sizes: "(M-XXL)",
+    material: "Ghana Batik & Ghana crack",
+    sizes: "(8-22)",
     price: {
       NGN: 75000,
-      CAD: 250
+      CAD: 105.05
     }
 },
 
@@ -64,18 +64,18 @@ export const productsData = [
       "size": 1000
     }],
 
-    productName: "Adeife skirt",
-    desc: "The Adeife skirt, crafted from pink Aso Oke with colorful straps, is elegant, versatile, and made to turn everyday moments into style statements.",
+    productName: "The Adeife skirt",
+    desc: "The Adeife skirt, crafted from Aso Oke with colorful straps, is elegant, versatile, and made to turn everyday moments into style statements.",
     features: [
       "Aso Oke",
       "Colorful straps", 
     ],
 
     material: "Aso-oke (hand-woven)",
-    sizes: "(M-XXL)",
+    sizes: "(8-22)",
     price: {
       NGN: 50000,
-      CAD: 250
+      CAD: 80.60
   }
 },
 
@@ -90,18 +90,18 @@ export const productsData = [
      "size": 1000
     }],
 
-    productName: "Liora set",
-    desc: "The Liora Set is crafted from detailed fabric that feels soft yet refined, with striking pops of blue that bring the whole look alive.",
+    productName: "The Liora set",
+    desc: "The Liora Set is crafted from detailed adire brocade fabric that feels soft yet refined, with striking pops of blue that bring the whole look alive.",
     features: [
       "Adire",
       "Linen"
     ],
       
     material: "100% linen Adire (hand-dyed)",
-    sizes: "(M-XXL)",
+    sizes: "(8-22)",
     price: {
       NGN: 65000,
-      CAD: 250
+      CAD: 75.10
   }
 },
 
@@ -121,12 +121,12 @@ id: "Adeoye-Aso-oke-Pant-014",
   features: [
     "Aso Oke"
   ],
-    
+
   material: "Aso oke (hand-woven)",
-  sizes: "(M-XXL)",
+  sizes: "(8-22)",
   price: {
     NGN: 75000,
-    CAD: 250
+    CAD: 105.08
   }
 },
 
@@ -141,18 +141,18 @@ id: "Amiyah-dress-015",
     "size": 1000
   }],
 
-  productName: "Amiyah dress",
-  desc: "The Amiyah dress has bold like the waves, soft like cotton.",
+  productName: "The Amiyah dress",
+  desc: "The Amiyah dress is made with crepe Adire has bold like the waves, soft like cotton.",
   features: [
     "High tigh slit",
     "Cotton",
   ],
     
-  material: "Cotton (hand-dyed)",
-  sizes: "(M-XXL)",
+  material: "Crepe Adire (hand-dyed)",
+  sizes: "(8-22)",
   price: {
     NGN: 70000,
-    CAD: 250
+    CAD: 90.18
   }
 },
 
@@ -175,10 +175,10 @@ id: "Lava-Flow-dress-016",
   ],
     
   material: "Mesh",
-  sizes: "(M-XXL)",
+  sizes: "(8-22)",
   price: {
     NGN: 75000,
-    CAD: 250
+    CAD: 90.15
   }
 },
 
@@ -193,19 +193,19 @@ id: "Asake-skirt-set-017",
     "size": 1000
   }],
 
-  productName: "Asake skirt set",
-  desc: "An Adire fabric handcrafted by us, styled into a modern fit with cowries for tradition.",
+  productName: "The Asake skirt set",
+  desc: "Made with Cotton - Adire fabric handcrafted by us, styled into a modern fit with cowries for tradition.",
   features: [
     "hand-crafted",
     "cowries embellished",
-    "Adire",
+    "Cotton Adire",
   ],
     
-  material: "Adire (hand-dyed)",
-  sizes: "(M-XXL)",
+  material: "Cotton Adire (hand-dyed)",
+  sizes: "(8-22)",
   price: {
     NGN: 75000,
-    CAD: 250
+    CAD: 75.90
   }
 },
 
@@ -221,16 +221,16 @@ id: "Scarlet-bloom-dress-018",
   }],
 
   productName: "Scarlet bloom dress",
-  desc: "brocade outfit is elegance redefined, perfect for celebrating your big day or making a timeless statement.",
+  desc: "A brocade outfit is elegance redefined, perfect for celebrating your big day or making a timeless statement.",
   features: [
     "Open back",
     "Brodade",
   ],
     
   material: "Brocade",
-  sizes: "(M-XXL)",
+  sizes: "(8-22)",
   price: {
     NGN: 105000,
-    CAD: 250
+    CAD: 118.08
   }}
 ]

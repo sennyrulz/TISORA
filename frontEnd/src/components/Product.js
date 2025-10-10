@@ -20,18 +20,19 @@ export const productsData = [
       "100% Adire crepe, Midi length with full gathers.",
       "Adjustable tie-back detail with peekaboo cutout.",
       "Padded bust(No bra needed.", 
-      "Concealed zipper on the side."],
+      "Concealed zipper on the side.",
+      "Black"],
 
     material: "100% Cotton Ghana Batik",
     sizes: "(M-XXL)",
     price: {
       NGN: 90000,
-      CAD: 250
+      CAD: 0
     }
   },
 
   { 
-   id: "CELO-002",
+   id: "CLEO-002",
     Img1: [
       {
         "publicId": "image00032_kpqkuj",
@@ -46,7 +47,7 @@ export const productsData = [
       }],
 
     productName: "Cleo dress",
-    desc: "Akande linen shirt (they wrote elan mistakenly) Made with linen with Aso-oke Breast pocket and Aso-oke at the back",
+    desc: "Made with Adire crepe and monostrap design hand, dyed with a unique asymmetrical neckline and a flared hem.",
     features: [
       "Midi length with a flared hem.",
       "Unique asymmetrical neckline.",
@@ -54,10 +55,10 @@ export const productsData = [
     ],
 
     material: "100% Adire cotton",
-    sizes: "(M-XXL)",
+    sizes: "(8-22)",
     price: {
-      NGN: 90000,
-      CAD: 250
+      NGN: 50000,
+      CAD: 0
     }
   },
 
@@ -75,7 +76,7 @@ export const productsData = [
         "size": 1000
       }],
 
-    productName: "Lyra Set",
+    productName: "The Lyra Set",
     desc: "Made with Ghana batik. Relaxed fit shirt with front buttons and piping.",
     features: [
       "Go classic with the shirt and matching shorts",
@@ -92,8 +93,8 @@ export const productsData = [
     material: "100% Cotton Ghana Batik",
     sizes: "(8-22)",
     price: {
-      NGN: 90000,
-      CAD: 250
+      NGN: 70000,
+      CAD: 99.06
     }
   },
 
@@ -124,8 +125,8 @@ export const productsData = [
     material: "100% Cotton Ghana Batik",
     sizes: "(8-22)",
     price: {
-      NGN: 90000,
-      CAD: 250
+      NGN: 50000,
+      CAD: 0
     }
   },
 
@@ -143,18 +144,18 @@ export const productsData = [
       }],
 
     productName: "Maia Set",
-    desc: "100% soft brocade Adire 2 piece set long-sleeve bishop colar shirt and trousers",
+    desc: "100% Cotton Adire Guina 2 piece set long-sleeve bishop colar shirt and trousers",
     features: [
       "Adjustable side drawstring shirt.",
       "Relaxed fit trousers with side pockets.",
-      "Made from 100% locally hand-dyed Adire cotton.", 
+      "Made with Adire cotton.", 
       "2 piece set long-sleeve bishop colar shirt and trousers."],
 
-    material: "100% Adire cotton",
-    sizes: "(M-XXL)",
+    material: "100% Cotton Adire Guinea",
+    sizes: "(8-22)",
     price: {
-      NGN: 90000,
-      CAD: 250
+      NGN: 65000,
+      CAD: 99.06
     }
   },
 
@@ -181,13 +182,13 @@ export const productsData = [
     material: "100% linen",
     sizes: "(M-XXL)",
     price: {
-      NGN: 90000,
-      CAD: 250
+      NGN: 85000,
+      CAD: 0
     }
   },
 
   { 
-   id: "ADEOYE-007",
+   id: "Esho-Pants-007",
     Img1: [{
         "publicId": "image00011_gwdlce",
         "size": 1000
@@ -197,8 +198,8 @@ export const productsData = [
         "size": 1000
       }],
 
-    productName: "Adeoye pants",
-    desc: "Slim-straight fit made with Adire Batik with a line of Pink like aso oke.",
+    productName: "Esho pants",
+    desc: "Slim-straight fit made with Ghana Batik with aso oke at the side.",
     features: [
       "Slim-straight fit.",
       "Side Aso Oke detailing (contrast strip).",
@@ -210,7 +211,7 @@ export const productsData = [
     sizes: "(M-XXL)",
     price: {
       NGN: 90000,
-      CAD: 250
+      CAD: 0
     }
   },
 
@@ -225,8 +226,8 @@ export const productsData = [
         "size": 1000
       }],
 
-    productName: "Ikemba (Ayokunle) Adire Linen Pant",
-    desc: "Hand dyed 100% batik linen pant.",
+    productName: "Ikemba (Ayokunle) Pant",
+    desc: "Made with linen Adire pant.",
     features: [
       "Available in Blue and Green.",
       "Straight-leg fit.",
@@ -240,36 +241,37 @@ export const productsData = [
     sizes: "(M-XXL)",
     price: {
       NGN: 90000,
-      CAD: 250
+      CAD: 0
     }
   },
   {
-   id: "Ariyike-008",
+   id: "Ariyike-009",
     Img1: [{
-        "publicId": "image00004_bwhasv",
+        "publicId": "image00045_iqh2a2",
         "size": 1000
       }],
     Img2: [{
-        "publicId": "image00004_bwhasv",
+        "publicId": "image00044_i5rxfy",
         "size": 1000
       }],
 
     productName: "Ariyike Boubou",
-    desc: "A Long length dress called boubou made with Ghana Batik with aso oke embroidery and pockets on both sides.",
+    desc: "A Long length dress called boubou made with 100% Adire fringe with aso oke embroidery and pockets on both sides.",
     features: [
-      "100% cotton Adire",
-      "Fring Aso-Oke.",
+      "100% cotton",
+      "Fringe Adire.",
+      "Aso-oke",
       "Embroidery and pockets on both sides.", 
     ],
 
     material: "100% cotton Adire (hand-dyed)",
     sizes: "(M-XXL)",
     price: {
-      NGN: 90000,
-      CAD: 250
+      NGN: 75000,
+      CAD: 166.84
     }
   },
-  {
+ {
    id: "Orire-Shirt-010",
     Img1: [{
         "publicId": "1P5A0529_c94def",
@@ -281,18 +283,18 @@ export const productsData = [
       }],
 
     productName: "Orire shirt",
-    desc: "The Orire Shirt is a stunning pink piece with playful white circles.",
+    desc: "The Orire Shirt made with Cotton Adire is a stunning pink piece with playful white circles.",
     features: [
       "Adire",
       "Tie-back detail",
       "Linen", 
     ],
 
-    material: "100% linen Adire (hand-dyed)",
+    material: "100% Cotton Adire (hand-dyed)",
     sizes: "(M-XXL)",
     price: {
-      NGN: 90000,
-      CAD: 250
+      NGN: 32000,
+      CAD: 70.17
     }
   },
 
@@ -308,18 +310,18 @@ export const productsData = [
     }],
 
     productName: "The Nyla set",
-    desc: "The Nyla set is vibrant, modern, and effortlessly wearable, an outfit that flows from tradition into today’s fashion scene.",
+    desc: "The Nyla set is made with Ghana batik & Ghana crack, It's an outfit that flows from tradition into today’s fashion scene.",
     features: [
       "Pink top",
       "yellow trousers",
       "Adire", 
     ],
 
-    material: "100% linen Adire (hand-dyed)",
-    sizes: "(M-XXL)",
+    material: "Ghana Batik & Ghana crack",
+    sizes: "(8-22)",
     price: {
-      NGN: 90000,
-      CAD: 250
+      NGN: 75000,
+      CAD: 105.05
     }
 },
 
@@ -334,18 +336,18 @@ export const productsData = [
       "size": 1000
     }],
 
-    productName: "Adeife skirt",
-    desc: "The Adeife skirt, crafted from pink Aso Oke with colorful straps, is elegant, versatile, and made to turn everyday moments into style statements.",
+    productName: "The Adeife skirt",
+    desc: "The Adeife skirt, crafted from Aso Oke with colorful straps, is elegant, versatile, and made to turn everyday moments into style statements.",
     features: [
       "Aso Oke",
       "Colorful straps", 
     ],
 
     material: "Aso-oke (hand-woven)",
-    sizes: "(M-XXL)",
+    sizes: "(8-22)",
     price: {
-      NGN: 90000,
-      CAD: 250
+      NGN: 50000,
+      CAD: 80.60
   }
 },
 
@@ -360,18 +362,18 @@ export const productsData = [
      "size": 1000
     }],
 
-    productName: "Liora set",
-    desc: "The Liora Set is crafted from detailed fabric that feels soft yet refined, with striking pops of blue that bring the whole look alive.",
+    productName: "The Liora set",
+    desc: "The Liora Set is crafted from detailed adire brocade fabric that feels soft yet refined, with striking pops of blue that bring the whole look alive.",
     features: [
       "Adire",
       "Linen"
     ],
       
     material: "100% linen Adire (hand-dyed)",
-    sizes: "(M-XXL)",
+    sizes: "(8-22)",
     price: {
-      NGN: 90000,
-      CAD: 250
+      NGN: 65000,
+      CAD: 75.10
   }
 },
 
@@ -391,12 +393,12 @@ id: "Adeoye-Aso-oke-Pant-014",
   features: [
     "Aso Oke"
   ],
-    
+
   material: "Aso oke (hand-woven)",
-  sizes: "(M-XXL)",
+  sizes: "(8-22)",
   price: {
-    NGN: 90000,
-    CAD: 250
+    NGN: 75000,
+    CAD: 105.08
   }
 },
 
@@ -411,18 +413,18 @@ id: "Amiyah-dress-015",
     "size": 1000
   }],
 
-  productName: "Amiyah dress",
-  desc: "The Amiyah dress has bold like the waves, soft like cotton.",
+  productName: "The Amiyah dress",
+  desc: "The Amiyah dress is made with crepe Adire has bold like the waves, soft like cotton.",
   features: [
     "High tigh slit",
     "Cotton",
   ],
     
-  material: "Cotton (hand-dyed)",
-  sizes: "(M-XXL)",
+  material: "Crepe Adire (hand-dyed)",
+  sizes: "(8-22)",
   price: {
-    NGN: 90000,
-    CAD: 250
+    NGN: 70000,
+    CAD: 90.18
   }
 },
 
@@ -445,10 +447,10 @@ id: "Lava-Flow-dress-016",
   ],
     
   material: "Mesh",
-  sizes: "(M-XXL)",
+  sizes: "(8-22)",
   price: {
-    NGN: 90000,
-    CAD: 250
+    NGN: 75000,
+    CAD: 90.15
   }
 },
 
@@ -463,22 +465,21 @@ id: "Asake-skirt-set-017",
     "size": 1000
   }],
 
-  productName: "Asake skirt set",
-  desc: "An Adire fabric handcrafted by us, styled into a modern fit with cowries for tradition.",
+  productName: "The Asake skirt set",
+  desc: "Made with Cotton - Adire fabric handcrafted by us, styled into a modern fit with cowries for tradition.",
   features: [
     "hand-crafted",
     "cowries embellished",
-    "Adire",
+    "Cotton Adire",
   ],
     
-  material: "Adire (hand-dyed)",
-  sizes: "(M-XXL)",
+  material: "Cotton Adire (hand-dyed)",
+  sizes: "(8-22)",
   price: {
-    NGN: 90000,
-    CAD: 250
+    NGN: 75000,
+    CAD: 75.90
   }
 },
-
 {
 id: "Scarlet-bloom-dress-018",
   Img1: [{
@@ -491,17 +492,17 @@ id: "Scarlet-bloom-dress-018",
   }],
 
   productName: "Scarlet bloom dress",
-  desc: "brocade outfit is elegance redefined, perfect for celebrating your big day or making a timeless statement.",
+  desc: "A brocade outfit is elegance redefined, perfect for celebrating your big day or making a timeless statement.",
   features: [
     "Open back",
     "Brodade",
   ],
     
   material: "Brocade",
-  sizes: "(M-XXL)",
+  sizes: "(8-22)",
   price: {
-    NGN: 90000,
-    CAD: 250
+    NGN: 105000,
+    CAD: 118.08
   }
 }
 ]

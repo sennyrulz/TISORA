@@ -10,8 +10,8 @@ const __dirname = path.dirname(__filename);
 dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
 import mongoose from "mongoose";
-import productModel from "../models/productModel.js"; // go up one level
-import { productsData } from "./Product.js"; // same folder
+import productModel from "../models/productModel.js"; 
+import { productsData } from "./Product.js"; 
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODBURL, {
