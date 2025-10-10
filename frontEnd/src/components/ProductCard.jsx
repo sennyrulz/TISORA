@@ -4,7 +4,6 @@ import { AdvancedImage } from '@cloudinary/react';
 import { Cloudinary } from '@cloudinary/url-gen/index';
 import bootstrap from "bootstrap/dist/js/bootstrap.bundle.min";
 import { addToCart } from "../redux/cartSlice";
-import { productsData } from "./Product";
 import QuickCart from "./QuickCart";
 
 
@@ -14,6 +13,30 @@ function ProductCard({id, Img1, Img2, productName, desc, price, material, featur
       cloudName: 'dr1ay8vmn' 
     }
   });
+
+const [backendProduct, setBackendProduct] = useState(null);
+  useEffect(() => {
+    const fetchProductData = async () => {
+      try {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/products/${id}`, {
+          credentials: "include", 
+      }); 
+        if (!response.ok) {
+          console.error("❌ Fetch failed:", response.status, response.statusText);
+          return;
+      }
+
+        const data = await response.json();
+        console.log("Fetched product data:", data);
+        setBackendProduct(data);
+
+      } catch (error) {
+        console.error("Error fetching product data:", error);
+      }
+    };
+
+    fetchProductData();
+  }, [id]);
 
   const fallbackPublicId = "IMG_4113_2_hgg2ta";
   const publicId1 = Img1?.[0]?.publicId || fallbackPublicId;
@@ -94,13 +117,16 @@ const translated = enumValues.map(size => ({
   label: sizeLabels[size]
 }));
 
-const userLocale = navigator.language || 'en-NG';
-const currency = userLocale.includes('NG') ? 'NGN' : 'CAD';
+// ✅ Always trust backend for price + currency
+const displayPrice = backendProduct?.price || price?.NGN || 0;
+const displayCurrency = backendProduct?.currency || 'NGN';
+
 
   return (
     <>
       <div className="singleCard bg-white d-flex flex-column justify-content-between pb-4 mb-5 
-         border border-1 shadow-md fit-content" style={{ minWidth: "240px", minHeight: "300px"}}>
+         border border-1 shadow-md fit-content" 
+        style={{ minWidth: "240px", minHeight: "300px"}}>
 
         <p className='d-none'>{id}</p>
 
@@ -116,9 +142,8 @@ const currency = userLocale.includes('NG') ? 'NGN' : 'CAD';
             <h5 className="mt-4 text-size-md">{productName}</h5>
             {/* <p className="fw-medium text-center">{desc || 'No description'}</p> */}
             <p className="fw-bold text-black"> 
-              Price: {currency === 'NGN' ? '₦' : 'C$'}
-              {price?.[currency]?.toLocaleString() || '0'}
-
+              Price: {displayCurrency === 'NGN' ? '₦' : 'C$'}
+              {displayPrice.toLocaleString() || '0'}
 
             {/* { price?.[currency]
               ? new Intl.NumberFormat('en-NG', {
@@ -203,8 +228,8 @@ const currency = userLocale.includes('NG') ? 'NGN' : 'CAD';
 
                   <h5 className="text-start">Price:</h5>
                     <p className="text-start">
-                    {currency === 'NGN' ? '₦' : 'C$'}
-                    {selectedProduct.price[currency].toLocaleString()}
+                      {displayCurrency === 'NGN' ? '₦' : 'C$'}
+                      {displayPrice.toLocaleString()}
                     </p>
                     
 
