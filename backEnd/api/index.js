@@ -63,13 +63,15 @@ mongoose
 // Routes endpoints
 app.use('/api/user', userRoute);
 app.use('/api/admin', adminRoute);
-app.use('/api/product', productRoute);
+app.use('/api/products', productRoute);
+console.log('✅ Product route registered at /api/products');
+
 app.use('/api/checkout', checkoutRoute);
 app.use('/api/orders', orderRoute);
 app.use('/api/payments', paymentRoute);
 
 //currency
-app.set('trust proxy', true);
+app.set('trust proxy', 1);
 
 // Debug middleware to log requests
 app.use((req, res, next) => {
