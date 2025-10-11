@@ -32,6 +32,10 @@ import OrderSuccess from "./pages/OrderSuccess.jsx"
 import Orders from "./components/Orders.jsx";
 import Season1 from "./pages/Season1.jsx"
 import Season2 from "./pages/Season2.jsx"
+import RefundPolicy from "./pages/refundPolicy.jsx";
+import TermsOfService from "./pages/termsOfService.jsx";
+import ShippingPolicy from "./pages/shippingPolicy.jsx";
+import Contact from "./components/contact.jsx";
 
 
 const cld = new Cloudinary({ cloud: { cloudName: 'dr1ay8vmn' }});
@@ -128,6 +132,10 @@ return (
         <Route path="/Orders" element={<Orders />} />
         <Route path="/Season1" element={<Season1 />} />
         <Route path="/Season2" element={<Season2 />} />
+        <Route path="/refundPolicy" element={<RefundPolicy />} />
+        <Route path="/termsOfService" element={<TermsOfService />} />
+        <Route path="/shippingPolicy" element={<ShippingPolicy />} />
+        <Route path="/contact" element={<Contact />} />
  
         {/* Protected User Dashboard */}
         <Route path="/DashboardLanding" element={<DashboardLanding/>} />

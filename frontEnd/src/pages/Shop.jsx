@@ -37,7 +37,6 @@ const Shop = () => {
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-
   return (
     <>
     <Container className="mt-5 py-4 px-0 md:px-5 md:pl-5">
@@ -45,10 +44,7 @@ const Shop = () => {
         <Col md={6} className="d-flex flex-column">
           <h3 className="fw-medium mt-5 fs-9 fs-md-4">Products</h3>
           <div className="d-flex align-items-center gap-1"
-            style={{
-              flexWrap: "nowrap",
-              overflowX: "auto",
-              paddingBottom: "4px" }}>
+            style={{flexWrap: "nowrap", overflowX: "auto", paddingBottom: "4px"}}>
 
             <p className="text-muted mb-0 fw-medium fs-6 fs-md-5"
               style={{ flexShrink: 0 }} > Sort by:

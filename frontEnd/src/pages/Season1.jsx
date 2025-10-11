@@ -37,70 +37,60 @@ const Season1 = () => {
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-
   return (
     <>
     <Container className="mt-5 py-4 px-0 md:px-5 md:pl-5">
-        <Row className="text-start px-3 px-md-0" style={{marginLeft:'150px'}}>
-            <Col md={6} className="d-flex flex-column">
-                <h3 className="fw-medium mt-5 fs-9 fs-md-4">Products</h3>
-                    <div
-                        className="d-flex align-items-center gap-1"
-                        style={{
-                        flexWrap: "nowrap",
-                        overflowX: "auto",
-                        paddingBottom: "4px" }}
-                    >
+      <Row className="text-start px-3 px-md-0" style={{marginLeft:'10px'}}>
+        <Col md={6} className="d-flex flex-column">
+          <h3 className="fw-medium mt-5 fs-9 fs-md-4">Products</h3>
+          <div className="d-flex align-items-center gap-1"
+            style={{ flexWrap: "nowrap", overflowX: "auto", paddingBottom: "4px"}}>
 
-                    <p className="text-muted mb-0 fw-medium fs-6 fs-md-5"
-                        style={{ flexShrink: 0 }} >
-                        Sort by:
-                    </p>
+              <p className="text-muted mb-0 fw-medium fs-6 fs-md-5"
+                style={{ flexShrink: 0 }}> Sort by:
+              </p>
+                
+            <Form.Select
+              aria-label="Sort products"
+              className="mx-1 my-3 my-md-5"
+              onChange={(e) => setSort(e.target.value)}
+              value={sort}
+              style={{
+              width: "fit-content",
+              minWidth: "80px",
+              maxWidth: "170px"}}>
+              <option value="low-to-high">Price, (Min price)</option>
+              <option value="high-to-low">Price, (Max price)</option>
+            </Form.Select>
+            
+              <p className="text-muted mb-0 fs-6"
+                style={{ whiteSpace: "nowrap", minWidth: "80px" }}>
+                {sortedProducts.length} products
+              </p>
+          </div>
+        </Col>
+      </Row>
 
-                    <Form.Select
-                        aria-label="Sort products"
-                        className="mx-1 my-3 my-md-5"
-                        onChange={(e) => setSort(e.target.value)}
-                        value={sort}
-                        style={{
-                            width: "fit-content",
-                            minWidth: "80px",
-                            maxWidth: "170px",
-                        }}>
-                        <option value="low-to-high">Price, (Min price)</option>
-                        <option value="high-to-low">Price, (Max price)</option>
-                    </Form.Select>
-        
-                    <p className="text-muted mb-0 fs-6"
-                        style={{ whiteSpace: "nowrap", minWidth: "80px" }}>
-                        {sortedProducts.length} products
-                    </p>
-                </div>
-            </Col>
-        </Row>
-
-        <Row className="shopRow" style={{marginLeft:'150px'}}>
-            {sortedProducts.length === 0 ? (
-            <Col>
-                <p className="text-muted fs-5 text-center w-100">
-                Please check back later or try a different search.
-                </p>
-            </Col>
-            ) : (
-            currentProducts.map((product) => (
-                <Col
-                key={product.id}
-                lg={3}
-                md={4}
-                sm={6}
-                xs={12}
-                className="d-flex align-items-stretch"
-                style={{ minWidth: "360px", minHeight: "300px" }}>
-                <ProductCard {...product} onAddToCart={handleAddToCart} />
-                </Col>
-            ))
-            )}
-        </Row>
+      <Row className="season1_shopRow" style={{marginLeft:'65px'}}>
+        {sortedProducts.length === 0 ? (
+        <Col>
+          <p className="text-muted fs-5 text-center w-100">
+            Please check back later or try a different search.
+          </p>
+        </Col>
+        ) : (
+        currentProducts.map((product) => (
+        <Col
+          key={product.id}
+          lg={3}
+          md={4}
+          sm={6}
+          xs={12}
+          className="d-flex align-items-stretch"
+          style={{ minWidth: "360px", minHeight: "300px" }}>
+          <ProductCard {...product} onAddToCart={handleAddToCart} />
+        </Col>)))}
+      </Row>
 
       {/* ✅ Ensure ScrollCards receives addToCart */}
       {/* <ScrollCards products={productModel} addToCart={addToCart} /> */}

@@ -37,31 +37,31 @@ const Footer = () => {
 
                     <span className="dot">·</span>
 
-                    <a href="#" className='text-dark text-decoration-none fs-6 fw-light mx-2 hover-underline'>
+                    <a href="/refundPolicy" className='text-dark text-decoration-none fs-6 fw-light mx-2 hover-underline'>
                         <small>Refund Policy</small>
                     </a>
 
                     <span className="dot">·</span>
 
-                    <a href="#" className='text-dark text-decoration-none fs-6 fw-light mx-2 hover-underline'>
+                    {/* <a href="/privacyPolicy" className='text-dark text-decoration-none fs-6 fw-light mx-2 hover-underline'>
                         <small>Privacy Policy</small>
                     </a>
 
-                    <span className="dot">·</span>
+                    <span className="dot">·</span> */}
 
-                    <a href="#" className='text-dark text-decoration-none fs-6 fw-light mx-2 hover-underline'>
+                    <a href="/termsOfService" className='text-dark text-decoration-none fs-6 fw-light mx-2 hover-underline'>
                         <small>Terms of Service</small>
                     </a>
 
                     <span className="dot">·</span>
 
-                    <a href="#" className='text-dark text-decoration-none fs-6 fw-light mx-2 hover-underline'>
+                    <a href="/shippingPolicy" className='text-dark text-decoration-none fs-6 fw-light mx-2 hover-underline'>
                         <small>Shipping Policy</small>
                     </a>
 
                     <span className="dot">·</span>
 
-                    <a href="#" className='text-dark text-decoration-none fs-6 fw-light mx-2 hover-underline'>
+                    <a href="/contact" className='text-dark text-decoration-none fs-6 fw-light mx-2 hover-underline'>
                         <small>Contact Information</small>
                     </a>
                 </Col>
