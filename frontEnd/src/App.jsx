@@ -35,7 +35,7 @@ import Season2 from "./pages/Season2.jsx"
 import RefundPolicy from "./pages/refundPolicy.jsx";
 import TermsOfService from "./pages/termsOfService.jsx";
 import ShippingPolicy from "./pages/shippingPolicy.jsx";
-import Contact from "./components/contact.jsx";
+import Contact from "./pages/contact.jsx";
 
 
 const cld = new Cloudinary({ cloud: { cloudName: 'dr1ay8vmn' }});

@@ -4,6 +4,7 @@ import image1 from '../assets/American_Express.png'
 import image2 from '../assets/Diners_Club.png'
 import image3 from '../assets/mastercard.png'
 import image4 from '../assets/Visa.png'
+import { Link } from 'react-router-dom'
 
 const Footer = () => {
   return (
@@ -30,40 +31,40 @@ const Footer = () => {
                 <Col md={12} className='d-flex flex-wrap justify-content-center gap-3'>
                     <p className="text-dark fw-light copyright-text mx-2">
                         &copy; {new Date().getFullYear()},{" "}
-                        <a href="/" className="text-dark text-decoration-none hover-underline">
+                        <Link to="/" className="text-dark text-decoration-none hover-underline">
                             Tisora
-                        </a>. All Rights Reserved
+                        </Link>. All Rights Reserved
                     </p>
 
                     <span className="dot">·</span>
 
-                    <a href="/refundPolicy" className='text-dark text-decoration-none fs-6 fw-light mx-2 hover-underline'>
+                    <Link to="/refundPolicy" className='text-dark text-decoration-none fs-6 fw-light mx-2 hover-underline'>
                         <small>Refund Policy</small>
-                    </a>
+                    </Link>
 
                     <span className="dot">·</span>
 
-                    {/* <a href="/privacyPolicy" className='text-dark text-decoration-none fs-6 fw-light mx-2 hover-underline'>
+                    {/* <Link to="/privacyPolicy" className='text-dark text-decoration-none fs-6 fw-light mx-2 hover-underline'>
                         <small>Privacy Policy</small>
-                    </a>
+                    </Link>
 
                     <span className="dot">·</span> */}
 
-                    <a href="/termsOfService" className='text-dark text-decoration-none fs-6 fw-light mx-2 hover-underline'>
+                    <Link to="/termsOfService" className='text-dark text-decoration-none fs-6 fw-light mx-2 hover-underline'>
                         <small>Terms of Service</small>
-                    </a>
+                    </Link>
 
                     <span className="dot">·</span>
 
-                    <a href="/shippingPolicy" className='text-dark text-decoration-none fs-6 fw-light mx-2 hover-underline'>
+                    <Link to="/shippingPolicy" className='text-dark text-decoration-none fs-6 fw-light mx-2 hover-underline'>
                         <small>Shipping Policy</small>
-                    </a>
+                    </Link>
 
                     <span className="dot">·</span>
 
-                    <a href="/contact" className='text-dark text-decoration-none fs-6 fw-light mx-2 hover-underline'>
+                    <Link to="/contact" className='text-dark text-decoration-none fs-6 fw-light mx-2 hover-underline'>
                         <small>Contact Information</small>
-                    </a>
+                    </Link>
                 </Col>
             </Row>
         </Container>
